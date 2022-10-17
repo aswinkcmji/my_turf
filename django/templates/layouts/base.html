@@ -1,0 +1,43 @@
+
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>MyTurf | Game Collaborating App</title>
+      
+
+      <!-- including styele  -->
+      {% include 'style/style.html' %}
+      
+  </head>
+  <body class="  ">
+    <!-- loader Start -->
+    <div id="loading">
+      <div class="loader simple-loader">
+          <div class="loader-body"></div>
+      </div>    </div>
+    <!-- loader END -->
+    {% include 'includes/sidebar.html' %}
+
+    <main class="main-content">
+        <div class="position-relative iq-banner">
+
+    {% include 'includes/navbar.html' %}
+
+
+    {% include 'includes/footer.html' %}
+        
+     
+    {% block content %}{% endblock content %}
+
+
+        </main>
+    
+        {% include 'includes/settings.html' %}
+
+     <!-- imcluding javascript -->
+     {% include 'js/js.html' %}
+
+  </body>
+</html>

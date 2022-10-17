@@ -1,0 +1,51 @@
+
+
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Hope UI | Responsive Bootstrap 5 Admin Dashboard Template</title>
+      
+       <!-- including styele  -->
+       {% include 'style/style.html' %}
+
+
+  </head>
+  <body class="   boxed-fancy">
+    <div class="boxed-inner">
+      <!-- loader Start -->
+      <div id="loading">
+        <div class="loader simple-loader">
+            <div class="loader-body"></div>
+        </div>      </div>
+      <!-- loader END -->
+
+
+      <span class="screen-darken"></span>
+      <main class="main-content">
+        
+
+
+        {% include 'includes/navbar_boxed_fancy.html' %}
+
+        {% block content %} {% endblock content %}
+        
+
+
+        <!-- Footer Section Start -->
+        {% include 'includes/footer.html' %}
+        <!-- Footer Section End -->  
+    
+    </main>
+      <!-- Wrapper End-->
+    </div>
+
+    {% include 'includes/settings.html' %}
+
+
+      <!-- imcluding javascript -->
+     {% include 'js/js.html' %}
+
+  </body>
+</html>
