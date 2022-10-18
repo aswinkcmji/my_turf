@@ -9,7 +9,7 @@ services:
     hostname: db
     volumes:
         # - ./sql/django_task1.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
-        - ./data/db:/var/lib/postgresql/data/
+        - postgrees_data:/var/lib/postgresql/data/
     
   admin:
     image: adminer
@@ -40,4 +40,4 @@ services:
   #     - ./go:/code
 
 volumes :
-  postgres_data:
+  postgrees_data:
