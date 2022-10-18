@@ -7,9 +7,6 @@ from django.views.generic import View
 class Test(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'home.html',{ })
-class Shop(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'e_commerce/shop.html',{ })
 
 class Signin(View):
     def get(self, request, *args, **kwargs):
