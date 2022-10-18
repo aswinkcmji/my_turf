@@ -1,1 +1,3 @@
-/data
+migrations
+_pycache_
+data

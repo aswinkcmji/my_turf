@@ -1,0 +1,33 @@
+{% extends 'layouts/base.html' %}
+{% load 'widget-tweaks'}
+{% block content %}
+<script>
+    document.getElementById('create-matches-li').classList.add('active')
+</script>
+
+<!-- <form method = "GET">
+    {{ form }}
+    <input type = "submit" value = "Submit">
+</form>
+ -->
+
+<div class="bd-example">
+        <form method="GET">
+            {% csrf_token %}
+            {{ form.category}}
+            
+            <div class="mb-3">
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                    <option selected="">Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+          
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    
+
+{% endblock content %}
