@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import MatchModel
 from django.views.generic import View
 
 
@@ -17,7 +18,11 @@ class Shop(View):
 
 class AllMatchesView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'Matches/all-matches.html',{ })
+        context={}
+        matches=MatchModel.objects.filter(locality="malampuzha")
+        print("hllo",matches)
+        context['matches']=matches
+        return render(request, 'Matches/all-matches.html',context)
 class MyMatchesView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'Matches/my-matches.html',{ })

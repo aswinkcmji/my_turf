@@ -1,5 +1,21 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
+
+<div class="row justify-content-md-around" style="background:rgb(125, 141, 141)">
+{% for match in matches%}
+<div class="column col-md-4">
+    <div class="card p-2 m-5">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEU83iw_VAtyC3PEYitQPfOwwClXtI1xKlUhqtmDzwWbOTCGFrI_HDd6Y8IxW1Dgg3IbQ&usqp=CAU" class="card-img-top" alt="Product 1" style="height:350px;">
+        <div class="card-body">
+       <h2>{{match.category}}</h2>
+          <p class="card-text">{{match.date}}</p>
+          <p class="card-text">{{match.time}}</p>
+        <a href="{% url 'join' match.id %}" class="btn btn-primary btn-lg">JOIN NOW</a>
+        </div>
+      </div>
+ </div>
+{%endfor%}
+</div>
 <script>
     document.getElementById('matches-li').classList.add('active')
 </script>

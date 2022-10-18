@@ -11,5 +11,8 @@ urlpatterns = [
     path('matches/', AllMatchesView.as_view(), name="matches"),
     path('my-matches/', MyMatchesView.as_view(), name="my-matches"),
     path('create-matches/', CreateMatchesView.as_view(), name="create-matches"),
+    path("join/<int:id>",CreateMatchesView.as_view(), name="join"),
+    
+
   
 ]
