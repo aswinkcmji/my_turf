@@ -4,7 +4,7 @@ from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.views import View
-from .forms import LoginForm,SignUpForm
+from .forms import LoginForm,SignUpForm ,SignUpTurfForm
 from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -28,7 +28,6 @@ class Signup(View):
                 form = SignUpForm(request.POST)
                 if form.is_valid():
                     form.save()
-                    print("Sign...")
                     messages.success(self.request, "Account Created Successfully")
                     return HttpResponseRedirect(reverse('login'))
                       
@@ -36,6 +35,28 @@ class Signup(View):
                     context ={}
                     context['form'] = form
                     return render(request, 'accounts/sign-up.html',context)
+
+
+class SignupTurf(View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            
+            context ={}
+            context['form'] = SignUpTurfForm()
+            return render(request, 'accounts/turf-sign-up.html',context)
+        
+    def post(self, request, *args, **kwargs):
+            if request.method == 'POST':
+                form = SignUpTurfForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    messages.success(self.request, "Account Created Successfully")
+                    return HttpResponseRedirect(reverse('login'))
+                      
+                else:
+                    context ={}
+                    context['form'] = form
+                    return render(request, 'accounts/turf-sign-up.html',context)
 
 
 
@@ -49,10 +70,15 @@ class LoginPage(LoginView):
         return render(request, self.template_name, context)
         
     def post(self, request, *args, **kwargs):
+        username_form=request.POST['username']
+        is_turf = UserModel.objects.get(username=username_form).is_turf
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse('home'))
+            if is_turf:
+                return HttpResponseRedirect(reverse('home_turf'))
+            else:
+                return HttpResponseRedirect(reverse('home'))
         else: 
             messages.error(request, 'Incorrect username or password')
         return HttpResponseRedirect(reverse('login'))

@@ -29,3 +29,23 @@ class LoginForm(forms.Form):
  
     username = forms.CharField(max_length = 30 , widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Username"}))
     password = forms.CharField(max_length=15, widget = forms.PasswordInput(attrs={'class': 'form-control','placeholder':"Password"}))
+
+
+class SignUpTurfForm(UserCreationForm):
+    
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Username"}))
+    turf_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Turf Name"}))
+    
+    email = forms.CharField(max_length=254, required=True, widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':"Email"}))
+    phone = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Phone Number" , 'type':"tel" }))
+    location = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Location"}))
+    password1=forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+    password2=forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password Again'}))
+
+    is_turf=forms.BooleanField(widget=forms.CheckboxInput(attrs={'checked':"checked" ,'hidden':"true"}))
+    avatar=forms.ImageField(required=True,widget=forms.ImageField())
+
+    class Meta:
+        model = UserModel
+        fields = ('username','turf_name' ,'email', 'phone','location','password1', 'password2','is_turf', 'avatar')
+
