@@ -62,7 +62,7 @@ class MyMatchesView(View):
         return render(request, 'Matches/my-matches.html',context)
 
 
-
+#############################################################   View for
 @method_decorator(login_required,name='dispatch')
 class CreateMatchesView(View):
     def get(self, request, *args, **kwargs):
