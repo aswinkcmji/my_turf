@@ -8,8 +8,10 @@
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEU83iw_VAtyC3PEYitQPfOwwClXtI1xKlUhqtmDzwWbOTCGFrI_HDd6Y8IxW1Dgg3IbQ&usqp=CAU" class="card-img-top" alt="Product 1" style="height:350px;">
         <div class="card-body">
        <h2>{{match.category}}</h2>
-          <p class="card-text">{{match.date}}</p>
-          <p class="card-text">{{match.time}}</p>
+          <p class="card-text text-dark">Date of Match:{{match.date}}</p>
+          <p class="card-text">Time:{{match.time}}</p>
+          <p class="card-text">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
+          <p class="card-text">Locality:{{match.locality}}</p>
         <a href="{% url 'join' match.id %}" class="btn btn-primary btn-lg">JOIN NOW</a>
         </div>
       </div>

@@ -19,7 +19,7 @@ class Shop(View):
 class AllMatchesView(View):
     def get(self, request, *args, **kwargs):
         context={}
-        matches=MatchModel.objects.filter(locality="malampuzha")
+        matches=MatchModel.objects.filter(locality="malampuzha",status="Upcoming")
         print("hllo",matches)
         context['matches']=matches
         return render(request, 'Matches/all-matches.html',context)
@@ -29,6 +29,13 @@ class MyMatchesView(View):
 class CreateMatchesView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'Matches/create-matches.html',{ })
+class JoinMatchesView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'Matches/create-matches.html',{ })
+
+
+
+
 class TurfsView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'turf/main.html',{ })
