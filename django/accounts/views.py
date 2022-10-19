@@ -76,7 +76,7 @@ class LoginPage(LoginView):
         if user is not None:
             login(request, user)
             if is_turf:
-                return HttpResponseRedirect(reverse('home_turf'))
+                return HttpResponseRedirect(reverse('turf_dash'))
             else:
                 return HttpResponseRedirect(reverse('home'))
         else: 
