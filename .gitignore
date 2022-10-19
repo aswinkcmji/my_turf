@@ -1,3 +1,4 @@
 migrations
 _pycache_
-data
+__pycache__
+data/
