@@ -71,9 +71,9 @@ class LoginPage(LoginView):
         
     def post(self, request, *args, **kwargs):
         username_form=request.POST['username']
-        is_turf = UserModel.objects.get(username=username_form).is_turf
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is not None:
+            is_turf = UserModel.objects.get(username=username_form).is_turf
             login(request, user)
             if is_turf:
                 return HttpResponseRedirect(reverse('turf_dash'))
