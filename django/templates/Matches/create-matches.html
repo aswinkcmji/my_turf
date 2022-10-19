@@ -2,9 +2,52 @@
 {% load widget_tweaks %}
 {% block content %}
 
+
+
+<section class="ecommerce-addstock-section container-fluid my-3" style="height: 78vh;" >
+    <!-- ecommerce topbar -->
+    <div class="ecomerce-top-bar ">
+        <div class="row">
+            <div class="col-4">
+                <span class="item-name" style="font-size: 1.4rem;">Create Match</span>
+            </div>
+        </div>
+    </div>
+    <!-- ecommerce main section -->
+    <div class="ecom-addstock my-3">
+        <div class="bg-white col-md-6 mx-auto mt-5 p-5">
+            <div class="">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+        
+                    {% for addForm in form %}
+                                
+                       
+                        {% if addForm.label != "Category" %}
+                        <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
+                            {% render_field addForm class="form-control" placeholder="Place Holder" %}
+                            <label >{{addForm.label}}</label>
+                        </div>
+                        {% else %}
+                            {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
+                        {% endif %}
+                        <span class="text-danger">{{addForm.errors}}</span>
+        
+                    {% endfor %}
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 <script>
     document.getElementById('create-matches-li').classList.add('active')
 </script>
+
+
 
 
 <div class="MIn"></div>
