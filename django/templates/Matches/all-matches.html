@@ -12,10 +12,36 @@
           <p class="card-text">Time:{{match.time}}</p>
           <p class="card-text">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text">Locality:{{match.locality}}</p>
-        <a href="{% url 'join' match.id %}" class="btn btn-primary btn-lg">JOIN NOW</a>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{match.id}}">
+            Vertically centered scrollable modal
+        </button>
         </div>
       </div>
  </div>
+ <div class="modal fade" id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <label class="label-floating">Game Category:</label>
+            <input type="text" placeholder="{{match.category}}" readonly> 
+            <p>Date of Match:{{match.date}}</p>
+          </div>
+          <div class="card text-white bg-secondary" > 
+            <div class="card-body">   
+                This is some text within a card body.
+            </div>
+            </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Understood</button>
+          </div>
+      </div>
+  </div>
+  </div>
 {%endfor%}
 </div>
 <script>

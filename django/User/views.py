@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .models import MatchModel
+from .models import MatchModel,RequestModel
 from django.views.generic import View
-
+from .forms import RequestForm
 
 # Create your views here.
 
@@ -30,8 +30,26 @@ class CreateMatchesView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'Matches/create-matches.html',{ })
 class JoinMatchesView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'Matches/create-matches.html',{ })
+    def get(self, request,id, *args, **kwargs):
+        reqdata=MatchModel.objects.get(id=id)
+        data={
+                "category":reqdata.category,
+                "date":reqdata.date,
+                "time":reqdata.time,
+                "username":reqdata.creator,
+                "locality":reqdata.locality,
+                "match_id":id,
+                "phoneno":+98765487654,
+                "status":"Pending"
+        }
+        context ={}
+        form = RequestForm(data)
+        context['form']=form
+        return render(request, 'Matches/join-matches.html',context)
+    def post(self, request, *args, **kwargs):
+         if request.method == 'POST':
+            form =RequestForm(request.POST )
+            print(form)
 
 
 
