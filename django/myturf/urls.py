@@ -23,4 +23,6 @@ urlpatterns = [
     path('home/', include('app.urls')),
     path('', include('User.urls')),
     path('shop/', include('e_commerce.urls')),
+    path('turf_dashboard/',include('dashboard.urls'))
+
 ]
