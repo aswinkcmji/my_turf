@@ -8,5 +8,4 @@ urlpatterns = [
     path('login/', Signin.as_view(), name="sign-in"),
     
     path('turfs/', Turfs.as_view(), name="turfs"),
-
 ]

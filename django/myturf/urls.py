@@ -21,9 +21,19 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
+<<<<<<< HEAD
     path('', include('User.urls')),
     path('shop/', include('e_commerce.urls')),
     path('dashboard/',include('dashboard.urls'))
+=======
+    path('admin/', admin.site.urls),
+    path('', include('accounts.urls')),
+    path('home/', include('app.urls')),
+    path('', include('User.urls')),
+    path('shop/', include('e_commerce.urls')),
+    path('turf_dashboard/',include('dashboard.urls'))
+
+>>>>>>> aed5b27771a2da0988b56e9c7a09b082c4b285a9
 ]
 
 
