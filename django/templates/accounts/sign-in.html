@@ -1,8 +1,8 @@
 
-
 {% extends "layouts/base_fullscreen.html" %}
 
       {% block content %}
+      {% load static %}
 
       <div class="wrapper">
       <section class="login-content">
@@ -76,7 +76,8 @@
                </div>
             </div>
             <div class="col-md-6 d-md-block d-none bg-primary p-0 mt-n1 vh-100 overflow-hidden">
-               <img src="/static/assets/images/auth/01.png" class="img-fluid gradient-main animated-scaleX" alt="images">
+               <div></div>
+               <img src=" {% static 'assets/images/sports/17.jpg' %}" class="img-fluid gradient-main animated-scaleX" alt="images">
             </div>
          </div>
       </section>
