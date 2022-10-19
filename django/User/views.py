@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import View
-
+from .forms import creatematchForm
+# from .models import slotModel
 
 # Create your views here.
 
-class Test(View):
+class HomeView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'home.html',{ })
 class Shop(View):
@@ -21,9 +22,30 @@ class AllMatchesView(View):
 class MyMatchesView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'Matches/my-matches.html',{ })
+
+
+#creat natches
+
 class CreateMatchesView(View):
+    template = 'Matches/create-matches.html'
     def get(self, request, *args, **kwargs):
-        return render(request, 'Matches/create-matches.html',{ })
+
+        form = creatematchForm()
+        # user = request.user
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
+        context = {'form': form,
+                    'data': 'Add match',
+                    # 'user': user,
+                    }
+        
+        return render(request,self.template,context)
+
+
+
+
+
+
+   
 class TurfsView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'turf/main.html',{ })
