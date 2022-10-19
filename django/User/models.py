@@ -1,3 +1,4 @@
+from email.policy import default
 from unittest.util import _MAX_LENGTH
 from django.db import models
 
@@ -23,7 +24,7 @@ class creatematchModel(models.Model):
     creator = models.CharField(max_length=150, blank=False,null=False)
     date = models.DateTimeField()
     time = models.DateTimeField()
-    nos = models.IntegerField() #nos = number of slots
+    nos = models.PositiveIntegerField(default=0) #nos = number of slots
     avs = models.IntegerField()
     status = models.BooleanField(default=False)
     

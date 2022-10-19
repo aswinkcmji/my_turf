@@ -26,11 +26,11 @@
                        
                         {% if addForm.label != "Category" %}
                         <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
-                            {% render_field addForm class="form-control" placeholder="Place Holder" %}
+                            {% render_field addForm class="form-control" placeholder="Place Holder" min="0" %}
                             <label >{{addForm.label}}</label>
                         </div>
                         {% else %}
-                            {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
+                            {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category"  %}
                         {% endif %}
                         <span class="text-danger">{{addForm.errors}}</span>
         
