@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'widget-tweaks',
+    'widget_tweaks',
     'User',
     'accounts',
     'dashboard',
@@ -132,3 +132,13 @@ STATICFILES_DIRS = [
 STATIC_URL = '/static/'
 
 
+# AUTH_USER = 'accounts.Signup'
+LOGIN_URL = 'login'
+
+LOGOUT_REDIRECT_URL = 'login'
+
+REDIRECT_FIELD_NAME ='login'
+
+AUTH_USER_MODEL='accounts.UserModel'
+
+LOGIN_REDIRECT_URL = 'home'

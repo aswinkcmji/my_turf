@@ -2,19 +2,22 @@ from django import forms
 
 from .models import creatematchModel
 
-sport =(
-    ("1", "Cricket"),
-    ("2", "Football"),
-    ("3", "Baseball"),
-    ("4", "Badminton"),
-    ("5", "Tennis"),
-)
 
-
+# choices=OPTIONS
 
 
 class creatematchForm(forms.Form):
-    category= forms.ChoiceField(choices=sport)
+
+    options =[
+        ("1", "Cricket"),
+        ("2", "Football"),
+        ("3", "Baseball"),
+        ("4", "Badminton"),
+        ("5", "Tennis"),
+    ]
+
+
+    category= forms.ChoiceField(choices=options)
     location= forms.CharField(max_length=1000)
     date = forms.DateField()
     time = forms.TimeField()

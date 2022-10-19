@@ -1,3 +1,58 @@
 from django.shortcuts import render
+from django.views.generic import View
+from django.contrib.auth import login as auth_login
+from django.shortcuts import render, redirect
+from django.contrib.auth.views import LoginView
+from django.views import View
+from .forms import LoginForm,SignUpForm
+from django.contrib.auth import authenticate,login,logout
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.contrib import auth
+from django.contrib import messages
+from django.contrib.auth.views import LoginView# from wallet.models import Wallet
+from .models import *
 
-# Create your views here.
+
+
+class Signup(View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            
+            context ={}
+            context['form'] = SignUpForm()
+            return render(request, 'accounts/sign-up.html',context)
+        
+    def post(self, request, *args, **kwargs):
+            if request.method == 'POST':
+                form = SignUpForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    print("Sign...")
+                    messages.success(self.request, "Account Created Successfully")
+                    return HttpResponseRedirect(reverse('login'))
+                      
+                else:
+                    context ={}
+                    context['form'] = form
+                    return render(request, 'accounts/sign-up.html',context)
+
+
+
+class LoginPage(LoginView):
+    
+    
+    template_name = 'accounts/sign-in.html'
+    def get(self, request, *args, **kwargs):
+        context ={}
+        context['form'] = LoginForm()
+        return render(request, self.template_name, context)
+        
+    def post(self, request, *args, **kwargs):
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse('home'))
+        else: 
+            messages.error(request, 'Incorrect username or password')
+        return HttpResponseRedirect(reverse('login'))

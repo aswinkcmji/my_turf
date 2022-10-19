@@ -32,7 +32,7 @@ class CreateMatchesView(View):
 
         form = creatematchForm()
         # user = request.user
-        
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
         context = {'form': form,
                     'data': 'Add match',
                     # 'user': user,
