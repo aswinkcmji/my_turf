@@ -16,8 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include, path
+from django.conf import settings  
+from django.conf.urls.static import static  
+
 
 urlpatterns = [
+<<<<<<< HEAD
+    path('', include('User.urls')),
+    path('shop/', include('e_commerce.urls')),
+    path('dashboard/',include('dashboard.urls'))
+=======
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('home/', include('app.urls')),
@@ -25,4 +33,9 @@ urlpatterns = [
     path('shop/', include('e_commerce.urls')),
     path('turf_dashboard/',include('dashboard.urls'))
 
+>>>>>>> aed5b27771a2da0988b56e9c7a09b082c4b285a9
 ]
+
+
+if settings.DEBUG:  
+        urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)  

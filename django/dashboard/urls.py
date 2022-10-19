@@ -1,6 +1,7 @@
 from django.urls import URLPattern, path
-from .views import Turf_Dashboard
+from .views import AddStockView
 
 urlpatterns = [
-    path('', Turf_Dashboard.as_view(), name="turf_dash"),
+    path('addstock/', AddStockView.as_view(), name="addstock"),
+    # path('liststock/', ListStock.as_view(), name="liststock")
 ]
