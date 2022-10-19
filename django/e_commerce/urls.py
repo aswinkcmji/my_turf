@@ -1,6 +1,6 @@
 from django.urls import URLPattern, path
 from .views import  E_commercePage
-from dashboard.views import AddStockView
+# from dashboard.views import AddStockView
 
 urlpatterns = [
     path('', E_commercePage.as_view(), name="shop"),

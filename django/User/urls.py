@@ -1,12 +1,12 @@
 from django.urls import URLPattern, path
 from django.conf.urls import url
-from .views import Test,Shop,AllMatchesView,MyMatchesView,CreateMatchesView,TurfsView,JoinMatchesView
+from .views import Test,AllMatchesView,MyMatchesView,CreateMatchesView,TurfsView,JoinMatchesView   
 
 
 urlpatterns = [
-    path('', Test.as_view(), name="register"),
+    path('home/', Test.as_view(), name="home"),
     # path('login/', Signin.as_view(), name="sign-in"),
-    path('shop/', Shop.as_view(), name="shop"),
+    # path('shop/', Shop.as_view(), name="shop"),
     path('turfs/', TurfsView.as_view(), name="turfs"),
     path('matches/', AllMatchesView.as_view(), name="matches"),
     path('my-matches/', MyMatchesView.as_view(), name="my-matches"),

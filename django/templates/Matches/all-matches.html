@@ -13,7 +13,7 @@
           <p class="card-text">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text">Locality:{{match.locality}}</p>
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{match.id}}">
-            Vertically centered scrollable modal
+            JOIN NOW
         </button>
         </div>
       </div>
@@ -26,20 +26,29 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <label class="label-floating">Game Category:</label>
-            <input type="text" placeholder="{{match.category}}" readonly> 
-            <p>Date of Match:{{match.date}}</p>
-          </div>
+            <form role="form" method="POST" action="">
+              {% csrf_token %} 
+            <label >Game Category:</label>
+            <input type="text" value="{{match.category}}" readonly name="id_category"> 
+            <label>Date of Match:</label> 
+            <input type="text" value="{{match.date}}" readonly name="id_date">
+            <label>Time of Match:</label> 
+            <input type="text" value="{{match.time}}" readonly name="id_time">
+            <label>Organized By:</label> 
+            <input type="text" value="{{match.creator}}" readonly name="id_user"><br>
+            <label>Location:</label> 
+            <input type="text" value="{{match.locality}}" readonly name="id_locality">
+            <input type="number" value="{{match.id}}" hidden name="id">
           <div class="card text-white bg-secondary" > 
             <div class="card-body">   
                 This is some text within a card body.
             </div>
             </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Understood</button>
-          </div>
+              <button type="button" class="btn btn-secondary" >Close</button>
+              <button type="submit" class="btn btn-primary">Request to Join</button>
+        </form>
       </div>
+  </div>
   </div>
   </div>
 {%endfor%}
