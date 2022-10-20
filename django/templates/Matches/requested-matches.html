@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
-<div class="row justify-content-md-around bg-light">
+<div class="row justify-content-md-around bg-soft-light">
 {% for match in matches%}
 <div class="column col-md-4">
     <div class="card p-2 m-5">
@@ -11,19 +11,15 @@
           <p class="card-text text-dark">Time:{{match.time}}</p>
           <p class="card-text text-dark">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text text-dark">Locality:{{match.locality}}</p>
-          <p>{{match.creator}}</p>
-          <p>{{request.user.username}}</p>
-          {% if match.creator != "{{user.get_username}}" %}
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{match.id}}">
-            EDIT
-        </button>
-        {%endif%}
+          <a  class="btn btn-primary" href="cancel/{{match.id}}">
+            Cancel
+          </a>
         </div>
       </div>
  </div>
  {%endfor%}
  </div>
 <script>
-    document.getElementById('my-matches-li').classList.add('active')
+    document.getElementById('requested-matches-li').classList.add('active')
 </script>
 {% endblock content %}

@@ -31,7 +31,7 @@
             <!-- Sidebar Menu Start -->
             <ul class="navbar-nav iq-main-menu gap-3 mt-3" id="sidebar-menu">
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="{% url 'register' %}">
+                    <a class="nav-link" aria-current="page" href="{% url 'home' %}">
                         <i class="icon">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M9.14373 20.7821V17.7152C9.14372 16.9381 9.77567 16.3067 10.5584 16.3018H13.4326C14.2189 16.3018 
@@ -135,6 +135,20 @@
                                 </i>
                                 <i class="sidenav-mini-icon"> B </i>
                                 <span class="item-name">Create Match</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'requested-matches' %}" id="requested-matches-li">
+                                <i class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
+                                        fill="currentColor">
+                                        <g>
+                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                        </g>
+                                    </svg>
+                                </i>
+                                <i class="sidenav-mini-icon"> B </i>
+                                <span class="item-name">Requested Matches</span>
                             </a>
                         </li>
                     </ul>

@@ -1,7 +1,8 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 
-<div class="row justify-content-md-around" style="background:rgb(125, 141, 141)">
+<div class="row justify-content-md-around bg-light">
+{% if matches%}
 {% for match in matches%}
 <div class="column col-md-4">
     <div class="card p-2 m-5">
@@ -9,9 +10,9 @@
         <div class="card-body">
        <h2>{{match.category}}</h2>
           <p class="card-text text-dark">Date of Match:{{match.date}}</p>
-          <p class="card-text">Time:{{match.time}}</p>
-          <p class="card-text">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
-          <p class="card-text">Locality:{{match.locality}}</p>
+          <p class="card-text text-dark">Time:{{match.time}}</p>
+          <p class="card-text text-dark ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
+          <p class="card-text text-dark">Locality:{{match.locality}}</p>
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{match.id}}">
             JOIN NOW
         </button>
@@ -53,6 +54,19 @@
   </div>
 {%endfor%}
 </div>
+{% else %}
+<div class="column col-md-4">
+    <div class="card text-white bg-soft-info m-5" > 
+      <div class="card-body">   
+        <h3 class="mt-3 text-center">There aren't any more matches happening in your locality</h3>
+        <p class="mt-3 text-center">
+          Interested in creating your own matches<a class="nav-link " href="{% url 'create-matches' %}" id="create-matches-li">Click here</a>
+        </p>
+      </div>
+      </div>
+</div>
+
+{%endif%}
 <script>
     document.getElementById('matches-li').classList.add('active')
 </script>

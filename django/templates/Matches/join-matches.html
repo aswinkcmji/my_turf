@@ -46,12 +46,25 @@
                     <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="bmd-label-floating">Organized By:</label>
                             {{ form.username}}
                           </div>
                         </div>
                     </div>
-                    <button type="submit"  class="btn btn-primary  ">Request</button>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          {{ form.status}}
+                        </div>
+                      </div>
+                  </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      {{ form.phoneno}}
+                    </div>
+                  </div>
+              </div>
+                    <button type="submit"  class="btn btn-primary ">Request</button>
         </form>
         </div>
         {% include 'includes/footer.html' %}    

@@ -8,11 +8,11 @@ class RequestForm(ModelForm):
     category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'true'}))
     date = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
     time = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
-    username= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
+    username= forms.CharField(widget=forms.HiddenInput(attrs={'class': 'form-control','readonly':'true'}))
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
-    status=forms.CharField()
-    match_id=forms.IntegerField()
-    phoneno=forms.IntegerField()
+    status=forms.CharField(widget=forms.HiddenInput())
+    match_id=forms.IntegerField(widget=forms.HiddenInput())
+    phoneno=forms.IntegerField(widget=forms.HiddenInput())
     class Meta():
         model = RequestModel
         fields = '__all__'

@@ -24,6 +24,10 @@ class HomeView(View):
 #     def get(self, request, *args, **kwargs):
 #         return render(request, 'accounts/sign-up.html',{ })
 
+
+
+
+########################################################## View for listing all matches in user locality which user hasn't requested or joined ################################################################################ 
 @method_decorator(login_required,name='dispatch')
 class AllMatchesView(View):
     def get(self, request, *args, **kwargs):
@@ -49,6 +53,19 @@ class AllMatchesView(View):
             selected_match=MatchModel.objects.get(id=match_id)
             print(category,date,time,username,phoneno,location,match_id)
             RequestModel.objects.create(match_id=selected_match,category=category,username=username,phoneno=phoneno,status="Pending",date=date,time=time,locality=location)
+            data={
+                'category':category,
+                'date':date,
+                'time':time,
+                'username':username,
+                'locality':location,
+                'status':"Pending",
+                'match_id':selected_match,
+                'phoneno':phoneno,
+
+            }
+            form = RequestForm(data)
+            print(form)
             return HttpResponseRedirect(reverse('matches'))
 
 
@@ -65,7 +82,7 @@ class MyMatchesView(View):
         return render(request, 'Matches/my-matches.html',context)
 
 
-#############################################################   View for
+#############################################################   View for creating matches ###############################################################################
 @method_decorator(login_required,name='dispatch')
 class CreateMatchesView(View):
     template = 'Matches/create-matches.html'
@@ -82,34 +99,35 @@ class CreateMatchesView(View):
         return render(request,self.template,context)
 
 
-
-
+############################################################ View for listing requested matches ###########################################################################
 @method_decorator(login_required,name='dispatch')
-class JoinMatchesView(View):
+class RequestedMatchesView(View):
+    def get(self, request, *args, **kwargs):
+        print(request.user.username)
+        context={}
+        id_list=RequestModel.objects.filter(username=request.user.username,status="Pending").values_list('match_id',flat=True)
+        print(list(id_list))
+        matches=MatchModel.objects.filter(id__in=list(id_list))
+        context['matches']=matches
+        return render(request, 'Matches/requested-matches.html',context)
+
+
+################################################################   View for join matches ###################################################################################
+@method_decorator(login_required,name='dispatch')
+class CancelRequestView(View):
     def get(self, request,id, *args, **kwargs):
-        reqdata=MatchModel.objects.get(id=id)
-        data={
-                "category":reqdata.category,
-                "date":reqdata.date,
-                "time":reqdata.time,
-                "username":reqdata.creator,
-                "locality":reqdata.locality,
-                "match_id":id,
-                "phoneno":+98765487654,
-                "status":"Pending"
-        }
-        context ={}
-        form = RequestForm(data)
-        context['form']=form
-        return render(request, 'Matches/join-matches.html',context)
-    def post(self, request, *args, **kwargs):
-         if request.method == 'POST':
-            form =RequestForm(request.POST )
-            print(form)
+        try:
+            reqdata=RequestModel.objects.get(match_id=id,username=request.user.username,status="Pending")
+        except:
+            return render(request, 'errors/error404.html')
+        print("hiiiiiiiiiiiiiiiiiiiiiii",reqdata)
+        reqdata.status="Cancelled"
+        reqdata.save()
+        return HttpResponseRedirect(reverse('matches'))
 
 
 
-
+############################################################# View for listing all turfs in user locality ####################################################################
 class TurfsView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'turf/main.html',{ })
