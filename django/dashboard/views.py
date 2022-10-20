@@ -12,7 +12,8 @@ class AddStockView(View):
         form = addStockForm()
         return render(request, 'e_commerce/addProduct.html',{'form':form})
 
-    def post(self,request,*args,**kwargs):  
+    def post(self,request,*args,**kwargs):
+        print("helllllllllllllllllllllllllllllllllllllllllllllllll")  
         if request.method == 'POST':  
             form = addStockForm(request.POST, request.FILES)
             if form.is_valid():  
