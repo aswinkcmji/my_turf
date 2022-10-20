@@ -8,9 +8,12 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
+from .forms import creatematchForm
+# from .models import slotModel
+
 # Create your views here.
 
-class Test(View):
+class HomeView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'home.html',{ })
 # class Shop(View):
@@ -65,9 +68,18 @@ class MyMatchesView(View):
 #############################################################   View for
 @method_decorator(login_required,name='dispatch')
 class CreateMatchesView(View):
+    template = 'Matches/create-matches.html'
     def get(self, request, *args, **kwargs):
-        return render(request, 'Matches/create-matches.html',{ })
 
+        form = creatematchForm()
+        # user = request.user
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
+        context = {'form': form,
+                    'data': 'Add match',
+                    # 'user': user,
+                    }
+        
+        return render(request,self.template,context)
 
 
 

@@ -1,6 +1,7 @@
 from email.policy import default
 from unicodedata import category
 from django.db import models
+from unittest.util import _MAX_LENGTH
 
 # Create your models here.
 class MatchModel(models.Model):
@@ -23,3 +24,33 @@ class RequestModel(models.Model):
     date= models.CharField(max_length=30,null=True,blank=False)
     time= models.CharField(max_length=30,null=True,blank=False)
     locality = models.CharField(max_length=30,null=True,blank=False)
+
+
+
+# Create your models here.
+# class MatchModel(models.Model):
+#     category = models.CharField(max_length=30,null=False,blank=False)
+
+
+# class slotModel(models.Model):
+#     category = models.CharField(max_length=50, blank=False,null=False)
+#     location = models.CharField(max_length=200,)
+#     creator = models.CharField(max_length=150, blank=False,null=False)
+#     nos = models.IntegerField()                                                                       #nos = number of slots
+#     avs = models.IntegerField()                                                                       #avs=available slots
+#     time = models.DateTimeField()
+#     date = models.DateTimeField()
+#     status = models.BooleanField(default=False)
+
+class creatematchModel(models.Model):
+    category = models.CharField(max_length=50, blank=False,null=False)
+    location =  models.CharField(max_length=200, blank=False,null=False)
+    creator = models.CharField(max_length=150, blank=False,null=False)
+    date = models.DateTimeField()
+    time = models.DateTimeField()
+    nos = models.IntegerField() #nos = number of slots
+    avs = models.IntegerField()
+    status = models.BooleanField(default=False)
+
+
+    

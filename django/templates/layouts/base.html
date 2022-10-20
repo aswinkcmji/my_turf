@@ -20,7 +20,7 @@
       </div>    
     </div>
     <!-- loader END -->
-   
+    
     {% include 'includes/sidebar.html' %}
 
     <main class="main-content">
@@ -29,12 +29,13 @@
     {% include 'includes/navbar.html' %}
 
 
+    
+    
     {% block content %}{% endblock content %}
     
-    
-    <!--{% include 'includes/footer.html' %} -->
-        </main>
-    
+    {% include 'includes/footer.html' %}    
+  </main>
+  
         {% include 'includes/settings.html' %}
 
      <!-- including javascript -->
