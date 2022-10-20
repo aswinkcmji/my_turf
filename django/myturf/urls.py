@@ -21,12 +21,15 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
+    path('', include('User.urls')),
+    path('shop/', include('e_commerce.urls')),
+    path('dashboard/',include('dashboard.urls')),
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('home/', include('app.urls')),
     path('', include('User.urls')),
     path('shop/', include('e_commerce.urls')),
-    path('turf_dashboard/',include('dashboard.urls'))
+    path('turf_dashboard/',include('dashboard.urls')),
 
 ]
 

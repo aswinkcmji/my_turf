@@ -48,4 +48,60 @@
 </script>
 
 
+
+
+<div class="MIn"></div>
+<h1 style="text-align:center">CREATE YOUR OWN MATCH</h1>
+<div class="bd-example">
+        <form method="GET">
+            {% csrf_token %}
+            <br><br><br>
+            <div class="mb-3">
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="category" id="category">
+                    
+                    {% for choices in form.category  %}
+                    
+                    <option >{{choices}}</option>
+
+                    {% endfor %}
+                    
+                </select>
+                
+                
+            </div>
+            <div class="mb-3">
+                <input class="form-control form-control-lg" type="text" placeholder="Enter your location" aria-label=".form-control-lg example" id="location" name="location">
+            </div>
+            <div class="mb-3">
+                <div class="input-group">
+                    <input type="text" class="form-control date_flatpicker" placeholder="Enter Date" id="date" name="date">
+                </div>
+            </div>
+            <div class="form-group form-group-alt">
+                <input type="text" class="form-control" placeholder="Enter Time" name="time" id="time">
+            </div>
+            <div class="form-group form-group-alt">
+                <input type="number" class="form-control" placeholder="No of slots" name="nos" id="nos">
+            </div>
+        </form>
+        <button type="submit" class="btn btn-primary">Submit</button>
+</div>
+</div>
+<style>
+.bd-example{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      width: 75rem;
+      height: 43rem;
+      
+      
+
+}
+</style>
+
+
+  
+    
+
 {% endblock content %}
