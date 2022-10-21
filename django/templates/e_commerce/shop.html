@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% load widget_tweaks %}
 {% block content %}
 
 <section class="ecommerce container-fluid my-3">
@@ -10,9 +11,8 @@
                 <span class="item-name" style="font-size: 1.4rem;">Shop</span>
             </div>
             <div class="col-8 d-flex ecomerce-top-bar-btns justify-content-end">
-                <span class="nav-item " >
-                    <a class="bg-primary nav-link text-light rounded" data-bs-toggle="collapse" href="#horizontal-menu-shop-filter" role="button"
-                        aria-expanded="false" aria-controls="horizontal-menu" style="width: fit-content;">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary">
                         <i class="icon">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                
                                 <path d="M14.5715 13.5941L20.4266 7.72014C20.7929 7.35183 21 6.84877 21 6.32376V4.60099C21 3.52002 20.1423 3 
@@ -27,95 +27,17 @@
                             </svg>
                         </i>
                         <span class="item-name">Filter</span>
-                        <i class="right-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 5l7 7-7 7" />
-                            </svg>
-                        </i>
-                    </a>
-                    <ul class="sub-nav collapse p-0" id="horizontal-menu-shop-filter" style="list-style: none;">
-                        <li class="nav-item">
-                            <a class="nav-link " href="/static/dashboard/index-dual-horizontal.html">
-                                <i class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
-                                        fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <span class="item-name" style="font-size: .9rem;">FootBall</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="/static/dashboard/index-dual-horizontal.html">
-                                <i class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
-                                        fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <span class="item-name" style="font-size: .9rem;">Cricket</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="/static/dashboard/index-dual-horizontal.html">
-                                <i class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
-                                        fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <span class="item-name" style="font-size: .9rem;">Batminton</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="/static/dashboard/index-dual-horizontal.html">
-                                <i class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
-                                        fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <span class="item-name" style="font-size: .9rem;">Vollyball</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="/static/dashboard/index-dual-horizontal.html">
-                                <i class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
-                                        fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <span class="item-name" style="font-size: .9rem;">Tennis</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="/static/dashboard/index-dual-horizontal.html">
-                                <i class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
-                                        fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <span class="item-name" style="font-size: .9rem;">Basketball</span>
-                            </a>
-                        </li>
+                    </button>
+                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu bg-l">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Action</a></li>
                     </ul>
-                </span>
+                </div>
             </div>
         </div>
     </div>
@@ -124,28 +46,81 @@
     <div class="ecom-main-section my-3">
         <div class="bg-white p-3">
             <div class="row">
+                
                 {% for i in ecom_data %}
                     <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card  p-2 shadow-sm">
-                            {% if i.image %}
-                                <td>
-                                    <img src="{{ i.image.url }}" alt="" class="img-fluid">
-                                </td>
-                            {% endif %}
+                            <div class="img-cover border">
+                                <img src="{{media_url}}{{i.image}}" class="img-fluid">
+                            </div>
                             <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <h5 class="card-title" style="text-transform: uppercase;">{{i.product_name}}</h5>
+                                <p class="card-text d-flex align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48">
+                                        <path fill="currentColor" fill-rule="evenodd" d="M16 12a2 2 0 0 1 2-2h12a2 2 0 1 1 0 4h-3.07a7.96 7.96 0 0 1 .818 2H30a2 
+                                        2 0 1 1 0 4h-2.252a8.012 8.012 0 0 1-6.121 5.834l6.037 9.057a2 2 0 1 1-3.328 2.218l-8-12A2 2 0 0 1 18 22h2c1.48 0 2.773-.804 
+                                        3.465-2H18a2 2 0 1 1 0-4h5.465A3.998 3.998 0 0 0 20 14h-2a2 2 0 0 1-2-2Z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span style="font-size: 1.1rem;">{{i.price}}</span>
+                                </p>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    
+                                    
+                                    
+                                    <div class="buy-buttons d-flex gap-3 justify-content-between">
+                                        <div class="product-quantity d-flex align-items-center ">
+                                            <a class="sub-item-btn btn border text-center p-2" style="width: 2rem;">-</a>
+                                            {% render_field cartForm.quantity type="text" class="product-quantity-field text-center p-2 border" style="width: 2rem;" readonly=true value="0" %}
+                                            {% render_field cartForm.product_name type="text" value=i.product_name hidden=true %}
+                                            {% render_field cartForm.product_id value=i.id hidden=true %}
+                                            {% render_field cartForm.username type="text" value=request.user.username hidden=true %}
+                                            {% render_field cartForm.price value=i.price hidden=true %}
+                                            {% render_field cartForm.image type="text" value=i.image hidden=true %}
+                                            <a class="add-item-btn btn border text-center p-2" style="width: 2rem;">+</a>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Add To Cart</button>
+                                    </div>
+                                </form>
+                                
                             </div>
                         </div>
                     </div>
                 {% endfor %}
+
             </div>
         </div>
     </div>
 </section>
 
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+<script>
+    
 
+    let buttonPlus  = $(".add-item-btn");
+    let buttonMinus = $(".sub-item-btn");
+
+    let incrementPlus = buttonPlus.click(function() {
+
+        let $n = $(this)
+		.parent(".product-quantity")
+		.find(".product-quantity-field");
+        let amount = Number($n.val());
+        $n.val(amount+1);
+    });
+
+    let incrementMinus = buttonMinus.click(function() {
+
+        let $n = $(this)
+		.parent(".product-quantity")
+		.find(".product-quantity-field");
+        let amount = Number($n.val());
+        if (amount > 0) {
+            $n.val(amount-1);
+        }
+    });
+
+</script>
 <script>
     document.getElementById('shop-li').classList.add('active')
 </script>
