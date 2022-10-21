@@ -33,8 +33,8 @@ class creatematchForm(forms.Form):
 
     category= forms.ChoiceField(choices=options)
     location= forms.CharField(max_length=1000)
-    date = forms.DateField()
-    time = forms.TimeField()
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
     nos = forms.IntegerField()                                                               #nos = number of slots
     class Meta:
         model = creatematchModel

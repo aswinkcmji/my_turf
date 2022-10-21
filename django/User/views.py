@@ -68,6 +68,13 @@ class AllMatchesView(View):
                 obj.match_id=selected_match
                 obj.save()
             else:
+                context={}
+                id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
+                matches=MatchModel.objects.filter(locality=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
+                form=RequestForm()
+                print("hllo",matches)
+                context['matches']=matches
+                context['form']=form
                 return render(request, 'Matches/all-matches.html',context)
             print(form)
             # RequestModel.objects.create(match_id=selected_match,category=category,username=username,phoneno=phoneno,status="Pending",date=date,time=time,locality=location)
@@ -105,6 +112,10 @@ class CreateMatchesView(View):
         
         return render(request,self.template,context)
 
+    def post(self, request, *args, **kwargs):
+        form=creatematchForm(request.POST)
+        print(form)
+        return HttpResponseRedirect(reverse('matches'))
 
 ############################################################ View for listing requested matches ###########################################################################
 @method_decorator(login_required,name='dispatch')

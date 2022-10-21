@@ -33,6 +33,7 @@
                             {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
                         {% endif %}
                         <span class="text-danger">{{addForm.errors}}</span>
+                        
         
                     {% endfor %}
                         <button class="btn btn-primary" type="submit">Submit</button>
@@ -87,6 +88,8 @@
         <button type="submit" class="btn btn-primary">Submit</button>
 </div>
 </div>
+<p>Date: <input type="date" id="datepicker">{{form.date}}</p>
+<p>Time: <input type="time"></p>
 <style>
 .bd-example{
       display:flex;
@@ -99,9 +102,12 @@
 
 }
 </style>
-
-
-  
-    
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script>
+    $( function() {
+      $( "#datepicker" ).datepicker();
+    } );
+    </script>
 
 {% endblock content %}

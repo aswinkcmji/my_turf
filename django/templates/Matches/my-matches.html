@@ -11,12 +11,14 @@
           <p class="card-text text-dark">Time:{{match.time}}</p>
           <p class="card-text text-dark">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text text-dark">Locality:{{match.locality}}</p>
-          <p>{{match.creator}}</p>
-          <p>{{request.user.username}}</p>
+          <!-- <p>{{match.creator}}</p>
+          <p>{{request.user.username}}</p> -->
           {% if match.creator == request.user.username %}
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{match.id}}">
             EDIT
         </button>
+        {%else%}
+        <p class="card-text text-dark">Organized By:{{match.creator}}</p>
         {%endif%}
         </div>
       </div>
