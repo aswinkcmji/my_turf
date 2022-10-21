@@ -13,7 +13,7 @@
           <p class="card-text text-dark">Locality:{{match.locality}}</p>
           <p>{{match.creator}}</p>
           <p>{{request.user.username}}</p>
-          {% if match.creator != "{{user.get_username}}" %}
+          {% if match.creator == request.user.username %}
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{match.id}}">
             EDIT
         </button>

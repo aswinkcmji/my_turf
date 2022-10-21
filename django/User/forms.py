@@ -11,11 +11,12 @@ class RequestForm(ModelForm):
     username= forms.CharField(widget=forms.HiddenInput(attrs={'class': 'form-control','readonly':'true'}))
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
     status=forms.CharField(widget=forms.HiddenInput())
-    match_id=forms.IntegerField(widget=forms.HiddenInput())
+    # match_id= forms.ModelMultipleChoiceField(queryset=RequestModel.objects.all())
     phoneno=forms.IntegerField(widget=forms.HiddenInput())
     class Meta():
         model = RequestModel
-        fields = '__all__'
+        # exclude = '__all__'
+        fields =('category','date','time','username','locality','status','phoneno')
 # choices=OPTIONS
 
 

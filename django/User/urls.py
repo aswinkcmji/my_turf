@@ -1,6 +1,6 @@
 from django.urls import URLPattern, path
 from django.conf.urls import url
-from .views import HomeView,AllMatchesView,MyMatchesView,CreateMatchesView,TurfsView,CancelRequestView,RequestedMatchesView   
+from .views import HomeView,AllMatchesView,MyMatchesView,CreateMatchesView,TurfsView,CancelRequestView,RequestedMatchesView,MatchHistoryView  
 
 
 
@@ -13,7 +13,7 @@ urlpatterns = [
     path('create-matches/', CreateMatchesView.as_view(), name="create-matches"),
     path("requested-matches/cancel/<int:id>",CancelRequestView.as_view(), name="join"),
     path('requested-matches/', RequestedMatchesView.as_view(), name="requested-matches"),
-
+     path('matches-history/', MatchHistoryView.as_view(), name="match-history"),
     path('home/', HomeView.as_view(), name="home"),
   
 ]

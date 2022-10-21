@@ -9,6 +9,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from .forms import creatematchForm
+from datetime import datetime
 # from .models import slotModel
 
 # Create your views here.
@@ -43,16 +44,18 @@ class AllMatchesView(View):
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
             print("hello")
+            match_id=request.POST.get('id')
+            try:
+                selected_match=MatchModel.objects.get(id=match_id,status="Upcoming")
+            except:
+                return render(request, 'errors/error404.html')
             category=request.POST.get('id_category')
             date=request.POST.get('id_date')
             time=request.POST.get('id_time')
             username=request.user.username
             phoneno=request.user.phone
             location=request.POST.get('id_locality')
-            match_id=request.POST.get('id')
-            selected_match=MatchModel.objects.get(id=match_id)
             print(category,date,time,username,phoneno,location,match_id)
-            RequestModel.objects.create(match_id=selected_match,category=category,username=username,phoneno=phoneno,status="Pending",date=date,time=time,locality=location)
             data={
                 'category':category,
                 'date':date,
@@ -60,12 +63,21 @@ class AllMatchesView(View):
                 'username':username,
                 'locality':location,
                 'status':"Pending",
-                'match_id':selected_match,
+                # 'match_id':selected_match,
                 'phoneno':phoneno,
 
             }
             form = RequestForm(data)
+            # form.fields['match_id'].initial = selected_match.id
+            if form.is_valid:
+                print("kikikiki")
+                obj=form.save(commit=False)
+                obj.match_id=selected_match
+                obj.save()
+            else:
+                return render(request, 'Matches/all-matches.html',context)
             print(form)
+            # RequestModel.objects.create(match_id=selected_match,category=category,username=username,phoneno=phoneno,status="Pending",date=date,time=time,locality=location)
             return HttpResponseRedirect(reverse('matches'))
 
 
@@ -74,11 +86,13 @@ class AllMatchesView(View):
 class MyMatchesView(View):
     def get(self, request, *args, **kwargs):
         print(request.user.username)
+        print(datetime.now())
         context={}
         id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
         print(list(id_list))
         matches=MatchModel.objects.filter(id__in=list(id_list))
         context['matches']=matches
+        context[request]=request
         return render(request, 'Matches/my-matches.html',context)
 
 
@@ -125,7 +139,11 @@ class CancelRequestView(View):
         reqdata.save()
         return HttpResponseRedirect(reverse('matches'))
 
-
+############################################################ View for match history #########################################################################################
+@method_decorator(login_required,name='dispatch')
+class MatchHistoryView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'Matches/match-history.html')
 
 ############################################################# View for listing all turfs in user locality ####################################################################
 class TurfsView(View):
