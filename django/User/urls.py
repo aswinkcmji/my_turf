@@ -1,10 +1,7 @@
 from django.urls import URLPattern, path
 from django.conf.urls import url
-<<<<<<< HEAD
-from .views import HomeView,Shop,AllMatchesView,MyMatchesView,CreateMatches,TurfsView
-=======
-from .views import HomeView,AllMatchesView,MyMatchesView,CreateMatchesView,TurfsView
->>>>>>> 1d48d9d1bbe3fda2651df667d4a6cbf8dcf51744
+# from .views import HomeView,Shop,AllMatchesView,MyMatchesView,CreateMatches,TurfsView
+from .views import HomeView,AllMatchesView,MyMatchesView,CreateMatches,TurfsView
 
 
 urlpatterns = [
