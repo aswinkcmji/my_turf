@@ -18,13 +18,20 @@ from django.db import models
 #     status = models.BooleanField(default=False)
 
 
-class creatematchModel(models.Model):
+class createMatchModel(models.Model):
+    category = models.CharField(max_length=50, blank=False,null=False)
+    location =  models.CharField(max_length=200, blank=False,null=False)
+    date = models.CharField(max_length=200, blank=False)
+    time = models.CharField(max_length=200, blank=False)
+    slots = models.IntegerField(default=0) 
+
+class MatchModel(models.Model):
     category = models.CharField(max_length=50, blank=False,null=False)
     location =  models.CharField(max_length=200, blank=False,null=False)
     creator = models.CharField(max_length=150, blank=False,null=False)
     date = models.DateTimeField()
     time = models.DateTimeField()
-    nos = models.PositiveIntegerField(default=0) #nos = number of slots
+    slots = models.IntegerField(default=0) 
     avs = models.IntegerField()
     status = models.BooleanField(default=False)
     

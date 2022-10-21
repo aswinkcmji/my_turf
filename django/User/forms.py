@@ -1,28 +1,28 @@
 from django import forms
 
-from .models import creatematchModel
+from .models import *
 
 
 # choices=OPTIONS
 
 
-class creatematchForm(forms.Form):
+class createMatchForm(forms.ModelForm):
 
     options =[
         ("1", "Cricket"),
         ("2", "Football"),
         ("3", "Baseball"),
         ("4", "Badminton"),
-        ("5", "Tennis"),
+        ("5","Tennis"),
     ]
 
 
     category= forms.ChoiceField(choices=options)
     location= forms.CharField(max_length=1000)
-    date = forms.DateField()
-    time = forms.TimeField()
-    nos = forms.IntegerField()                                                               #nos = number of slots
+    date = forms.CharField()
+    time = forms.CharField()
+    slots = forms.IntegerField()                                                              
     class Meta:
-        model = creatematchModel
-        fields = ('category', 'location', 'date', 'time', 'nos')
+        model = createMatchModel
+        fields = ('category', 'location', 'date', 'time', 'slots')
 

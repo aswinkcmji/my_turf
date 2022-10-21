@@ -43,9 +43,9 @@ class SignUpTurfForm(UserCreationForm):
     password2=forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password Again'}))
 
     is_turf=forms.BooleanField(widget=forms.CheckboxInput(attrs={'checked':"checked" ,'hidden':"true"}))
-    avatar=forms.ImageField(required=True,widget=forms.ImageField())
+    # avatar=forms.ImageField(required=True,widget=forms.ImageField())
 
     class Meta:
         model = UserModel
-        fields = ('username','turf_name' ,'email', 'phone','location','password1', 'password2','is_turf', 'avatar')
+        fields = ('username','turf_name' ,'email', 'phone','location','password1', 'password2','is_turf')
 
