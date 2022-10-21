@@ -6,7 +6,6 @@ from .views import HomeView,AllMatchesView,MyMatchesView,CreateMatchesView,Turfs
 
 urlpatterns = [
     # path('login/', Signin.as_view(), name="sign-in"),
-    # path('shop/', Shop.as_view(), name="shop"),
     path('turfs/', TurfsView.as_view(), name="turfs"),
     path('matches/', AllMatchesView.as_view(), name="matches"),
     path('my-matches/', MyMatchesView.as_view(), name="my-matches"),
