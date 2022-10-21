@@ -8,9 +8,7 @@
     <!-- ecommerce topbar -->
     <div class="ecomerce-top-bar ">
         <div class="row">
-            <div class="col-4">
-                <span class="item-name" style="font-size: 1.4rem;">Create Match</span>
-            </div>
+                <h1 class=" mt-5"style="text-align:center">CREATE YOUR OWN MATCH</h1>
         </div>
     </div>
     <!-- ecommerce main section -->
@@ -21,21 +19,27 @@
                     {% csrf_token %}
                     
         
-                    {% for addForm in form %}
+                    {% for addForm in form.visible_fields %}
                                 
                        
                         {% if addForm.label != "Category" %}
                         <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
                             {% render_field addForm class="form-control" placeholder="Place Holder" %}
+                            {% if addform.type != "hidden"%}
                             <label >{{addForm.label}}</label>
+                            {%endif%}
+                            <p>{{addform.type}}</p>
                         </div>
                         {% else %}
                             {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
                         {% endif %}
-                        <span class="text-danger">{{addForm.errors}}</span>
+                        <!-- <span class="text-danger">{{addForm.errors}}</span> -->
                         
         
                     {% endfor %}
+                    {%for dontForm in form.hidden_fields%}
+                    {% render_field dontForm %}
+                    {%endfor%}
                         <button class="btn btn-primary" type="submit">Submit</button>
                 </form>
             </div>
@@ -43,16 +47,19 @@
     </div>
 </section>
 
-
 <script>
     document.getElementById('create-matches-li').classList.add('active')
+    
+    // $('#name').keyup(function (){
+    //     $('#email').val($(this).val()); // <-- and here
+    // });
 </script>
 
 
 
 
-<div class="MIn"></div>
-<h1 style="text-align:center">CREATE YOUR OWN MATCH</h1>
+<!-- <div class="MIn"></div>
+
 <div class="bd-example">
         <form method="GET">
             {% csrf_token %}
@@ -87,9 +94,9 @@
         </form>
         <button type="submit" class="btn btn-primary">Submit</button>
 </div>
-</div>
-<p>Date: <input type="date" id="datepicker">{{form.date}}</p>
-<p>Time: <input type="time"></p>
+</div> -->
+<!-- <p>Date: <input type="date" id="datepicker">{{form.date}}</p>
+<p>Time: <input type="time" step="1"></p> -->
 <style>
 .bd-example{
       display:flex;
@@ -105,9 +112,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script>
-    $( function() {
-      $( "#datepicker" ).datepicker();
-    } );
+    $('#id_slots').keyup(function (){
+    $('#id_slot_available').val($(this).val()); // <-- reverse your selectors here
+    });
     </script>
 
 {% endblock content %}

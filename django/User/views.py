@@ -61,8 +61,9 @@ class AllMatchesView(View):
 
             }
             form = RequestForm(data)
+            print(form)
             # form.fields['match_id'].initial = selected_match.id
-            if form.is_valid:
+            if form.is_valid():
                 print("kikikiki")
                 obj=form.save(commit=False)
                 obj.match_id=selected_match
@@ -102,7 +103,12 @@ class CreateMatchesView(View):
     template = 'Matches/create-matches.html'
     def get(self, request, *args, **kwargs):
 
-        form = creatematchForm()
+        data={
+            "creator" : request.user.username,
+            "status": "Upcoming",
+            "slot_available": 0,
+        }
+        form = creatematchForm(data)
         # user = request.user
         print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
         context = {'form': form,
@@ -115,6 +121,16 @@ class CreateMatchesView(View):
     def post(self, request, *args, **kwargs):
         form=creatematchForm(request.POST)
         print(form)
+        slots=int(request.POST['slots'])
+        # print(form.slot_available)
+        print(form)
+        if form.is_valid():
+            print("kikikiki")
+            form.cleaned_data['slot_available']=slots-1
+            form.save()
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(reverse('create-matches'))
         return HttpResponseRedirect(reverse('matches'))
 
 ############################################################ View for listing requested matches ###########################################################################

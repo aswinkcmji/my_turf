@@ -9,8 +9,8 @@
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEU83iw_VAtyC3PEYitQPfOwwClXtI1xKlUhqtmDzwWbOTCGFrI_HDd6Y8IxW1Dgg3IbQ&usqp=CAU" class="card-img-top" alt="Product 1" style="height:350px;">
         <div class="card-body">
        <h2>{{match.category}}</h2>
-          <p class="card-text text-dark">Date of Match:{{match.date}}</p>
-          <p class="card-text text-dark">Time:{{match.time}}</p>
+          <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
+          <p class="card-text text-dark">Time:{{match.time|time:"h:i:s"}}</p>
           <p class="card-text text-dark ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text text-dark">Locality:{{match.locality}}</p>
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{match.id}}">
@@ -32,9 +32,9 @@
             <label >Game Category:</label>
             <input type="text" value="{{match.category}}" readonly name="id_category"> 
             <label>Date of Match:</label> 
-            <input type="text" value="{{match.date}}" readonly name="id_date">
+            <input type="text" value="{{match.date|date:"Y-m-d"}}" readonly name="id_date">
             <label>Time of Match:</label> 
-            <input type="text" value="{{match.time}}" readonly name="id_time">
+            <input type="text" value="{{match.time|time:"h:i:s"}}" readonly name="id_time">
             <label>Organized By:</label> 
             <input type="text" value="{{match.creator}}" readonly name="id_user"><br>
             <label>Location:</label> 

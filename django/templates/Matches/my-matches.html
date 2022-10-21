@@ -1,14 +1,15 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 <div class="row justify-content-md-around bg-light">
+{% if matches%}
 {% for match in matches%}
 <div class="column col-md-4">
     <div class="card p-2 m-5">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEU83iw_VAtyC3PEYitQPfOwwClXtI1xKlUhqtmDzwWbOTCGFrI_HDd6Y8IxW1Dgg3IbQ&usqp=CAU" class="card-img-top" alt="Product 1" style="height:350px;">
         <div class="card-body">
        <h2>{{match.category}}</h2>
-          <p class="card-text text-dark">Date of Match:{{match.date}}</p>
-          <p class="card-text text-dark">Time:{{match.time}}</p>
+          <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
+          <p class="card-text text-dark">Time:{{match.time|time:"h:i:s"}}</p>
           <p class="card-text text-dark">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text text-dark">Locality:{{match.locality}}</p>
           <!-- <p>{{match.creator}}</p>
@@ -25,6 +26,19 @@
  </div>
  {%endfor%}
  </div>
+ {% else %}
+<div class="column col-md-4">
+    <div class="card text-white bg-soft-info m-5" > 
+      <div class="card-body">   
+        <h3 class="mt-3 text-center">There aren't any more matches happening in your locality</h3>
+        <p class="mt-3 text-center">
+          Interested in creating your own matches<a class="nav-link " href="{% url 'create-matches' %}" id="create-matches-li">Click here</a>
+        </p>
+      </div>
+      </div>
+</div>
+
+{%endif%}
 <script>
     document.getElementById('my-matches-li').classList.add('active')
 </script>

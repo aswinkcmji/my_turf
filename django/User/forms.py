@@ -2,12 +2,12 @@ from time import time
 from django import forms
 from django.forms import ModelForm
 
-from .models import RequestModel,creatematchModel
+from .models import RequestModel,creatematchModel,MatchModel
 
 class RequestForm(ModelForm):
     category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'true'}))
-    date = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
-    time = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
+    date = forms.DateField(widget=forms.DateInput(attrs={'readonly':'true','type': 'date'}))
+    time = forms.TimeField(widget=forms.TimeInput(attrs={'readonly':'true','type': 'time'}))
     username= forms.CharField(widget=forms.HiddenInput(attrs={'class': 'form-control','readonly':'true'}))
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
     status=forms.CharField(widget=forms.HiddenInput())
@@ -20,23 +20,29 @@ class RequestForm(ModelForm):
 # choices=OPTIONS
 
 
-class creatematchForm(forms.Form):
+class creatematchForm(ModelForm):
 
     options =[
-        ("1", "Cricket"),
-        ("2", "Football"),
-        ("3", "Baseball"),
-        ("4", "Badminton"),
-        ("5", "Tennis"),
+        ("Cricket", "Cricket"),
+        ("Football", "Football"),
+        ("Baseball", "Baseball"),
+        ("Badminton", "Badminton"),
+        ("Tennis", "Tennis"),
+        ("Volleyball","Volleyball"),
+        ("Basketball","Basketball")
     ]
 
 
     category= forms.ChoiceField(choices=options)
-    location= forms.CharField(max_length=1000)
+    # location= forms.CharField(max_length=1000)
     date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
-    nos = forms.IntegerField()                                                               #nos = number of slots
+    time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
+    slots = forms.IntegerField()#nos = number of slots           
+    creator= forms.CharField(widget=forms.HiddenInput(attrs={'class': 'form-control','readonly':'true'}))
+    locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
+    status=forms.CharField(widget=forms.HiddenInput())
+    slot_available=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
-        model = creatematchModel
-        fields = ('category', 'location', 'date', 'time', 'nos')
+        model = MatchModel
+        fields = '__all__'
 
