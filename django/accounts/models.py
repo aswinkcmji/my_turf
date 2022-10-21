@@ -10,9 +10,10 @@ class UserModel(AbstractUser):
     phone = models.CharField(max_length=16)
     age = models.IntegerField(default=0)
     gender = models.CharField(max_length=10)
-    avatar = models.ImageField( null=True , upload_to='images')
+    avatar = models.ImageField( null=True , upload_to='images/avatar')
     turf_name= models.CharField(max_length=255, null=True)
-    catagory = ArrayField(models.CharField(max_length=512, null=True) , null=True) 
+    category = ArrayField(models.CharField(max_length=512, null=True) , null=True) 
+    landmark = models.CharField(max_length=255, null=True)
     is_turf = models.BooleanField(default=False )
 
     USERNAME_FIELD = 'username'
