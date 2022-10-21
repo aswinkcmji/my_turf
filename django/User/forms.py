@@ -45,4 +45,13 @@ class creatematchForm(ModelForm):
     class Meta:
         model = MatchModel
         fields = '__all__'
+    def clean(self):
+        print("hasgfsdyfgsdhjfdg")
+        self.cleaned_data = super().clean()
+        slots=self.cleaned_data.get('slots')
+        print(slots)
+        if slots !=None:
+            self.cleaned_data['slot_available']=slots-1
+        # print("khsfdagjfdghsuj",slots,self.cleaned_data['slot_available'])
+        return self.cleaned_data
 
