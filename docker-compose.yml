@@ -1,0 +1,43 @@
+version: "3"
+services:
+  db:
+    image: postgres:12-alpine
+    ports:
+      - "5431:5432"
+    env_file:
+      - env_vars.env
+    hostname: db
+    volumes:
+        # - ./sql/django_task1.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+        - postgrees_data:/var/lib/postgresql/data/
+    
+  admin:
+    image: adminer
+    restart: always
+    depends_on: 
+      - db
+    ports:
+      - 8090:8080
+  web:
+    build: ./django
+    
+    # context: /django
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./django:/code
+    ports:
+      - "8000:8000"
+    env_file:
+      - env_vars.env
+    depends_on:
+      - db
+  # go:
+  #   build:
+  #     dockerfile: go/Dockerfile
+  #     context: .
+  #   # command: ./go
+  #   volumes:
+  #     - ./go:/code
+
+volumes :
+  postgrees_data:

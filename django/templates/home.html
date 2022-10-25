@@ -1,0 +1,224 @@
+{% extends 'layouts/base_boxed_fancy.html' %}
+{% block content %}
+{% load static %}
+<div>
+   <div id="carouselExampleFade" class="carousel slide carousel-fade overflow-hidden vh-75" data-bs-ride="carousel"
+      style="height: 60vh;">
+      <div class="carousel-inner">
+         <div class="carousel-item active" style=" 
+                        background-image: url('{% static 'assets/images/sports/2.jpg' %}');
+                        height:60vh;
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+
+            ">
+         </div>
+         <div class="carousel-item " style=" 
+                   background-image: url('{% static 'assets/images/sports/9.jpg' %}');
+                   height:60vh;
+                   background-repeat: no-repeat;
+                   background-position: center;
+                   background-size: cover;
+
+            ">
+         </div>
+         <div class="carousel-item " style=" 
+              background-image: url('{% static 'assets/images/sports/11.jpg' %}');
+              height:60vh;
+              background-repeat: no-repeat;
+              background-position: center;
+              background-size: cover;
+
+            ">
+         </div>
+      </div>
+   </div>
+
+   <div class="card mx-auto overflow-visible " style="
+    margin-top: -3rem;
+    z-index: 10;
+    background: rgba( 251, 251, 251, 0.45 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 11px );
+    -webkit-backdrop-filter: blur( 11px );
+    border-radius: 10px;
+    width: 90%;
+">
+      <div class="card-body">
+         <p class="text-black h3 " style="
+                font-family: Signika;
+            ">
+            Welcome to MyTurf
+         </p>
+         <p class=" m-0"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae esse dolorum perferendis quos
+            doloribus</p>
+         <p class=" "> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus possimus mollitia, repellat
+            error earum in vel obcaecati aspernatur.</p>
+      </div>
+   </div>
+
+
+   <!-- <div class="bg-transparent card container-fluid mx-4 shadow-sm w-auto ">
+      <h4 class="m-4 text-lg-center text-secondary" style="
+    font-family: Signika;
+">Try Some of our Awasome Products</h4>
+      <div class="row swiper-wrapper justify-content-center" aria-live="polite">
+         <div class="col-md-3 col-8">
+
+            <div class="card shadow overflow-hidden" style="  
+              background-image: url('{% static 'assets/images/sports/5.jpg' %}');
+              background-repeat: no-repeat;
+              background-position: center;
+              background-size: cover;
+            ">
+
+               <img src="{% static 'assets/images/sports/5.jpg' %}" alt="product_image">
+               <div class="card-body  " style="
+                     margin-top: -1rem;
+    background: rgba( 0, 0, 0, 0.5 );
+    /* box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%); */
+    backdrop-filter: blur( 10px );
+    -webkit-backdrop-filter: blur( 10px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    border-radius: 15px 15px 0px 0px !important
+               ">
+                  <div></div>
+                  <div class="row">
+                     <div class="col-md-7">
+                        <p class="card-title text-white h4">Card title</p>
+
+                     </div>
+                     <div class="col-md-5">
+                        <div class=" px-2 py-1 text text-white" style="
+       background: rgba( 255, 255, 255, 0.2 );
+       /* box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%); */
+       backdrop-filter: blur( 10px );
+       -webkit-backdrop-filter: blur( 10px );
+       border: 1px solid rgba( 255, 255, 255, 0.18 );
+       border-radius: 15px;
+       font-weight: bold; 
+                  "> $ 1000
+                        </div>
+                     </div>
+
+                  </div>
+
+               </div>
+            </div>
+         </div>
+
+         <div class="col-md-3 ">
+
+            <div class="card shadow overflow-hidden" style="  
+              background-image: url('{% static 'assets/images/sports/15.jpg' %}');
+              background-repeat: no-repeat;
+              background-position: center;
+              background-size: cover;
+            ">
+
+               <img src="{% static 'assets/images/sports/15.jpg' %}" alt="product_image">
+               <div class="card-body  " style="
+                     margin-top: -1rem;
+    background: rgba( 0, 0, 0, 0.5 );
+    /* box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%); */
+    backdrop-filter: blur( 10px );
+    -webkit-backdrop-filter: blur( 10px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    border-radius: 15px 15px 0px 0px !important
+               ">
+                  <div></div>
+                  <div class="row">
+                     <div class="col-md-7">
+                        <p class="card-title text-white h4">Card title</p>
+
+                     </div>
+                     <div class="col-md-5">
+                        <div class=" px-2 py-1 text text-white" style="
+       background: rgba( 255, 255, 255, 0.2 );
+       /* box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%); */
+       backdrop-filter: blur( 10px );
+       -webkit-backdrop-filter: blur( 10px );
+       border: 1px solid rgba( 255, 255, 255, 0.18 );
+       border-radius: 15px;
+       font-weight: bold; 
+                  "> $ 1000
+                        </div>
+                     </div>
+
+                  </div>
+
+               </div>
+            </div>
+         </div>
+
+         <div class="col-md-3 ">
+
+            <div class="card shadow overflow-hidden" style="  
+           background-image: url('{% static 'assets/images/sports/7.jpg' %}');
+           background-repeat: no-repeat;
+           background-position: center;
+           background-size: cover;
+         ">
+
+               <img src="{% static 'assets/images/sports/7.jpg' %}" alt="product_image">
+               <div class="card-body  " style="
+                  margin-top: -1rem;
+ background: rgba( 0, 0, 0, 0.5 );
+ /* box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%); */
+ backdrop-filter: blur( 10px );
+ -webkit-backdrop-filter: blur( 10px );
+ border: 1px solid rgba( 255, 255, 255, 0.18 );
+ border-radius: 15px 15px 0px 0px !important
+            ">
+                  <div></div>
+                  <div class="row">
+                     <div class="col-md-7">
+                        <p class="card-title text-white h4">Card title</p>
+
+                     </div>
+                     <div class="col-md-5">
+                        <div class=" px-2 py-1 text text-white" style="
+    background: rgba( 255, 255, 255, 0.2 );
+    /* box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%); */
+    backdrop-filter: blur( 10px );
+    -webkit-backdrop-filter: blur( 10px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    border-radius: 15px;
+    font-weight: bold; 
+               "> $ 1000
+                        </div>
+                     </div>
+
+                  </div>
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </div></div>
+
+
+
+ -->
+
+
+
+
+ <div class="bg-transparent card container-fluid mx-4 shadow-sm w-auto ">
+   <h4 class="m-4 text-lg-center text-secondary" style="
+ font-family: Signika;
+">Try Some of our Awasome Products</h4>
+
+
+
+
+
+ </div>
+
+
+
+
+
+</div>
+         {% endblock content %}
