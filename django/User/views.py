@@ -243,7 +243,7 @@ class EditMatchesView(View):
             updatedRecord. slot_available = form.cleaned_data['slot_available']
             updatedRecord.save()
             # RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
-        # else:
-        #     print(form.errors)
-        #     return HttpResponseRedirect(reverse('create-matches'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(reverse('create-matches'))
         return HttpResponseRedirect(reverse('my-matches'))
