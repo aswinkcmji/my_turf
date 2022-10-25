@@ -47,7 +47,7 @@ class SignupTurf(View):
         
     def post(self, request, *args, **kwargs):
             if request.method == 'POST':
-                form = SignUpTurfForm(request.POST,request.FILES)
+                form = SignUpTurfForm(request.POST)
                 if form.is_valid():
                     form.save()
                     messages.success(self.request, "Account Created Successfully")

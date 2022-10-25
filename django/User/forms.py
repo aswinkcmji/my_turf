@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import *
+from .models import createMatchModel
 
 
 # choices=OPTIONS
@@ -19,8 +19,8 @@ class createMatchForm(forms.ModelForm):
 
     category= forms.ChoiceField(choices=options)
     location= forms.CharField(max_length=1000)
-    date = forms.CharField()
-    time = forms.CharField()
+    date = forms.DateField(widget=forms.DateInput({'type':'date'}))
+    time = forms.TimeField(widget=forms.TimeInput({'type':'time'}))
     slots = forms.IntegerField()                                                              
     class Meta:
         model = createMatchModel

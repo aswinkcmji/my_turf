@@ -1,6 +1,6 @@
 from django.urls import URLPattern, path
 from django.conf.urls import url
-# from .views import HomeView,Shop,AllMatchesView,MyMatchesView,CreateMatches,TurfsView
+
 from .views import HomeView,AllMatchesView,MyMatchesView,CreateMatches,TurfsView
 
 

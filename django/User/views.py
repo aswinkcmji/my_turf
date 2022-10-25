@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse
 from .models import *
+from django.contrib import messages
 
 # from .models import slotModel
 
@@ -13,6 +14,13 @@ from .models import *
 class HomeView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'home.html',{ })
+class Shop(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'e_commerce/shop.html',{ })
+
+# class Signin(View):
+#     def get(self, request, *args, **kwargs):
+#         return render(request, 'accounts/sign-up.html',{ })
 
 class AllMatchesView(View):
     def get(self, request, *args, **kwargs):
@@ -29,7 +37,7 @@ class CreateMatches(View):
         a = createMatchForm()
         user = request.user
         
-        print("-------------------------------------------------------------------------")
+        print("------------------------------------------------------------------------")
         context = { 'form': a,
                     'data': 'Create Matches',
                     'user': user,
@@ -39,21 +47,13 @@ class CreateMatches(View):
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
                 a = createMatchForm(request.POST)
-                print("////////////////////////////////////////////////////////////////////")
                 if a.is_valid():
-                    a.save()
-                    print(a,"++++++++++++++++++++++++++++++=")
-                    print("***************************************************************")
-
-                    messages.success(request, 'Form submission successful')
+                    a.save(createMatchForm)
+                    messages.success(request, "success")
                     print('a')
                     return redirect('my-matches')
                 else:
-                    print("=============================================================")
-
-                    messages.warning(request, 'Form submission failed')
-                    print("....................................................................")
-
+                    messages.warning(request, " failed to submit")
                     return redirect('my-matches')
                     
         else:   

@@ -21,8 +21,8 @@ from django.db import models
 class createMatchModel(models.Model):
     category = models.CharField(max_length=50, blank=False,null=False)
     location =  models.CharField(max_length=200, blank=False,null=False)
-    date = models.CharField(max_length=200, blank=False)
-    time = models.CharField(max_length=200, blank=False)
+    date = models.CharField(max_length=100, blank=False,null=False)
+    time = models.CharField(max_length=100, blank=False,null=False)
     slots = models.IntegerField(default=0) 
 
 class MatchModel(models.Model):
