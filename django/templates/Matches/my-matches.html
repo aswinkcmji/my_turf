@@ -17,7 +17,7 @@
           {% if match.creator == request.user.username %}
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{match.id}}">
             EDIT
-        </button>
+          </button>
         {%else%}
         <p class="card-text text-dark">Organized By:{{match.creator}}</p>
         {%endif%}
