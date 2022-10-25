@@ -126,7 +126,6 @@ class CreateMatchesView(View):
         print(form)
         if form.is_valid():
             print("kikikiki")
-            form.cleaned_data['slot_available']=slots-1
             form.save()
         else:
             print(form.errors)
