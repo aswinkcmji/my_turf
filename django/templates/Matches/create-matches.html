@@ -33,7 +33,7 @@
                         {% else %}
                             {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
                         {% endif %}
-                        <!-- <span class="text-danger">{{addForm.errors}}</span> -->
+                        <span class="text-danger">{{addForm.errors}}</span>
                         
         
                     {% endfor %}
@@ -111,10 +111,6 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-<script>
-    $('#id_slots').keyup(function (){
-    $('#id_slot_available').val($(this).val()); // <-- reverse your selectors here
-    });
-    </script>
+
 
 {% endblock content %}
