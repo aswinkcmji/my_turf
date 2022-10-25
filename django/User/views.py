@@ -1,4 +1,5 @@
 from datetime import date
+from multiprocessing import context
 from django.shortcuts import render
 from .models import MatchModel,RequestModel
 from django.views.generic import View
@@ -126,11 +127,12 @@ class CreateMatchesView(View):
         print(form)
         if form.is_valid():
             print("kikikiki")
-            form.save()
+            obj=form.save()
+            RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
         else:
             print(form.errors)
             return HttpResponseRedirect(reverse('create-matches'))
-        return HttpResponseRedirect(reverse('matches'))
+        return HttpResponseRedirect(reverse('my-matches'))
 
 ############################################################ View for listing requested matches ###########################################################################
 @method_decorator(login_required,name='dispatch')
@@ -162,7 +164,32 @@ class CancelRequestView(View):
 @method_decorator(login_required,name='dispatch')
 class MatchHistoryView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'Matches/match-history.html')
+        id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
+        jum=MatchModel.objects.filter(status="Upcoming",id__in=list(id_list)).exclude(creator=request.user.username).values()#joined upcoming matches
+        id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
+        jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list)).exclude(creator=request.user.username).values()#joined completed matches
+        id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
+        jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list)).exclude(creator=request.user.username).values()#joined cancelled matches
+        crum=MatchModel.objects.filter(creator=request.user.username,locality=request.user.location,status="Upcoming") #created upcoming matches
+        crcom=MatchModel.objects.filter(creator=request.user.username,locality=request.user.location,status="Completed") #created completed matches
+        crcam=MatchModel.objects.filter(creator=request.user.username,locality=request.user.location,status="Cancelled") #created cancelled matches
+        reqcan=RequestModel.objects.filter(username=request.user.username,status="Cancelled")#requests cancelled
+        reqrej=RequestModel.objects.filter(username=request.user.username,status="Rejected")#requests rejected
+        context={}
+        context={
+            'jum':jum,
+            'jcom':jcom,
+            'jcam':jcam,
+            'crum':crum,
+            'crcom':crcom,
+            'crcam':crcam,
+            'reqcan':reqcan,
+            'reqrej':reqrej,
+        }
+        # context['data']=jum
+        print(jum)
+        print(context)
+        return render(request, 'Matches/match-history.html',context)
 
 ############################################################# View for listing all turfs in user locality ####################################################################
 class TurfsView(View):

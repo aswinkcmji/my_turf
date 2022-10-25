@@ -14,7 +14,7 @@
           <p class="card-text text-dark ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text text-dark">Locality:{{match.locality}}</p>
           {% if match.creator != request.user.username %}
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{match.id}}">
+          <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{match.id}}">
            JOIN NOW
         </button>
         {%else%}
@@ -64,7 +64,7 @@
       <div class="card-body">   
         <h3 class="mt-3 text-center">There aren't any more matches happening in your locality</h3>
         <p class="mt-3 text-center">
-          Interested in creating your own matches<a class="" href="{% url 'create-matches' %}" id="create-matches-li">Click here</a>
+          Visit <a class="" href="{% url 'my-matches' %}" id="my-matches-li">My Match</a> to see the matches you created or joined
         </p>
       </div>
       </div>
