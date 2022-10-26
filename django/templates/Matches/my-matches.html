@@ -1,7 +1,8 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
-<div class="row bg-light">
+
 {% if matches%}
+<div class="row bg-light">
 {% for match in matches%}
 <div class="column col-md-4 g-4">
     <div class="card p-2 m-4.2">
@@ -42,7 +43,8 @@
  {%endfor%}
  </div>
  {% else %}
-<div class="column col-md-4">
+ <div class="row bg-light justify-content-center">
+<div class="column col-md-4 justify-content-md-around">
     <div class="card text-white bg-soft-info m-5" > 
       <div class="card-body">   
         <h3 class="mt-3 text-center">There aren't any matches you have created or joined</h3>
@@ -52,9 +54,10 @@
       </div>
       </div>
 </div>
-
+</div>
 {%endif%}
 <script>
     document.getElementById('my-matches-li').classList.add('active')
+  
 </script>
 {% endblock content %}

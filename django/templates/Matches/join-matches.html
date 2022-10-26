@@ -64,6 +64,10 @@
             toastr.success(message);
           }
       });
+      $(document).ready(function() {
+      var today = new Date().toISOString().split('T')[0];
+      $("#id_date").attr('min', today);
+      });
 
   </script>
 {%endblock content%}

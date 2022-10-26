@@ -10,7 +10,8 @@
         <div class="card-body">
        <h2>{{match.category}}</h2>
           <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
-          <p class="card-text text-dark">Time:{{match.time|time:"H:i:s"}}</p>
+          <p class="card-text text-dark">Start Time:{{match.start_time|time:"H:i:s"}}</p>
+          <p class="card-text text-dark">End Time:{{match.end_time|time:"H:i:s"}}</p>
           <p class="card-text text-dark ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text text-dark">Locality:{{match.locality}}</p>
           {% if match.creator != request.user.username %}
@@ -37,8 +38,10 @@
             <input type="text" value="{{match.category}}" readonly name="id_category"> 
             <label>Date of Match:</label> 
             <input type="text" value="{{match.date|date:"Y-m-d"}}" readonly name="id_date">
-            <label>Time of Match:</label> 
-            <input type="text" value="{{match.time|time:"h:i:s"}}" readonly name="id_time">
+            <label>Start Time of Match:</label> 
+            <input type="text" value="{{match.start_time|time:"h:i:s"}}" readonly name="id_start_time">
+            <label>End Time of Match:</label> 
+            <input type="text" value="{{match.end_time|time:"h:i:s"}}" readonly name="id_end_time">
             <label>Organized By:</label> 
             <input type="text" value="{{match.creator}}" readonly name="id_user"><br>
             <label>Location:</label> 

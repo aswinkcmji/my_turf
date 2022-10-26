@@ -4,7 +4,7 @@
 
 
 
-<section class="ecommerce-addstock-section container-fluid my-3" style="height: 78vh;" >
+<section class="ecommerce-addstock-section container-fluid my-3"  >
     <!-- ecommerce topbar -->
     {% if messages %}
     {% for message in messages %}
@@ -75,7 +75,10 @@
             toastr.success(message);
           }
       });
-
+      $(document).ready(function() {
+      var today = new Date().toISOString().split('T')[0];
+      $("#id_date").attr('min', today);
+      });
   </script>
 
 

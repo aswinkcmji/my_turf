@@ -10,7 +10,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from .forms import creatematchForm,updatematchform
-from datetime import datetime
+from datetime import datetime,timedelta
 from django.utils import timezone
 from django.contrib import messages
 # from .models import slotModel
@@ -47,15 +47,17 @@ class AllMatchesView(View):
                 return render(request, 'errors/error404.html')
             category=request.POST.get('id_category')
             date=request.POST.get('id_date')
-            time=request.POST.get('id_time')
+            start_time=request.POST.get('id_start_time')
+            end_time=request.POST.get('id_end_time')
             username=request.user.username
             phoneno=request.user.phone
             location=request.POST.get('id_locality')
-            print(category,date,time,username,phoneno,location,match_id)
+            print(category,date,start_time,end_time,username,phoneno,location,match_id)
             data={
                 'category':category,
                 'date':date,
-                'time':time,
+                'start_time':start_time,
+                'end_time':end_time,
                 'username':username,
                 'locality':location,
                 'status':"Pending",
@@ -105,13 +107,16 @@ class MyMatchesView(View):
 class CreateMatchesView(View):
     template = 'Matches/create-matches.html'
     def get(self, request, *args, **kwargs):
-        print(datetime.now().strftime('%H:%M:%S'))
+        print(datetime.now()+timedelta(hours=1))
+        end_time=(datetime.now()+timedelta(hours=1)).strftime('%H:%M:%S')
+        print(end_time)
         now = timezone.now()
         print(now)
         data={
             'category':'Cricket',
             'date':datetime.now().date(),
-            'time':datetime.now().strftime('%H:%M:%S'),
+            'start_time':datetime.now().strftime('%H:%M:%S'),
+            'end_time':end_time,
             'locality':request.user.location,
             'creator' : request.user.username,
             "status": "Upcoming",
@@ -134,12 +139,13 @@ class CreateMatchesView(View):
         slots=int(request.POST['slots'])
         # print(form.slot_available)
         # print(form)
+        print(request.POST['date']>datetime.now().date(),"djkASGHDGVDGUIJFSABV")
         if form.is_valid():
             print("kikikiki")
             print(form.errors.as_data())
             obj=form.save()
-            RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
-            messages.success(request	,'Your match has been succesfully edit. Visit My Match to see .')
+            RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
+            messages.success(request	,'Your match has been succesfully created. Visit My Match to see .')
             return HttpResponseRedirect(reverse('create-matches'))
 
         else:
@@ -217,7 +223,8 @@ class EditMatchesView(View):
         data={
             'category':editobj.category,
             'date':editobj.date,
-            'time':editobj.time,
+            'start_time':editobj.start_time,
+            'end_time':editobj.end_time,
             'locality':editobj.locality,
             'status':editobj.status,
             "creator" : request.user.username,
@@ -243,7 +250,8 @@ class EditMatchesView(View):
             updatedRecord = MatchModel.objects.get(id=match_id)
             updatedRecord. category = form.cleaned_data['category']
             updatedRecord. date = form.cleaned_data['date']
-            updatedRecord. time = form.cleaned_data['time']
+            updatedRecord. start_time = form.cleaned_data['start_time']
+            updatedRecord. end_time = form.cleaned_data['end_time']
             updatedRecord. locality = form.cleaned_data['locality']
             updatedRecord. slots = form.cleaned_data['slots']
             updatedRecord. slot_available = form.cleaned_data['slot_available']
