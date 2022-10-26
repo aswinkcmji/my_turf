@@ -1,0 +1,55 @@
+{% extends 'layouts/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+    <section class="ecommerce-addstock-section container-fluid my-3" style="height: 78vh;" >
+        <!-- ecommerce topbar -->
+    <div class="ecomerce-top-bar ">
+        <div class="row">
+            <div class="col-4">
+                <span class="item-name" style="font-size: 1.4rem;">Add Stock</span>
+            </div>
+        </div>
+    </div>
+        <!-- ecommerce main section -->
+        <div class="ecom-addstock my-3">
+            <div class="bg-white col-md-6 mx-auto mt-5 p-5">
+                <div class="">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {% for addForm in form %}
+                        
+                        <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-3">
+                            {% render_field addForm class="form-control" placeholder="Place Holder"%}
+                            {% if addForm.label != "Image" %}
+                                <label >{{addForm.label}}</label>
+                            {% else %}
+                            {% endif %}
+                        </div>
+                        <span class="text-danger">{{addForm.errors}}</span>
+                        {% endfor %}
+                        
+                        <button class="btn btn-primary" type="submit">Submit</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    
+    
+    
+    <!-- {% if img_obj %}  
+        <h3>Succesfully uploaded :</h3>  
+        <img src="{{ img_obj.image.url}}" alt="connect" style="max-height:300px">  
+    {% endif %} -->
+
+
+    <script>
+        document.getElementById('addproduct-li').classList.add('active')
+    </script>
+{% endblock content %}

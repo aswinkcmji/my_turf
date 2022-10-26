@@ -1,0 +1,289 @@
+{% extends "layouts/base_fullscreen.html" %}
+
+{% block content %}
+{% load static %}
+<div class="wrapper">
+   <section class="login-content">
+
+      <div class="row m-0 align-items-center bg-white vh-100">
+         <div class="col-md-6 d-md-block d-none bg-primary p-0 mt-n1 vh-100 overflow-hidden">
+            <!-- <img src="{% static 'assets/images/sports/15.jpg' %}" class="img-fluid gradient-main animated-scaleX" alt="images"> -->
+            <video class="img-fluid gradient-main animated-scaleX" autoplay loop muted>
+               <source src="{% static 'assets/videos/01.mp4' %}" type="video/mp4">
+               Your browser does not support the video tag.
+            </video>
+         </div>
+         <div class="col-md-6 overflow-scroll" style="max-height: 100vh;">
+            <div class="row justify-content-center">
+               <div class="col-md-10">
+                  <div class="card card-transparent auth-card shadow-none d-flex justify-content-center mb-0 px-5 pt-4">
+                     <div class="card-body">
+                        <a href="" class="navbar-brand d-flex align-items-center mb-3">
+                           <!--Logo start-->
+                           <svg width="30" class="" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect x="-0.757324" y="19.2427" width="28" height="4" rx="2"
+                                 transform="rotate(-45 -0.757324 19.2427)" fill="currentColor" />
+                              <rect x="7.72803" y="27.728" width="28" height="4" rx="2"
+                                 transform="rotate(-45 7.72803 27.728)" fill="currentColor" />
+                              <rect x="10.5366" y="16.3945" width="16" height="4" rx="2"
+                                 transform="rotate(45 10.5366 16.3945)" fill="currentColor" />
+                              <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2"
+                                 transform="rotate(45 10.5562 -0.556152)" fill="currentColor" />
+                           </svg>
+                           <!--logo End-->
+                           <h4 class="logo-title ms-3">MyTurf</h4>
+                        </a>
+                        <h2 class="mb-2 text-center">Register Your Turf</h2>
+                        <p class="text-center">Fill your turf details.</p>
+                        <p class="mt-3 text-center">
+                           Not a turf owner? <a href="{% url 'register' %}" class="text-underline">Register as User</a>
+                        </p>
+                        <form method="post" enctype="multipart/form-data" >
+                           {% csrf_token %}
+                           {{ form.errors}}
+                           {{form.is_turf}}
+
+                           <div class="row">
+
+                              <div class="col-lg-12">
+                                 <div class="form-group">
+                                    <label for="avatar" class="form-label">Avatar</label>
+                                    {{form.avatar}}
+                                 </div>
+                                 <span class="text-error  text-danger">{{ form.Avatar.errors }}</span>
+                              </div>
+
+                              <div class="col-lg-12">
+                                 <div class="form-group">
+                                    <label for="username" class="form-label">Username</label>
+                                    {{form.username}}
+                                 </div>
+                                 <span class="text-error  text-danger">{{ form.username.errors }}</span>
+                              </div>
+
+                              <div class="col-lg-12">
+                                 <div class="form-group">
+                                    <label for="truf_name" class="form-label">Turf Name</label>
+                                    {{form.turf_name}}
+                                 </div>
+                                 <span class="text-error text-danger">{{ form.first_name.errors }}</span>
+                              </div>
+
+
+                              <div class="col-lg-12">
+                                 <div class="form-group">
+                                    <label for="email" class="form-label">Email</label>
+                                    {{form.email}}
+                                 </div>
+                                 <span class="text-error text-danger">{{ form.email.errors }}</span>
+                              </div>
+
+                              <div class="col-lg-12">
+                                 <div class="form-group">
+                                    <label for="phone" class="form-label">Phone No.</label>
+                                    {{form.phone}}
+                                 </div>
+                                 <span class="text-error text-danger">{{ form.phone.errors }}</span>
+                              </div>
+                              <div class="col-lg-12">
+                                 <div class="form-group">
+                                    <label for="location" class="form-label">Location</label>
+                                    {{form.location}}
+                                 </div>
+                                 <span class="text-error text-danger">{{ form.location.errors }}</span>
+                              </div>
+                              <div class="col-lg-12">
+                                 <div class="form-group">
+                                    <label for="Landmark" class="form-label">Landmark</label>
+                                    {{form.landmark}}
+                                 </div>
+                                 <span class="text-error text-danger">{{ form.landmark.errors }}</span>
+                              </div>
+
+
+                              <!-- #######################################taginput###################################################### -->
+                              <div class="wrapper-taginput">
+
+                                 <div class="form-label">Game Categories
+
+                                 </div>
+
+
+                                 <div class="content-taginput">
+
+                                    <p>Select Type of Games can be played at your turf</p>
+
+                                    <ul id="ul-taginput"><select type="text" spellcheck="false" id="taginput" class="form-control">
+
+                                          <option>Categories</option>
+                                          <option value="op1">op1</option>
+                                          <option value="op2">op2</option>
+                                          <option value="op3sportssssss">op3sportssssss</option>
+                                       </select>
+                                    </ul>
+
+                                 </div>
+
+
+
+                                 <div>
+                                 <span id="bt-remove-taginput" style="cursor: pointer;"
+                                    class=" text-danger text-end w-auto">Remove All</span></div>
+                              </div>
+                              {{form.category}}
+                              <!-- #######################################end taginput###################################################### -->
+
+
+                              <div class="col-lg-12">
+                                 <div class="form-group">
+                                    <label for="password1" class="form-label">Password</label>
+                                    {{form.password1}}
+                                 </div>
+                                 <span class="text-error text-danger">{{ form.password1.errors }}</span>
+                              </div>
+
+                              <div class="col-lg-12">
+                                 <div class="form-group">
+                                    <label for="password2" class="form-label">Confirm Password</label>
+                                    {{form.password2}}
+                                 </div>
+                                 <span class="text-error text-danger">{{ form.password2.errors }}</span>
+                              </div>
+
+
+
+
+
+
+                              <!-- <div class="col-lg-12 d-flex justify-content-center">
+                                 <div class="form-check mb-3">
+                                    <input type="checkbox" class="form-check-input" id="customCheck1">
+                                    <label class="form-check-label" for="customCheck1">I agree with the terms of
+                                       use</label>
+                                    </div>
+                                 </div> -->
+                           </div>
+                           <div class="d-flex justify-content-center">
+                              <button type="submit" class="btn btn-primary">Sign Up</button>
+                           </div>
+
+                           <p class="mt-3 text-center">
+                              Already have an Account <a href="{% url 'login' %}" class="text-underline">Sign In</a>
+                           </p>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+               <!-- #######################################taginput###################################################### -->
+
+               <script>
+
+
+                  const ul = document.getElementById("ul-taginput");
+
+                  const input = document.getElementById("taginput")
+                  const category_input = document.getElementById("category-input")
+
+                  // const tagNumb = document.querySelector(".details-taginput span");
+
+
+                  let maxTags = 10,
+
+                     tags = [];
+
+
+
+
+                  createTag();
+
+
+                  function createTag() {
+
+                     ul.querySelectorAll("li").forEach(li => li.remove());
+
+                     tags.slice().reverse().forEach(tag => {
+
+                        let liTag = ` <li>${tag} <i class="" onclick="remove(this, '${tag}')"> <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M14.3955 9.59497L9.60352 14.387" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14.3971 14.3898L9.60107 9.59277" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M16.3345 2.75024H7.66549C4.64449 2.75024 2.75049 4.88924 2.75049 7.91624V16.0842C2.75049 19.1112 4.63549 21.2502 7.66549 21.2502H16.3335C19.3645 21.2502 21.2505 19.1112 21.2505 16.0842V7.91624C21.2505 4.88924 19.3645 2.75024 16.3345 2.75024Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></i></li>`;
+
+                        ul.insertAdjacentHTML("afterbegin", liTag);
+
+                     });
+
+                  }
+
+
+                  function remove(element, tag) {
+
+                     let index = tags.indexOf(tag);
+
+                     tags = [...tags.slice(0, index), ...tags.slice(index + 1)];
+
+                     element.parentElement.remove();
+                     category_input.value = JSON.stringify(tags) ;
+
+                  }
+
+
+                  function addTag(e) {
+
+                     let tag = e.target.value;
+
+                     if (tag.length > 1 && !tags.includes(tag) && tag != "Categories") {
+
+                        tag.split(',').forEach(tag => {
+
+                           tags.push(tag);
+                           category_input.value = JSON.stringify(tags) ;
+
+                           createTag();
+
+                        });
+                     }
+
+                     // e.target.value = "Select from here to Add Another";
+                  }
+
+
+
+
+                  input.addEventListener("click", addTag);
+
+                  const removeBtn = document.querySelector("#bt-remove-taginput");
+
+                  removeBtn.addEventListener("click", () => {
+
+                     tags.length = 0;
+
+                     ul.querySelectorAll("li").forEach(li => li.remove());
+
+                     countTags();
+
+                  });
+
+
+
+
+               </script>
+
+               <!-- ####################################### end taginput###################################################### -->
+            </div>
+            <div class="sign-bg sign-bg-right">
+               <svg width="280" height="230" viewBox="0 0 421 359" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g opacity="0.05">
+                     <rect x="-15.0845" y="154.773" width="543" height="77.5714" rx="38.7857"
+                        transform="rotate(-45 -15.0845 154.773)" fill="#3A57E8" />
+                     <rect x="149.47" y="319.328" width="543" height="77.5714" rx="38.7857"
+                        transform="rotate(-45 149.47 319.328)" fill="#3A57E8" />
+                     <rect x="203.936" y="99.543" width="310.286" height="77.5714" rx="38.7857"
+                        transform="rotate(45 203.936 99.543)" fill="#3A57E8" />
+                     <rect x="204.316" y="-229.172" width="543" height="77.5714" rx="38.7857"
+                        transform="rotate(45 204.316 -229.172)" fill="#3A57E8" />
+                  </g>
+               </svg>
+            </div>
+         </div>
+      </div>
+
+   </section>
+</div>
+{% endblock content %}

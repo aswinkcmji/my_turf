@@ -1,0 +1,147 @@
+/* Import Google Font-Poppins */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+
+/* ::selection{
+
+color: #fff;
+
+background: #5372F0;
+
+} */
+
+/* .wrapper-taginput{
+
+width: 496px;
+
+background: #fff;
+
+border-radius: 10px;
+
+padding: 18px 25px 20px;
+
+box-shadow: 0 0 30px rgba(0,0,0,0.06);
+
+} */
+
+.wrapper-taginput :where(.title-taginput, li, li i, .details-taginput){
+
+display: flex;
+
+align-items: center;
+
+}
+
+.title-taginput img{
+
+max-width: 21px;
+
+}
+
+.title-taginput h2{
+
+font-size: 21px;
+
+font-weight: 600;
+
+margin-left: 8px;
+
+}
+
+.wrapper-taginput .content-taginput{
+
+margin: 10px 0;
+
+}
+
+.content-taginput p{
+
+font-size: 15px;
+
+}
+
+.content-taginput ul{
+
+display: flex;
+
+flex-wrap: wrap;
+
+padding: 7px;
+
+margin: 12px 0;
+
+border-radius: 5px;
+
+border: 1px solid #a6a6a6;
+
+}
+
+.content-taginput ul li{
+
+color: #333;
+
+margin: 4px 3px;
+
+list-style: none;
+
+border-radius: 5px;
+
+background: #F2F2F2;
+
+padding: 5px 8px 5px 10px;
+
+border: 1px solid #e3e1e1;
+
+}
+
+.content-taginput ul li i{
+
+height: 20px;
+
+width: 20px;
+
+color: #808080;
+
+margin-left: 8px;
+
+font-size: 12px;
+
+cursor: pointer;
+
+border-radius: 50%;
+
+background: #dfdfdf;
+
+justify-content: center;
+
+}
+
+.content-taginput ul input{
+
+flex: 1;
+
+padding: 5px;
+
+border: none;
+
+outline: none;
+
+font-size: 16px;
+
+}
+
+.wrapper-taginput .details-taginput{
+
+justify-content: space-between;
+
+}
+
+
+
+.details-taginput button:hover{
+
+background: #2c52ed;
+
+}
+
