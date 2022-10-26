@@ -1,0 +1,46 @@
+{% extends 'layouts/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<section class="ecommerce-addstock-section container-fluid my-3" style="height: 78vh;" >
+  <!-- ecommerce topbar -->
+  <div class="ecomerce-top-bar ">
+      <div class="row">
+              <h1 class=" mt-5"style="text-align:center">CREATE YOUR OWN MATCH</h1>
+      </div>
+  </div>
+  <!-- ecommerce main section -->
+  <div class="ecom-addstock my-3">
+      <div class="bg-white col-md-6 mx-auto mt-5 p-5">
+          <div class="">
+              <form method="POST">
+                  {% csrf_token %}
+                  
+      
+                  {% for addForm in form.visible_fields %}
+                              
+                     
+                      {% if addForm.label != "Category" %}
+                      <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
+                          {% render_field addForm class="form-control" placeholder="Place Holder" %}
+                          {% if addform.type != "hidden"%}
+                          <label >{{addForm.label}}</label>
+                          {%endif%}
+                          <p>{{addform.type}}</p>
+                      </div>
+                      {% else %}
+                          {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
+                      {% endif %}
+                      <span class="text-danger">{{addForm.errors}}</span>
+                      
+      
+                  {% endfor %}
+                  {%for dontForm in form.hidden_fields%}
+                  {% render_field dontForm %}
+                  {%endfor%}
+                      <button class="btn btn-primary" type="submit">Submit</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</section>
+{%endblock content%}

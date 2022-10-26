@@ -17,11 +17,12 @@ from .models import *
 
 class Signup(View):
     def get(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            
+        if not request.user.is_authenticated:  
             context ={}
             context['form'] = SignUpForm()
             return render(request, 'accounts/sign-up.html',context)
+        else:
+            return HttpResponseRedirect(reverse('home'))
         
     def post(self, request, *args, **kwargs):
             if request.method == 'POST':
