@@ -106,17 +106,18 @@ class CreateMatchesView(View):
     def get(self, request, *args, **kwargs):
         print(datetime.now().strftime('%H:%M:%S'))
         now = timezone.now()
+        print(now)
         data={
             'category':'Cricket',
             'date':datetime.now().date(),
-            'time':now,
+            'time':datetime.now().strftime('%H:%M:%S'),
             'locality':request.user.location,
             'creator' : request.user.username,
             "status": "Upcoming",
             "slot_available": 0,
             "slots": 1,
         }
-        form = creatematchForm(data)
+        form = creatematchForm(data,request=request)
         # user = request.user
         print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
         context = {'form': form,
@@ -127,18 +128,19 @@ class CreateMatchesView(View):
         return render(request,self.template,context)
 
     def post(self, request, *args, **kwargs):
-        form=creatematchForm(request.POST)
-        print(form)
+        form=creatematchForm(request.POST,request=request)
+        # print(form)
         slots=int(request.POST['slots'])
         # print(form.slot_available)
-        print(form)
+        # print(form)
         if form.is_valid():
             print("kikikiki")
+            print(form.errors.as_data())
             obj=form.save()
             RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
         else:
             print(form.errors)
-            return HttpResponseRedirect(reverse('create-matches'))
+            return render(request,self.template,{'form':creatematchForm(request.POST,request)})
         return HttpResponseRedirect(reverse('my-matches'))
 
 ############################################################ View for listing requested matches ###########################################################################
