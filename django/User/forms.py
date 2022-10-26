@@ -54,19 +54,18 @@ class creatematchForm(ModelForm):
         print("hasgfsdyfgsdhjfdg")
         self.cleaned_data = super().clean()
         slots=self.cleaned_data.get('slots')
-        # creator=self.cleaned_data.get('creator')
+        creator=self.cleaned_data.get('creator')
+        status=self.cleaned_data.get('status')
         print(slots)
-        # if creator != self.request.user.username:
-        #     # self.error=self.error_class([
-        #     #             'Please do not change your username'])
-        #     pass
-        # print(creator)
-        self.cleaned_data['creator']=self.request.user.username
-        self.cleaned_data['status']="Upcoming"
         if slots !=None:
             self.cleaned_data['slot_available']=slots-1
-        # print(self.error)
-        print("khsfdagjfdghsuj",slots,self.cleaned_data['slot_available'],self.cleaned_data['creator'])
+        # self.cleaned_data['creator']=self.request.user.username
+        if creator !=  self.request.user.username:
+            self._errors['creator']=self.error_class([''])
+        if status != "Upcoming":
+            self._errors['status']=self.error_class([''])
+        # self.cleaned_data['status']="Upcoming"
+        print("khsfdagjfdghsuj",slots,self.cleaned_data['slot_available'])
         return self.cleaned_data
 
 
@@ -97,15 +96,25 @@ class updatematchform(ModelForm):
     class Meta:
         model = MatchModel
         fields = '__all__'
+    
+    def __init__(self,*args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(updatematchform, self).__init__(*args, **kwargs)
+
     def clean(self):
         print("hasgfsdyfgsdhjfdg")
         self.cleaned_data = super().clean()
         slots=self.cleaned_data.get('slots')
         creator=self.cleaned_data.get('creator')
+        status=self.cleaned_data.get('status')
         print(slots)
         if slots !=None:
             self.cleaned_data['slot_available']=slots-1
-        self.cleaned_data['creator']=self.request.user.username
-        self.cleaned_data['status']="Upcoming"
+        # self.cleaned_data['creator']=self.request.user.username
+        if creator !=  self.request.user.username:
+            self._errors['creator']=self.error_class([''])
+        if status != "Upcoming":
+            self._errors['status']=self.error_class([''])
+        # self.cleaned_data['status']="Upcoming"
         print("khsfdagjfdghsuj",slots,self.cleaned_data['slot_available'])
         return self.cleaned_data

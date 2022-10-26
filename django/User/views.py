@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate
 from .forms import creatematchForm
 from datetime import datetime
 from django.utils import timezone
+from django.contrib import messages
 # from .models import slotModel
 
 # Create your views here.
@@ -138,10 +139,14 @@ class CreateMatchesView(View):
             print(form.errors.as_data())
             obj=form.save()
             RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
+            messages.success(request	,'Your match has been succesfully edit. Visit My Match to see .')
+            return HttpResponseRedirect(reverse('create-matches'))
+
         else:
-            print(form.errors)
+            print(form.errors.as_data())
+            messages.error(request	,'Please do not change the fields')
             return render(request,self.template,{'form':creatematchForm(request.POST,request)})
-        return HttpResponseRedirect(reverse('my-matches'))
+        
 
 ############################################################ View for listing requested matches ###########################################################################
 @method_decorator(login_required,name='dispatch')
@@ -221,20 +226,20 @@ class EditMatchesView(View):
             'slot_available':editobj.slot_available,
             'match_id':editobj.id,
         }
-        form=updatematchform(data)
+        form=updatematchform(data,request=request)
         context={
             'form':form
         }
         return render(request,'Matches/join-matches.html',context)
-        return render(request, 'Matches/match-history.html',context)
+        
     def post(self, request, *args, **kwargs):
         match_id = request.POST['match_id']
-        form=updatematchform(request.POST)
-        print(form)
+        form=updatematchform(request.POST,request=request)
+        # print(form)
         # print(form.slot_available)
-        print(form)
+        # print(form)
         if form.is_valid():
-            print("kikikiki")
+            print("kikfjsdhgusdjgusikiki")
             # form.save()
             updatedRecord = MatchModel.objects.get(id=match_id)
             updatedRecord. category = form.cleaned_data['category']
@@ -244,8 +249,11 @@ class EditMatchesView(View):
             updatedRecord. slots = form.cleaned_data['slots']
             updatedRecord. slot_available = form.cleaned_data['slot_available']
             updatedRecord.save()
+            messages.success(request	,'Your match has been succesfully edit. Visit My Match to see .')
+            return render(request,'Matches/join-matches.html',{'form':updatematchform(request.POST,request=request)})
             # RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
         else:
-            print(form.errors)
-            return HttpResponseRedirect(reverse('create-matches'))
-        return HttpResponseRedirect(reverse('my-matches'))
+            print(form.errors.as_data())
+            messages.error(request	,'Please do not change the fields')
+            return render(request,'Matches/join-matches.html',{'form':updatematchform(request.POST,request=request)})
+        # return HttpResponseRedirect(reverse('my-matches'))

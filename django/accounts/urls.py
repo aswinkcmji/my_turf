@@ -11,7 +11,7 @@ from .views import Turf_Gallery
 urlpatterns = [
     path('register/', Signup.as_view(), name="register"),
     path('register_turf/', SignupTurf.as_view(), name="register_turf"),
-    path('', LoginPage.as_view(redirect_authenticated_user=True), name="login"),
+    path('login/', LoginPage.as_view(redirect_authenticated_user=True), name="login"),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     path('turf_gallery/', Turf_Gallery.as_view(), name="turf_gallery"),
 
