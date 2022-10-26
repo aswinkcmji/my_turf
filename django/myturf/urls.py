@@ -29,6 +29,7 @@ urlpatterns = [
     path('home/', include('app.urls')),
     path('', include('User.urls')),
     path('turf_dashboard/',include('dashboard.urls')),
+    path('',include('accounts.urls')),
 
 ]
 
