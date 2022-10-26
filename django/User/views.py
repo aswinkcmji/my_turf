@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import creatematchForm
+from .forms import creatematchForm,updatematchform
 from datetime import datetime
 from django.utils import timezone
 # from .models import slotModel
@@ -202,7 +202,6 @@ class MatchHistoryView(View):
 class TurfsView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'turf/main.html',{ })
-
 
 ############################################################## View for editing matches created by user #####################################################################
 class EditMatchesView(View):

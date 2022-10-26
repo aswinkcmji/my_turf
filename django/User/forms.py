@@ -2,7 +2,7 @@ from time import time
 from django import forms
 from django.forms import ModelForm
 # from django.contrib.auth import authenticate
-from .models import RequestModel,creatematchModel,MatchModel
+from .models import *
 
 class RequestForm(ModelForm):
     category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'true'}))
@@ -98,3 +98,4 @@ class updatematchform(ModelForm):
         #     pass
         # print("khsfdagjfdghsuj",slots,self.cleaned_data['slot_available'])
         return self.cleaned_data
+
