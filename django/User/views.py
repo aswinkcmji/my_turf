@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import creatematchForm
+from .forms import creatematchForm,updatematchform
 from datetime import datetime
 # from .models import slotModel
 
@@ -195,3 +195,48 @@ class MatchHistoryView(View):
 class TurfsView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'turf/main.html',{ })
+
+############################################################## View for editing matches created by user #####################################################################
+class EditMatchesView(View):
+    def get(self, request,id, *args, **kwargs):
+        editobj=MatchModel.objects.get(id=id)
+        data={
+            'category':editobj.category,
+            'date':editobj.date,
+            'time':editobj.time,
+            'locality':editobj.locality,
+            'status':editobj.status,
+            "creator" : request.user.username,
+            "slots": editobj.slots,
+            'slot_available':editobj.slot_available,
+            'match_id':editobj.id,
+        }
+        form=updatematchform(data)
+        context={
+            'form':form
+        }
+        return render(request,'Matches/join-matches.html',context)
+        return render(request, 'Matches/match-history.html',context)
+    def post(self, request, *args, **kwargs):
+        match_id = request.POST['match_id']
+        form=updatematchform(request.POST)
+        print(form)
+        # print(form.slot_available)
+        print(form)
+        if form.is_valid():
+            print("kikikiki")
+            # form.save()
+            updatedRecord = MatchModel.objects.get(id=match_id)
+            updatedRecord. category = form.cleaned_data['category']
+            updatedRecord. date = form.cleaned_data['date']
+            updatedRecord. time = form.cleaned_data['time']
+            updatedRecord. locality = form.cleaned_data['locality']
+            updatedRecord. slots = form.cleaned_data['slots']
+            updatedRecord. slot_available = form.cleaned_data['slot_available']
+            updatedRecord.save()
+            # RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
+        # else:
+        #     print(form.errors)
+        #     return HttpResponseRedirect(reverse('create-matches'))
+        return HttpResponseRedirect(reverse('my-matches'))
+

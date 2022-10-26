@@ -1,6 +1,6 @@
 from django.urls import URLPattern, path
 from django.conf.urls import url
-from .views import HomeView,AllMatchesView,MyMatchesView,CreateMatchesView,TurfsView,CancelRequestView,RequestedMatchesView,MatchHistoryView  
+from .views import *
 
 
 
@@ -14,5 +14,6 @@ urlpatterns = [
     path('requested-matches/', RequestedMatchesView.as_view(), name="requested-matches"),
      path('matches-history/', MatchHistoryView.as_view(), name="match-history"),
     path('home/', HomeView.as_view(), name="home"),
+    path("my-matches/edit/<int:id>",EditMatchesView.as_view(),name="edit"),
   
 ]

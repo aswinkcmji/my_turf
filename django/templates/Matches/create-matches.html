@@ -23,8 +23,8 @@
                                 
                        
                         {% if addForm.label != "Category" %}
-                        <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4 ">
-                            {% render_field addForm class="form-control" placeholder="Place Holder" min='1' %}
+                        <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
+                            {% render_field addForm class="form-control" placeholder="Place Holder" min='1'%}
                             {% if addform.type != "hidden"%}
                             <label >{{addForm.label}}</label>
                             {%endif%}
@@ -33,7 +33,7 @@
                         {% else %}
                             {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
                         {% endif %}
-                        <!-- <span class="text-danger">{{addForm.errors}}</span> -->
+                        <span class="text-danger">{{addForm.errors}}</span>
                         
         
                     {% endfor %}
@@ -41,63 +41,21 @@
                     {% render_field dontForm %}
                     {%endfor%}
                         <button class="btn btn-primary" type="submit">Submit</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
-
-<script>
-    document.getElementById('create-matches-li').classList.add('active')
-    
-    // $('#name').keyup(function (){
-    //     $('#email').val($(this).val()); // <-- and here
-    // });
-</script>
-
-
-
-
-<!-- <div class="MIn"></div>
-
-<div class="bd-example">
-        <form method="GET">
-            {% csrf_token %}
-            <br><br><br>
-            <div class="mb-3">
-                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="category" id="category">
-                    
-                    {% for choices in form.category  %}
-                    
-                    <option >{{choices}}</option>
-
-                    {% endfor %}
-                    
-                </select>
-                
-                
-            </div>
-            <div class="mb-3">
-                <input class="form-control form-control-lg" type="text" placeholder="Enter your location" aria-label=".form-control-lg example" id="location" name="location">
-            </div>
-            <div class="mb-3">
-                <div class="input-group">
-                    <input type="text" class="form-control date_flatpicker" placeholder="Enter Date" id="date" name="date">
+                    </form>
                 </div>
             </div>
-            <div class="form-group form-group-alt">
-                <input type="text" class="form-control" placeholder="Enter Time" name="time" id="time">
-            </div>
-            <div class="form-group form-group-alt">
-                <input type="number" class="form-control" placeholder="No of slots" name="nos" id="nos">
-            </div>
-        </form>
-        <button type="submit" class="btn btn-primary">Submit</button>
-</div>
-</div> -->
-<!-- <p>Date: <input type="date" id="datepicker">{{form.date}}</p>
-<p>Time: <input type="time" step="1"></p> -->
-<style>
+        </div>
+    </section>
+    
+    <script>
+        document.getElementById('create-matches-li').classList.add('active')
+        
+        // $('#name').keyup(function (){
+        //     $('#email').val($(this).val()); // <-- and here
+        // });
+    </script>
+    
+    <!-- <style>
 .bd-example{
       display:flex;
       flex-direction:column;
@@ -108,13 +66,9 @@
       
 
 }
-</style>
+</style> -->
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-<script>
-    $('#id_slots').keyup(function (){
-    $('#id_slot_available').val($(this).val()); // <-- reverse your selectors here
-    });
-    </script>
+
 
 {% endblock content %}
