@@ -3,7 +3,7 @@ from multiprocessing import context
 from django.shortcuts import render
 from .models import MatchModel,RequestModel
 from django.views.generic import View
-from .forms import RequestForm
+from .forms import RequestForm, updatematchform
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from .forms import creatematchForm,updatematchform
 from datetime import datetime
+from django.utils import timezone
 # from .models import slotModel
 
 # Create your views here.
@@ -22,7 +23,7 @@ class HomeView(View):
 
 
 
-########################################################## View for listing all matches in user locality which user hasn't requested or joined ################################################################################ 
+########################################################## View for listing all matches in user locality which user hasn't requested or joined or created ################################################################################ 
 @method_decorator(login_required,name='dispatch')
 class AllMatchesView(View):
     def get(self, request, *args, **kwargs):
@@ -103,11 +104,17 @@ class MyMatchesView(View):
 class CreateMatchesView(View):
     template = 'Matches/create-matches.html'
     def get(self, request, *args, **kwargs):
-
+        print(datetime.now().strftime('%H:%M:%S'))
+        now = timezone.now()
         data={
-            "creator" : request.user.username,
+            'category':'Cricket',
+            'date':datetime.now().date(),
+            'time':now,
+            'locality':request.user.location,
+            'creator' : request.user.username,
             "status": "Upcoming",
             "slot_available": 0,
+            "slots": 1,
         }
         form = creatematchForm(data)
         # user = request.user
@@ -147,7 +154,7 @@ class RequestedMatchesView(View):
         return render(request, 'Matches/requested-matches.html',context)
 
 
-################################################################   View for join matches ###################################################################################
+################################################################  View for cancel match  requests ###################################################################################
 @method_decorator(login_required,name='dispatch')
 class CancelRequestView(View):
     def get(self, request,id, *args, **kwargs):
@@ -235,8 +242,7 @@ class EditMatchesView(View):
             updatedRecord. slot_available = form.cleaned_data['slot_available']
             updatedRecord.save()
             # RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
-        # else:
-        #     print(form.errors)
-        #     return HttpResponseRedirect(reverse('create-matches'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(reverse('create-matches'))
         return HttpResponseRedirect(reverse('my-matches'))
-

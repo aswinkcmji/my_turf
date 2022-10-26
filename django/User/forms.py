@@ -1,7 +1,7 @@
 from time import time
 from django import forms
 from django.forms import ModelForm
-
+# from django.contrib.auth import authenticate
 from .models import *
 
 class RequestForm(ModelForm):
@@ -49,9 +49,12 @@ class creatematchForm(ModelForm):
         print("hasgfsdyfgsdhjfdg")
         self.cleaned_data = super().clean()
         slots=self.cleaned_data.get('slots')
+        creator=self.cleaned_data.get('creator')
         print(slots)
         if slots !=None:
             self.cleaned_data['slot_available']=slots-1
+        # if creator != request.user.username:
+        #     pass
         # print("khsfdagjfdghsuj",slots,self.cleaned_data['slot_available'])
         return self.cleaned_data
 
