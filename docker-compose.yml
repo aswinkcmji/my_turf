@@ -2,8 +2,8 @@ version: "3"
 services:
   db:
     image: postgres:12-alpine
-    ports:
-      - "5433:5432"
+    # ports:
+    #   - "5431:5432"
     env_file:
       - env_vars.env
     hostname: db
@@ -17,11 +17,7 @@ services:
     depends_on: 
       - db
     ports:
-<<<<<<< HEAD
       - 8083:8080
-=======
-      - 8090:8080
->>>>>>> 5298887b1d0e57b40dbc028b5407a5a4f28cf430
   web:
     build: ./django
     
