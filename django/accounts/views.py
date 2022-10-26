@@ -41,7 +41,6 @@ class Signup(View):
 class SignupTurf(View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            
             context ={}
             context['form'] = SignUpTurfForm()
             return render(request, 'accounts/turf-sign-up.html',context)
@@ -51,6 +50,7 @@ class SignupTurf(View):
                 form = SignUpTurfForm(request.POST,request.FILES)
                 if form.is_valid():
                     form.save()
+                    
                     messages.success(self.request, "Account Created Successfully")
                     return HttpResponseRedirect(reverse('login'))
                       
