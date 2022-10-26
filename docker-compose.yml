@@ -17,11 +17,7 @@ services:
     depends_on: 
       - db
     ports:
-<<<<<<< HEAD
-      - 8083:8080
-=======
       - 8090:8080
->>>>>>> 5298887b1d0e57b40dbc028b5407a5a4f28cf430
   web:
     build: ./django
     

@@ -4,6 +4,7 @@ from django.views.generic import View
 from accounts.models import UserModel
 from e_commerce.forms import addStockForm
 from e_commerce.models import ProductsModel
+from django.conf import settings  
 from django.views.generic import View
 # Create your views here.
 
@@ -34,12 +35,12 @@ class Turf_Dashboard(View):
         # turfDetails = UserModel.objects.all().exclude(username="admin")
 
         turfDetails = UserModel.objects.filter(username = request.user.username).values()
-
-
+        
         context = {
 
             'turfDetails': turfDetails,
-           
+            'media_url':settings.MEDIA_URL,
+
         }
         print("==============",context)
 
