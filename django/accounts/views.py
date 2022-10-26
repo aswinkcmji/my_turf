@@ -82,3 +82,8 @@ class LoginPage(LoginView):
         else: 
             messages.error(request, 'Incorrect username or password')
         return HttpResponseRedirect(reverse('login'))
+
+
+class Turf_Gallery(View):
+    def get(self,request):
+        return render(request,'turf/turf_gallery.html')
