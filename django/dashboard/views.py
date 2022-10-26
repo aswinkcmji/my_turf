@@ -4,6 +4,9 @@ from django.views.generic import View
 from e_commerce.forms import addStockForm
 from e_commerce.models import ProductsModel
 from django.views.generic import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 
@@ -31,3 +34,8 @@ class AddStockView(View):
 class Turf_Dashboard(View):
     def get(self,request):
         return render(request,"turf/turf_dashboard.html",{})
+
+@method_decorator(login_required,name='dispatch')
+class TurfSchedule(View):
+    def get(self,request):
+        return render(request,"turf/schedule.html",{})
