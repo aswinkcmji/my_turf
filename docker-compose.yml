@@ -3,7 +3,7 @@ services:
   db:
     image: postgres:12-alpine
     ports:
-      - "5431:5432"
+      - "5433:5432"
     env_file:
       - env_vars.env
     hostname: db
