@@ -1,9 +1,12 @@
+from datetime import datetime
+from enum import auto
+from sqlite3 import Date
 from time import time
 from django import forms
 from django.forms import ModelForm
 # from django.contrib.auth import authenticate
 from .models import *
-
+import datetime
 class RequestForm(ModelForm):
     category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'true'}))
     date = forms.DateField(widget=forms.DateInput(attrs={'readonly':'true','type': 'date'}))
@@ -55,7 +58,7 @@ class creatematchForm(ModelForm):
             self.cleaned_data['slot_available']=slots-1
         # if creator != request.user.username:
         #     pass
-        # print("khsfdagjfdghsuj",slots,self.cleaned_data['slot_available'])
+        # print("khsfdagjfdghsuj",slots,self.cleaned_data['slot_available'  ])
         return self.cleaned_data
 
 
@@ -74,7 +77,7 @@ class updatematchform(ModelForm):
 
     category= forms.ChoiceField(choices=options)
     # location= forms.CharField(max_length=1000)
-    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    date = forms.DateField(initial=datetime.date.today, widget=forms.widgets.DateInput(attrs={'type': 'date'}))
     time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
     slots = forms.IntegerField()#nos = number of slots           
     creator= forms.CharField(widget=forms.HiddenInput(attrs={'class': 'form-control','readonly':'true'}))
