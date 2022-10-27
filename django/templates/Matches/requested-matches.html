@@ -23,7 +23,7 @@
         <div class="card-body">
        <h2>{{match.category}}</h2>
           <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
-          <p class="card-text text-dark">Time:{{match.time|time:"h:i:s"}}</p>
+          <p class="card-text text-dark">Time:{{match.time|time:"H:i:s"}}</p>
           <p class="card-text text-dark">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text text-dark">Locality:{{match.locality}}</p>
           <a  class="btn btn-primary" href="cancel/{{match.id}}">

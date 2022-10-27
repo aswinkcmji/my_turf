@@ -6,6 +6,7 @@
 {% for match in matches%}
 <div class="column col-md-4">
     <div class="card p-2 m-5">
+<<<<<<< HEAD
       {% if match.category == "Cricket" %}
         <img src="https://cdn.britannica.com/47/148847-050-C4FB5341/Cricket-bat-ball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
         {% elif match.category == "Football" %}
@@ -23,9 +24,14 @@
         
         {%endif%}
      <div class="card-body">
+=======
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEU83iw_VAtyC3PEYitQPfOwwClXtI1xKlUhqtmDzwWbOTCGFrI_HDd6Y8IxW1Dgg3IbQ&usqp=CAU" class="card-img-top" alt="Product 1" >
+        <div class="card-body">
+>>>>>>> 4c1ae76f78abc97a3cc3c89805b07a44e01d568a
        <h2>{{match.category}}</h2>
           <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
-          <p class="card-text text-dark">Time:{{match.time|time:"h:i:s"}}</p>
+          <p class="card-text text-dark">Start Time:{{match.start_time|time:"H:i:s"}}</p>
+          <p class="card-text text-dark">End Time:{{match.end_time|time:"H:i:s"}}</p>
           <p class="card-text text-dark ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text text-dark">Locality:{{match.locality}}</p>
           {% if match.creator != request.user.username %}
@@ -52,8 +58,10 @@
             <input type="text" value="{{match.category}}" readonly name="id_category"> 
             <label>Date of Match:</label> 
             <input type="text" value="{{match.date|date:"Y-m-d"}}" readonly name="id_date">
-            <label>Time of Match:</label> 
-            <input type="text" value="{{match.time|time:"h:i:s"}}" readonly name="id_time">
+            <label>Start Time of Match:</label> 
+            <input type="text" value="{{match.start_time|time:"h:i:s"}}" readonly name="id_start_time">
+            <label>End Time of Match:</label> 
+            <input type="text" value="{{match.end_time|time:"h:i:s"}}" readonly name="id_end_time">
             <label>Organized By:</label> 
             <input type="text" value="{{match.creator}}" readonly name="id_user"><br>
             <label>Location:</label> 

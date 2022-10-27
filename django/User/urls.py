@@ -13,6 +13,6 @@ urlpatterns = [
     path("requested-matches/cancel/<int:id>",CancelRequestView.as_view(), name="join"),
     path('requested-matches/', RequestedMatchesView.as_view(), name="requested-matches"),
     path('matches-history/', MatchHistoryView.as_view(), name="match-history"),
-    path('home/', HomeView.as_view(), name="home"),
+    path('', HomeView.as_view(), name="home"),
     path("my-matches/edit/<int:id>",EditMatchesView.as_view(),name="edit")
 ]

@@ -45,6 +45,8 @@ class SignupTurf(View):
             context ={}
             context['form'] = SignUpTurfForm()
             return render(request, 'accounts/turf-sign-up.html',context)
+        else:
+            return HttpResponseRedirect(reverse('home'))
         
     def post(self, request, *args, **kwargs):
             if request.method == 'POST':
