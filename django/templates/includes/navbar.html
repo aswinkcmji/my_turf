@@ -58,7 +58,7 @@
                       
                       {% if cartData %}
                         {% for i in cartData %}
-                        <a href="#" class="iq-sub-card">
+                        <div  class="iq-sub-card">
                           <div class="d-flex justify-content-between">
                             <div class=" d-flex align-items-center">
                               <div class="">
@@ -99,8 +99,32 @@
                             </a>
                           </div>
                           </div>
-                        </a>
+                        </div>
                         {% endfor %}
+                        <div class="bg-light" style="height: .5em;"></div>
+                        <div  class="container-fluid mt-4">
+                          <div class="d-flex flex-column">
+                            <div class="mb-4">
+                              <span class="h6 text-secondary">Price Details</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                              <span>Price({{totalItemCount}} items):</span>
+                              <span>{{totalAmount}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                              <span class="">Delivery Charge:</span>
+                              <span class="text-success">Free Delivery</span>
+                            </div>
+                            <hr>
+                            <div class="mb-4 d-flex justify-content-between">
+                              <span class="h6 text-secondary">Total Price</span>
+                              <span>{{totalAmount}}</span>
+                            </div>
+                          </div>
+                          <div class="mb-3 d-flex justify-content-end">
+                            <a href="{% url 'checkout' %}" class="checkout btn btn-warning px-3 py-2 " style="font-size: .8rem;">Place Order</a>
+                          </div>
+                        </div>
                         {% else%}
                         <a href="#" class="iq-sub-card">
                           <div class="d-flex justify-content-between">
