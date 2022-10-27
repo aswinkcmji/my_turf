@@ -1,9 +1,14 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse
 from django.views.generic import View
+from accounts.models import UserModel
 from e_commerce.forms import addStockForm
 from e_commerce.models import ProductsModel
+from django.conf import settings  
 from django.views.generic import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 
@@ -30,4 +35,28 @@ class AddStockView(View):
             return render(request, 'e_commerce/addProduct.html',{'form':form})
 class Turf_Dashboard(View):
     def get(self,request):
-        return render(request,"turf/turf_dashboard.html",{})
+
+        # turfDetails = UserModel.objects.all().exclude(username="admin")
+
+        turfDetails = UserModel.objects.filter(username = request.user.username).values()
+        
+        context = {
+
+            'turfDetails': turfDetails,
+            'media_url':settings.MEDIA_URL,
+
+        }
+        print("==============",context)
+
+
+        return render(request,'turf/turf_dashboard.html',context)
+
+
+# class TurfGalleryView(View):
+#     def get(self, request, *args, **kwargs):
+#         form = 
+
+@method_decorator(login_required,name='dispatch')
+class TurfSchedule(View):
+    def get(self,request):
+        return render(request,"turf/schedule.html",{})
