@@ -139,7 +139,7 @@ class CreateMatchesView(View):
         slots=int(request.POST['slots'])
         # print(form.slot_available)
         # print(form)
-        print(request.POST['date']>datetime.now().date(),"djkASGHDGVDGUIJFSABV")
+        # print(request.POST['date']>datetime.now().date(),"djkASGHDGVDGUIJFSABV")
         if form.is_valid():
             print("kikikiki")
             print(form.errors.as_data())
@@ -149,9 +149,9 @@ class CreateMatchesView(View):
             return HttpResponseRedirect(reverse('create-matches'))
 
         else:
-            print(form.errors.as_data())
+            # print(form.errors['start_time'])
             messages.error(request	,'Please do not change the fields')
-            return render(request,self.template,{'form':creatematchForm(request.POST,request)})
+            return render(request,self.template,{'form':form})
         
 
 ############################################################ View for listing requested matches ###########################################################################
@@ -236,7 +236,7 @@ class EditMatchesView(View):
         context={
             'form':form
         }
-        return render(request,'Matches/join-matches.html',context)
+        return render(request,'Matches/edit-matches.html',context)
         
     def post(self, request, *args, **kwargs):
         match_id = request.POST['match_id']
@@ -257,10 +257,45 @@ class EditMatchesView(View):
             updatedRecord. slot_available = form.cleaned_data['slot_available']
             updatedRecord.save()
             messages.success(request	,'Your match has been succesfully edit. Visit My Match to see .')
-            return render(request,'Matches/join-matches.html',{'form':updatematchform(request.POST,request=request)})
+            return render(request,'Matches/edit-matches.html',{'form':updatematchform(request.POST,request=request)})
             # RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
         else:
             print(form.errors.as_data())
             messages.error(request	,'Please do not change the fields')
-            return render(request,'Matches/join-matches.html',{'form':updatematchform(request.POST,request=request)})
+            return render(request,'Matches/edit-matches.html',{'form':updatematchform(request.POST,request=request)})
         # return HttpResponseRedirect(reverse('my-matches'))
+
+
+
+##################################################################### View for Requests viewing #######################################################################
+class RequestsView(View):
+    def get(self, request,*args, **kwargs):
+        id_list=MatchModel.objects.filter(creator=request.user.username,status="Upcoming").values_list('id',flat=True)
+        print(list(id_list))
+        requests=RequestModel.objects.filter(status='Pending',match_id__in=list(id_list)).values()
+        # print(requests)
+        context={}
+        context['requests']=requests
+        return render(request,'Matches/requests.html',context)
+    def  post(self, request, *args, **kwargs):
+        selected=request.POST.getlist('selected[]')
+        print(selected)
+        if 'Accept' in request.POST:
+            print("Accepted requests")
+            requests=RequestModel.objects.filter(id__in=selected)
+            for requesti in requests:
+                requesti.status="Accepted"
+                requesti.save()
+                match_id=requesti.match_id.pk
+                print(match_id,type(match_id))
+                obj=MatchModel.objects.get(id=match_id)
+                obj.slot_available=obj.slot_available-1
+                obj.save()
+            return HttpResponseRedirect(reverse('requests'))
+        elif 'Reject' in request.POST:
+            print("Rejected requests")
+            requests=RequestModel.objects.filter(id__in=selected)
+            for request in requests:
+                request.status="Rejected"
+                request.save()
+            return HttpResponseRedirect(reverse('requests'))
