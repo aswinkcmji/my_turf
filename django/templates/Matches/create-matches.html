@@ -21,7 +21,7 @@
     <div class="ecom-addstock my-3">
         <div class="bg-white col-md-6 mx-auto mt-5 p-5">
             <div class="">
-                <form method="POST">
+                <form method="POST" id="creatematch">
                     {% csrf_token %}
                     
         
@@ -70,14 +70,17 @@
         let message = $('#messagecontent').html()
           if( tag == 'error'){
             toastr.error(message);
+            $('#creatematch').trigger('reset');
           }
           if( tag == 'success' ){
             toastr.success(message);
+            $('#creatematch').trigger('reset');
           }
       });
       $(document).ready(function() {
       var today = new Date().toISOString().split('T')[0];
       $("#id_date").attr('min', today);
+      $('#creatematch').trigger('reset');
       });
   </script>
 
