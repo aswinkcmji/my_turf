@@ -12,16 +12,18 @@ from django.contrib import auth
 from django.contrib import messages
 from django.contrib.auth.views import LoginView# from wallet.models import Wallet
 from .models import *
+from django.conf import settings
 
 
 
 class Signup(View):
     def get(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            
+        if not request.user.is_authenticated:  
             context ={}
             context['form'] = SignUpForm()
             return render(request, 'accounts/sign-up.html',context)
+        else:
+            return HttpResponseRedirect(reverse('home'))
         
     def post(self, request, *args, **kwargs):
             if request.method == 'POST':
@@ -40,16 +42,18 @@ class Signup(View):
 class SignupTurf(View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            
             context ={}
             context['form'] = SignUpTurfForm()
             return render(request, 'accounts/turf-sign-up.html',context)
+        else:
+            return HttpResponseRedirect(reverse('home'))
         
     def post(self, request, *args, **kwargs):
             if request.method == 'POST':
                 form = SignUpTurfForm(request.POST,request.FILES)
                 if form.is_valid():
                     form.save()
+                    
                     messages.success(self.request, "Account Created Successfully")
                     return HttpResponseRedirect(reverse('login'))
                       
@@ -82,3 +86,21 @@ class LoginPage(LoginView):
         else: 
             messages.error(request, 'Incorrect username or password')
         return HttpResponseRedirect(reverse('login'))
+
+
+class Turf_Gallery(View):
+    def get(self,request):
+
+
+        turfDetails = UserModel.objects.filter(username = request.user.username).values()
+        
+        context = {
+
+            'turfDetails': turfDetails,
+            'media_url':settings.MEDIA_URL,
+
+        }
+        print(" ",context)
+
+
+        return render(request,'turf/turf_gallery.html',context)

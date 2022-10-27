@@ -31,7 +31,7 @@
             <!-- Sidebar Menu Start -->
             <ul class="navbar-nav iq-main-menu gap-3 mt-3" id="sidebar-menu">
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="{% url 'register' %}">
+                    <a class="nav-link" aria-current="page" href="{% url 'home' %}">
                         <i class="icon">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M9.14373 20.7821V17.7152C9.14372 16.9381 9.77567 16.3067 10.5584 16.3018H13.4326C14.2189 16.3018 
@@ -137,6 +137,34 @@
                                 <span class="item-name">Create Match</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'requested-matches' %}" id="requested-matches-li">
+                                <i class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
+                                        fill="currentColor">
+                                        <g>
+                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                        </g>
+                                    </svg>
+                                </i>
+                                <i class="sidenav-mini-icon"> B </i>
+                                <span class="item-name">Requested Matches</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'match-history' %}" id="Match-History-li">
+                                <i class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
+                                        fill="currentColor">
+                                        <g>
+                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                        </g>
+                                    </svg>
+                                </i>
+                                <i class="sidenav-mini-icon"> B </i>
+                                <span class="item-name">Match-History</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -226,7 +254,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="{% url 'shop' %}">
+                    <a class="nav-link" aria-current="page" href="{% url 'turf_gallery' %}">
                         <i class="icon">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.4" d="M16.3328 22H7.66618C4.2769 22 2 19.6229 2 16.0843V7.91672C2 4.37811 4.2769 2 7.66618
@@ -249,7 +277,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="{% url 'shop' %}">
+                    <a class="nav-link" aria-current="page" href="{% url 'turf_schedule' %} " id="turf-schedule-li">
                         <i class="icon">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.4" d="M16.34 1.99976H7.67C4.28 1.99976 2 4.37976 2 7.91976V16.0898C2 19.6198 4.28 21.9998 7.67 
@@ -263,9 +291,9 @@
                                 </path>
                             </svg>
                         </i>
-                        <span class="item-name">Time Slot</span>
+                        <span class="item-name">Schedule</span>
                     </a>
-                </li>
+                </li>            
 
             </ul>
             <!-- Sidebar Menu End -->
