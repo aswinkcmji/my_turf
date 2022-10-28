@@ -29,11 +29,9 @@ class AddStockView(View):
         print("helllllllllllllllllllllllllllllllllllllllllllllllll")  
         if request.method == 'POST':  
             form = addStockForm(request.POST, request.FILES)
-            if form.is_valid():  
+            if form.is_valid(): 
+                print(request.FILES) 
                 form.save()  
-
-                # Getting the current instance object to display in the template  
-                # img_object = form.instance  
                 
                 return redirect(reverse('addstock'))  
             else:  

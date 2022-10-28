@@ -72,49 +72,80 @@
             <div class="row">
                 
                 {% for i in ecom_data %}
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="card  p-2 shadow-sm">
-                            <div class="img-cover border d-flex justify-content-center align-items-center" style="width:100%;">
-                                <img src="{{media_url}}{{i.image}}" class="img-fluid" style="width:100%;">
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title" style="text-transform: uppercase;">{{i.product_name}}</h5>
-                                <p class="card-text d-flex align-items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48">
-                                        <path fill="currentColor" fill-rule="evenodd" d="M16 12a2 2 0 0 1 2-2h12a2 2 0 1 1 0 4h-3.07a7.96 7.96 0 0 1 .818 2H30a2 
-                                        2 0 1 1 0 4h-2.252a8.012 8.012 0 0 1-6.121 5.834l6.037 9.057a2 2 0 1 1-3.328 2.218l-8-12A2 2 0 0 1 18 22h2c1.48 0 2.773-.804 
-                                        3.465-2H18a2 2 0 1 1 0-4h5.465A3.998 3.998 0 0 0 20 14h-2a2 2 0 0 1-2-2Z" clip-rule="evenodd"/>
-                                    </svg>
-                                    <span style="font-size: 1.1rem;">{{i.price}}</span>
-                                </p>
-                                <form method="POST">
-                                    {% csrf_token %}
-                                    <div class="buy-buttons d-flex gap-3 justify-content-between">
-                                        <div class="product-quantity d-flex align-items-center ">
-                                            <a class="sub-item-btn btn border text-center p-2" style="width: 2rem;">-</a>
-                                                {% render_field cartForm.quantity type="text" class="product-quantity-field text-center p-2 border" style="width: 3rem;" pattern="\d{1,100}" value="1" %}
-                                                {% render_field cartForm.product_name type="text" value=i.product_name hidden=true %}
-                                                {% render_field cartForm.product_id value=i.id hidden=true %}
-                                                {% render_field cartForm.username type="text" value=request.user.username hidden=true %}
-                                                {% render_field cartForm.price value=i.price hidden=true %}
-                                                {% render_field cartForm.image type="text" value=i.image hidden=true %}
-                                            <a class="add-item-btn btn border text-center p-2" style="width: 2rem;">+</a>
-                                        </div>
-                                        {% comment %} {% if i.id in cartorbuylist %}
-                                            <button type="submit" class="btn btn-danger">Go To Cart</button>
-                                        {% else %}
+                    {% if i.quantity %}
+                        
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div class="card  p-2 shadow-sm">
+                                <div class="img-cover border d-flex justify-content-center align-items-center" style="width:100%;">
+                                    <img src="{{media_url}}{{i.image}}" class="img-fluid" style="width:100%;">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title" style="text-transform: uppercase;">{{i.product_name}}</h5>
+                                    <p class="card-text d-flex align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48">
+                                            <path fill="currentColor" fill-rule="evenodd" d="M16 12a2 2 0 0 1 2-2h12a2 2 0 1 1 0 4h-3.07a7.96 7.96 0 0 1 .818 2H30a2 
+                                            2 0 1 1 0 4h-2.252a8.012 8.012 0 0 1-6.121 5.834l6.037 9.057a2 2 0 1 1-3.328 2.218l-8-12A2 2 0 0 1 18 22h2c1.48 0 2.773-.804 
+                                            3.465-2H18a2 2 0 1 1 0-4h5.465A3.998 3.998 0 0 0 20 14h-2a2 2 0 0 1-2-2Z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span style="font-size: 1.1rem;">{{i.price}}</span>
+                                    </p>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <div class="buy-buttons d-flex gap-3 justify-content-between">
+                                            <div class="product-quantity d-flex align-items-center ">
+                                                <a class="sub-item-btn btn border text-center p-2" style="width: 2rem;">-</a>
+                                                    {% render_field cartForm.quantity type="number" class="product-quantity-field text-center p-2 border" style="width: 3.5rem;" min=1 max=i.quantity value="1" %}
+                                                    {% render_field cartForm.product_name type="text" value=i.product_name hidden=true %}
+                                                    {% render_field cartForm.product_id value=i.id hidden=true %}
+                                                    {% render_field cartForm.username type="text" value=request.user.username hidden=true %}
+                                                    {% render_field cartForm.price value=i.price hidden=true %}
+                                                    {% render_field cartForm.image type="text" value=i.image hidden=true %}
+                                                <a class="add-item-btn btn border text-center p-2" style="width: 2rem;">+</a>
+                                            </div>
+                                            {% comment %} {% if i.id in cartorbuylist %}
+                                                <button type="submit" class="btn btn-danger">Go To Cart</button>
+                                            {% else %}
+                                                <button type="submit" class="btn btn-primary">Add To Cart</button>
+                                            {% endif %} {% endcomment %}
                                             <button type="submit" class="btn btn-primary">Add To Cart</button>
-                                        {% endif %} {% endcomment %}
-                                        <button type="submit" class="btn btn-primary">Add To Cart</button>
 
-                                       
-                                    </div>
-                                </form>
-                                
-                                
+                                        
+                                        </div>
+                                    </form>
+                                    
+                                    
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% else %}
+                        <div class="col-12 col-sm-6 col-lg-4 bg-">
+                            <div class="card  p-2 shadow-sm">
+                                <div class="img-cover border d-flex justify-content-center align-items-center" style="width:100%;">
+                                    <img src="{{media_url}}{{i.image}}" class="img-fluid" style="width:100%;">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title" style="text-transform: uppercase;">{{i.product_name}}</h5>
+                                    <p class="card-text d-flex align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48">
+                                            <path fill="currentColor" fill-rule="evenodd" d="M16 12a2 2 0 0 1 2-2h12a2 2 0 1 1 0 4h-3.07a7.96 7.96 0 0 1 .818 2H30a2 
+                                            2 0 1 1 0 4h-2.252a8.012 8.012 0 0 1-6.121 5.834l6.037 9.057a2 2 0 1 1-3.328 2.218l-8-12A2 2 0 0 1 18 22h2c1.48 0 2.773-.804 
+                                            3.465-2H18a2 2 0 1 1 0-4h5.465A3.998 3.998 0 0 0 20 14h-2a2 2 0 0 1-2-2Z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span style="font-size: 1.1rem;">{{i.price}}</span>
+                                    </p>
+                                    <div>
+                                        <div class="buy-buttons d-flex gap-3 justify-content-between">
+                                            <div class="product-quantity d-flex align-items-center ">
+                                            </div>
+                                            <a href="{% url 'outOfStock' %}" class="btn btn-danger">Out Of Stock</a>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 {% endfor %}
 
             </div>
