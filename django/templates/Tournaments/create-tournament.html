@@ -53,7 +53,7 @@
     </div>
 </section>
 
-<script>document.getElementById('create-matches-li').classList.add('active')</script>
+<script>document.getElementById('create-tournament-li').classList.add('active')</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
       
@@ -64,17 +64,17 @@
         let message = $('#messagecontent').html()
           if( tag == 'error'){
             toastr.error(message);
-            $('#creatematch').trigger('reset');
+            $('#createtournament').trigger('reset');
           }
           if( tag == 'success' ){
             toastr.success(message);
-            $('#creatematch').trigger('reset');
+            $('#createtournament').trigger('reset');
           }
       });
       $(document).ready(function() {
       var today = new Date().toISOString().split('T')[0];
       $("#id_date").attr('min', today);
-      $('#creatematch').trigger('reset');
+      $('#createtournament').trigger('reset');
       });
   </script>
 

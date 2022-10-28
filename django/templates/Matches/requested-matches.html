@@ -2,7 +2,8 @@
 {% block content %}
 
 
-{%if matches%}
+<div class="container-fluid">
+  {%if matches%}
 <div class="container-fluid">
   <div class="row  bg-soft-light">
     {% for match in matches%}
@@ -53,6 +54,7 @@
   </div>
   </div>
   {%endif%}
+</div>
 <script>
     document.getElementById('requested-matches-li').classList.add('active')
 </script>

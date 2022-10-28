@@ -38,5 +38,5 @@ class TournamentModel(models.Model):
     locality = models.CharField(max_length=30,null=True,blank=False)
     creator = models.CharField(max_length=30,null=True,blank=False)
     status = models.CharField(default="Upcoming",max_length=30,null=False,blank=False)
-    slots =models.IntegerField(default=1,null=False,blank=False)
-    slot_available =models.IntegerField(default = 1,null=False,blank=False)
+    teams =models.IntegerField(default=1,null=False,blank=False)
+    team_space_available =models.IntegerField(default = 1,null=False,blank=False)
