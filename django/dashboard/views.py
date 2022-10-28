@@ -153,3 +153,15 @@ class TurfScheduleDelete(View):
         schedule = TurfScheduleModel.objects.filter(id=id).first()
         schedule.delete()
         return redirect('turf_schedule')
+
+
+@method_decorator(login_required,name='dispatch')
+class ManageUser(View):
+    def get (self, request, *args, **kwargs):
+        return render(request,'admin/manage_user.html',{})
+
+
+@method_decorator(login_required,name='dispatch')
+class ManageTurf(View):
+    def get (self, request, *args, **kwargs):
+        return render(request,'admin/manage_turf.html',{})
