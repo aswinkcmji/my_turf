@@ -4,6 +4,8 @@
 <div class="container-fluid">
   {% if matches%}
 <div class="row bg-light justify-content-around">
+{% if matches%}
+<div class="row bg-light justify-content-around container-fluid">
 {% for match in matches%}
 <div class="column col-md-4">
   <div class="card p-2 m-4">
@@ -57,7 +59,6 @@
       </div>
 </div>
 </div>
-{%endif%}
 </div>
 
 
@@ -65,4 +66,7 @@
     document.getElementById('my-matches-li').classList.add('active')
   
 </script>
+{%endif%}
+{%endif%}
+
 {% endblock content %}

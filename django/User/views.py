@@ -77,10 +77,11 @@ class AllMatchesView(View):
                 context={}
                 id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
                 matches=MatchModel.objects.filter(locality=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
-                form=RequestForm()
+                form=RequestForm(data   )
                 print("hllo",matches)
                 context['matches']=matches
                 context['form']=form
+                messages.error(request	,'Please do not change the fields')
                 return render(request, 'Matches/all-matches.html',context)
             print(form)
             # RequestModel.objects.create(match_id=selected_match,category=category,username=username,phoneno=phoneno,status="Pending",date=date,time=time,locality=location)
@@ -121,7 +122,7 @@ class CreateMatchesView(View):
             'creator' : request.user.username,
             "status": "Upcoming",
             "slot_available": 0,
-            "slots": 1,
+            "slots": 2,
         }
         form = creatematchForm(data,request=request)
         # user = request.user
@@ -184,17 +185,20 @@ class CancelRequestView(View):
 @method_decorator(login_required,name='dispatch')
 class MatchHistoryView(View):
     def get(self, request, *args, **kwargs):
-        id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
-        jum=MatchModel.objects.filter(status="Upcoming",id__in=list(id_list)).exclude(creator=request.user.username).values()#joined upcoming matches
-        id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
-        jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list)).exclude(creator=request.user.username).values()#joined completed matches
-        id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
-        jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list)).exclude(creator=request.user.username).values()#joined cancelled matches
+        id_list1=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
+        jum=MatchModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.username).values()#joined upcoming matches
+        id_list2=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
+        jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).values()#joined completed matches
+        id_list3=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
+        jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).values()#joined cancelled matches
         crum=MatchModel.objects.filter(creator=request.user.username,locality=request.user.location,status="Upcoming") #created upcoming matches
         crcom=MatchModel.objects.filter(creator=request.user.username,locality=request.user.location,status="Completed") #created completed matches
         crcam=MatchModel.objects.filter(creator=request.user.username,locality=request.user.location,status="Cancelled") #created cancelled matches
         reqcan=RequestModel.objects.filter(username=request.user.username,status="Cancelled")#requests cancelled
         reqrej=RequestModel.objects.filter(username=request.user.username,status="Rejected")#requests rejected
+        id_list4=MatchModel.objects.filter(creator=request.user.username,locality=request.user.location).values_list('id',flat=True)
+        reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted")
+        reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected")
         context={}
         context={
             'jum':jum,
@@ -205,6 +209,9 @@ class MatchHistoryView(View):
             'crcam':crcam,
             'reqcan':reqcan,
             'reqrej':reqrej,
+            'reqaccep':reqaccep,
+            'reqrejec':reqrejec,
+
         }
         # context['data']=jum
         print(jum)
@@ -280,77 +287,33 @@ class RequestsView(View):
     def  post(self, request, *args, **kwargs):
         selected=request.POST.getlist('selected[]')
         print(selected)
-        if 'Accept' in request.POST:
-            print("Accepted requests")
-            requests=RequestModel.objects.filter(id__in=selected)
-            for requesti in requests:
-                requesti.status="Accepted"
-                requesti.save()
-                match_id=requesti.match_id.pk
-                print(match_id,type(match_id))
-                obj=MatchModel.objects.get(id=match_id)
-                obj.slot_available=obj.slot_available-1
-                obj.save()
+        if selected != []: 
+            print("hiiiiiiiiiiiiiiiiiiiiiiiiiiiyyyyyyyyyyyyyyyyyyyyyyyhiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+            if 'Accept' in request.POST:
+                print("Accepted requests")
+                requests=RequestModel.objects.filter(id__in=selected)
+                for requesti in requests:
+                    requesti.status="Accepted"
+                    requesti.save()
+                    match_id=requesti.match_id.pk
+                    print(match_id,type(match_id))
+                    obj=MatchModel.objects.get(id=match_id)
+                    obj.slot_available=obj.slot_available-1
+                    if obj.slot_available<=0:
+                             messages.error(request	,'Slots are full. User cant be selected')
+                             return HttpResponseRedirect(reverse('requests'))
+                    obj.save()
+                messages.success(request,'The requests were accepted')
+                return HttpResponseRedirect(reverse('requests'))
+            elif 'Reject' in request.POST:
+                print("Rejected requests")
+                requests=RequestModel.objects.filter(id__in=selected)
+                for requestj in requests:
+                    requestj.status="Rejected"
+                    requestj.save()
+                messages.success(request,'The requests were rejected')
+                return HttpResponseRedirect(reverse('requests'))
+        else:
+            print("hyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyiiiiiiiiiiiiiiiiiiiiiiiiiiiiihyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+            messages.error(request	,'NO user selected')
             return HttpResponseRedirect(reverse('requests'))
-        elif 'Reject' in request.POST:
-            print("Rejected requests")
-            requests=RequestModel.objects.filter(id__in=selected)
-            for request in requests:
-                request.status="Rejected"
-                request.save()
-            return HttpResponseRedirect(reverse('requests'))
-
-
-
-###############---------------------------------------------create tournament----------------------------------------------------################
-
-# @method_decorator(login_required,name='dispatch')
-# class CreateMatchesView(View):
-#     template = 'Matches/create-tournament.html'
-#     def get(self, request, *args, **kwargs):
-#         print(datetime.now()+timedelta(hours=1))
-#         end_time=(datetime.now()+timedelta(hours=1)).strftime('%H:%M:%S')
-#         print(end_time)
-#         now = timezone.now()
-#         print(now)
-#         data={
-#             'category':'Cricket',
-#             'date':datetime.now().date(),
-#             'start_time':datetime.now().strftime('%H:%M:%S'),
-#             'end_time':end_time,
-#             'locality':request.user.location,
-#             'creator' : request.user.username,
-#             "status": "Upcoming",
-#             "slot_available": 0,
-#             "slots": 1,
-#         }
-#         form = creatematchForm(data,request=request)
-#         # user = request.user
-#         print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
-#         context = {'form': form,
-#                     'data': 'Add match',
-#                     # 'user': user,
-#                     }
-        
-#         return render(request,self.template,context)
-
-#     def post(self, request, *args, **kwargs):
-#         form=creatematchForm(request.POST,request=request)
-#         # print(form)
-#         slots=int(request.POST['slots'])
-#         # print(form.slot_available)
-#         # print(form)
-#         # print(request.POST['date']>datetime.now().date(),"djkASGHDGVDGUIJFSABV")
-#         if form.is_valid():
-#             print("kikikiki")
-#             print(form.errors.as_data())
-#             obj=form.save()
-#             RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
-#             messages.success(request	,'Your match has been succesfully created. Visit My Match to see .')
-#             return HttpResponseRedirect(reverse('create-matches'))
-
-#         else:
-#             # print(form.errors['start_time'])
-#             messages.error(request	,'Please do not change the fields')
-#             return render(request,self.template,{'form':form})
-        

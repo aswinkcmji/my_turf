@@ -1,5 +1,8 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
+
+
+{%if matches%}
 <div class="container-fluid">
   <div class="row  bg-soft-light">
     {% for match in matches%}
@@ -36,9 +39,20 @@
      {%endfor%}
   </div>
 </div>
-
-
-
+ {%else%}
+ <div class="row bg-light justify-content-center">
+  <div class="column col-md-4 justify-content-md-around">
+      <div class="card text-white bg-soft-info m-5" > 
+        <div class="card-body">   
+          <h3 class="mt-3 text-center">There aren't any matches you have requested to join</h3>
+          <p class="mt-3 text-center">
+            Interested in creating your own matches<a class="nav-link " href="{% url 'create-matches' %}" id="create-matches-li">Click here</a>
+          </p>
+        </div>
+        </div>
+  </div>
+  </div>
+  {%endif%}
 <script>
     document.getElementById('requested-matches-li').classList.add('active')
 </script>
