@@ -1,3 +1,4 @@
+from pickle import NONE
 from time import time
 from django import forms
 from django.forms import ModelForm
@@ -62,6 +63,8 @@ class creatematchForm(ModelForm):
         slots=self.cleaned_data.get('slots')
         creator=self.cleaned_data.get('creator')
         status=self.cleaned_data.get('status')
+        start_time=self.cleaned_data.get('start_time')
+        end_time=self.cleaned_data.get('end_time')
         print(slots)
         if slots != None and slots >= 1:
             self.cleaned_data['slot_available']=slots-1
@@ -73,6 +76,13 @@ class creatematchForm(ModelForm):
         if status != "Upcoming":
             self._errors['status']=self.error_class([''])
         # self.cleaned_data['status']="Upcoming"
+        if   start_time != None and end_time !=None :
+                if start_time >= end_time:
+                    self._errors['start_time']=self.error_class(['Start time can not be more than end time'])
+        elif  start_time == None:
+                self._errors['start_time']=self.error_class(['Start time must be time type'])
+        elif  end_time == None:
+                self._errors['end_time']=self.error_class(['End time must be time type'])
         print("khsfdagjfdghsuj",slots,self.cleaned_data['slot_available'])
         return self.cleaned_data
 
@@ -116,6 +126,8 @@ class updatematchform(ModelForm):
         slots=self.cleaned_data.get('slots')
         creator=self.cleaned_data.get('creator')
         status=self.cleaned_data.get('status')
+        start_time=self.cleaned_data.get('start_time')
+        end_time=self.cleaned_data.get('end_time')
         print("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",type(slots))
         if slots != None and slots >= 1:
             self.cleaned_data['slot_available']=slots-1
@@ -126,6 +138,13 @@ class updatematchform(ModelForm):
             self._errors['creator']=self.error_class([''])
         if status != "Upcoming":
             self._errors['status']=self.error_class([''])
+        if   start_time != None and end_time !=None :
+                if start_time >= end_time:
+                    self._errors['start_time']=self.error_class(['Start time can not be more than end time'])
+        elif  start_time == None:
+                self._errors['start_time']=self.error_class(['Start time must be time type'])
+        elif  end_time == None:
+                self._errors['end_time']=self.error_class(['End time must be time type'])
         # self.cleaned_data['status']="Upcoming"
         print("khsfdagjfdghsuj",slots,self.cleaned_data['slot_available'])
         return self.cleaned_data
