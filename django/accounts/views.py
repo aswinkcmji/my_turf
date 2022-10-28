@@ -54,10 +54,10 @@ class SignupTurf(View):
                     messages.success(self.request, "Account Created Successfully")
                     return HttpResponseRedirect(reverse('login'))
                       
-                else:
-                    context ={}
-                    context['form'] = form
-                    return render(request, 'accounts/turf-sign-up.html',context)
+            else:
+                context ={}
+                context['form'] = form
+                return render(request, 'accounts/turf-sign-up.html',context)
 
 
 
