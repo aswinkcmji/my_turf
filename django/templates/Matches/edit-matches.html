@@ -1,11 +1,17 @@
 {% extends 'layouts/base.html' %}
 {% load widget_tweaks %}
 {% block content %}
-<section class="ecommerce-addstock-section container-fluid my-3" style="height: 78vh;" >
+<section class="ecommerce-addstock-section container-fluid my-3" >
   <!-- ecommerce topbar -->
+  {% if messages %}
+  {% for message in messages %}
+      <p class="d-none" id="messagetag">{{message.tags}}</p>
+      <p class="d-none " id="messagecontent">{{message}}</p>
+  {% endfor %}
+    {% endif %}
   <div class="ecomerce-top-bar ">
       <div class="row">
-              <h1 class=" mt-5"style="text-align:center">CREATE YOUR OWN MATCH</h1>
+              <h1 class=" mt-5"style="text-align:center">EDIT YOUR MATCH</h1>
       </div>
   </div>
   <!-- ecommerce main section -->
@@ -43,4 +49,25 @@
       </div>
   </div>
 </section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+      
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+  <script type="text/javascript">
+     $(document).ready(function(){
+        let tag=$('#messagetag').html()
+        let message = $('#messagecontent').html()
+          if( tag == 'error'){
+            toastr.error(message);
+          }
+          if( tag == 'success' ){
+            toastr.success(message);
+          }
+      });
+      $(document).ready(function() {
+      var today = new Date().toISOString().split('T')[0];
+      $("#id_date").attr('min', today);
+      });
+
+  </script>
 {%endblock content%}

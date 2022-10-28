@@ -12,6 +12,7 @@ from django.contrib import auth
 from django.contrib import messages
 from django.contrib.auth.views import LoginView# from wallet.models import Wallet
 from .models import *
+from django.conf import settings
 
 
 
@@ -44,6 +45,8 @@ class SignupTurf(View):
             context ={}
             context['form'] = SignUpTurfForm()
             return render(request, 'accounts/turf-sign-up.html',context)
+        else:
+            return HttpResponseRedirect(reverse('home'))
         
     def post(self, request, *args, **kwargs):
             if request.method == 'POST':
@@ -87,4 +90,17 @@ class LoginPage(LoginView):
 
 class Turf_Gallery(View):
     def get(self,request):
-        return render(request,'turf/turf_gallery.html')
+
+
+        turfDetails = UserModel.objects.filter(username = request.user.username).values()
+        
+        context = {
+
+            'turfDetails': turfDetails,
+            'media_url':settings.MEDIA_URL,
+
+        }
+        print(" ",context)
+
+
+        return render(request,'turf/turf_gallery.html',context)

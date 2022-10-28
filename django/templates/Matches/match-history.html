@@ -23,7 +23,7 @@
         </div> -->
     </div>
     <div class="iq-header-img">
-        <img src="/static/assets/images/dashboard/top-header.png" alt="header" class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
+        <img src="/static/assets/images/dashboard/top-image.jpg" alt="header" class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
         <img src="/static/assets/images/dashboard/top-header1.png" alt="header" class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
         <img src="/static/assets/images/dashboard/top-header2.png" alt="header" class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
         <img src="/static/assets/images/dashboard/top-header3.png" alt="header" class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
@@ -104,7 +104,10 @@
                               Date
                             </th>
                             <th>
-                              Time
+                                Start Time
+                            </th>
+                            <th>
+                              End Time
                             </th>
                             <th>
                               Location
@@ -115,18 +118,19 @@
                            {% for data in jum %}
                           
                             <tr >
-                             
+                              {% if data.creator != request.user.username%}
                               <td>{{forloop.counter0|add:1}}</td>
                               <td>{{data.category}}</td>
                               <td>{{data.creator }}</td>
                               <td>{{data.date|date:"Y-m-d"}}</td>
-                              <td>{{data.time|time:"h:i:s"}}</td>
+                              <td>{{data.start_time|time:"h:i:s"}}</td>
+                              <td>{{data.end_time|time:"h:i:s"}}</td>
                               <td>
                                  {{data.locality}}
                               </td>
                
                             </tr>
-                            
+                            {%endif%}
                             {% endfor %}
                             
                           </tbody>
@@ -171,16 +175,20 @@
                          <tbody>
                            {% for data in jcom %}
                            {% if data.creator != request.user.username%}
-                            <tr >
-                              <td>{{forloop.counter0|add:1}}</td>
-                              <td>{{data.category}}</td>
-                              <td>{{data.creator }}</td>
-                              <td>{{data.date|date:"Y-m-d"}}</td>
-                              <td>{{data.time|time:"h:i:s"}}</td>
-                              <td>
-                                 {{data.locality}}
-                              </td>
-                            </tr>
+                           
+                           <tr >
+                             
+                            <td>{{forloop.counter0|add:1}}</td>
+                            <td>{{data.category}}</td>
+                            <td>{{data.creator }}</td>
+                            <td>{{data.date|date:"Y-m-d"}}</td>
+                            <td>{{data.start_time|time:"h:i:s"}}</td>
+                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>
+                               {{data.locality}}
+                            </td>
+             
+                          </tr>
                             {%endif%}
                             {% endfor %}
                             
@@ -226,16 +234,20 @@
                           <tbody>
                            {% for data in jcam %}
                            {% if data.creator != request.user.username%}
-                            <tr >
-                              <td>{{forloop.counter0|add:1}}</td>
-                              <td>{{data.category}}</td>
-                              <td>{{data.creator }}</td>
-                              <td>{{data.date|date:"Y-m-d"}}</td>
-                              <td>{{data.time|time:"h:i:s"}}</td>
-                              <td>
-                                 {{data.locality}}
-                              </td>
-                            </tr>
+                               
+                           <tr >
+                             
+                            <td>{{forloop.counter0|add:1}}</td>
+                            <td>{{data.category}}</td>
+                            <td>{{data.creator }}</td>
+                            <td>{{data.date|date:"Y-m-d"}}</td>
+                            <td>{{data.start_time|time:"h:i:s"}}</td>
+                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>
+                               {{data.locality}}
+                            </td>
+             
+                          </tr>
                             {%endif%}
                             {% endfor %}
                             
@@ -272,10 +284,6 @@
                             <th>
                               #
                             </th>
-                            
-                            
-                      
-                           
                             <th>
                               Category
                             </th>
@@ -286,7 +294,10 @@
                               Date
                             </th>
                             <th>
-                              Time
+                                Start Time
+                            </th>
+                            <th>
+                              End Time
                             </th>
                             <th>
                               Location
@@ -295,16 +306,19 @@
                           </thead>
                           <tbody>
                            {% for data in crum %}
-                            <tr >
-                              <td>{{forloop.counter0|add:1}}</td>
-                              <td>{{data.category}}</td>
-                              <td>{{data.creator }}</td>
-                              <td>{{data.date|date:"Y-m-d"}}</td>
-                              <td>{{data.time|time:"h:i:s"}}</td>
-                              <td>
-                                 {{data.locality}}
-                              </td>
-                            </tr>
+                           <tr >
+                             
+                            <td>{{forloop.counter0|add:1}}</td>
+                            <td>{{data.category}}</td>
+                            <td>{{data.creator }}</td>
+                            <td>{{data.date|date:"Y-m-d"}}</td>
+                            <td>{{data.start_time|time:"h:i:s"}}</td>
+                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>
+                               {{data.locality}}
+                            </td>
+             
+                          </tr>
                             {% endfor %}
                             
                           </tbody>
@@ -322,42 +336,44 @@
                     <div class="table-responsive">
                        <table class="table">
                          <thead class=" text-primary">
-                           <th>
-                             #
-                           </th>
-                           
-                           
-                     
-                          
-                           <th>
-                             Category
-                           </th>
-                           <th>
-                             Organized By
-                           </th>
-                           <th>
-                             Date
-                           </th>
-                           <th>
-                             Time
-                           </th>
-                           <th>
-                             Location
-                           </th>
+                          <th>
+                            #
+                          </th>
+                          <th>
+                            Category
+                          </th>
+                          <th>
+                            Organized By
+                          </th>
+                          <th>
+                            Date
+                          </th>
+                          <th>
+                              Start Time
+                          </th>
+                          <th>
+                            End Time
+                          </th>
+                          <th>
+                            Location
+                          </th>
                            
                          </thead>
                          <tbody>
                            {% for data in crcom %}
-                            <tr >
-                              <td>{{forloop.counter0|add:1}}</td>
-                              <td>{{data.category}}</td>
-                              <td>{{data.creator }}</td>
-                              <td>{{data.date|date:"Y-m-d"}}</td>
-                              <td>{{data.time|time:"h:i:s"}}</td>
-                              <td>
-                                 {{data.locality}}
-                              </td>
-                            </tr>
+                           <tr >
+                             
+                            <td>{{forloop.counter0|add:1}}</td>
+                            <td>{{data.category}}</td>
+                            <td>{{data.creator }}</td>
+                            <td>{{data.date|date:"Y-m-d"}}</td>
+                            <td>{{data.start_time|time:"h:i:s"}}</td>
+                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>
+                               {{data.locality}}
+                            </td>
+             
+                          </tr>
                             {% endfor %}
                             
                           </tbody>
@@ -378,10 +394,6 @@
                             <th>
                               #
                             </th>
-                            
-                            
-                      
-                           
                             <th>
                               Category
                             </th>
@@ -392,7 +404,10 @@
                               Date
                             </th>
                             <th>
-                              Time
+                                Start Time
+                            </th>
+                            <th>
+                              End Time
                             </th>
                             <th>
                               Location
@@ -401,16 +416,19 @@
                           </thead>
                           <tbody>
                            {% for data in crcam %}
-                            <tr >
-                              <td>{{forloop.counter0|add:1}}</td>
-                              <td>{{data.category}}</td>
-                              <td>{{data.creator }}</td>
-                              <td>{{data.date|date:"Y-m-d"}}</td>
-                              <td>{{data.time|time:"h:i:s"}}</td>
-                              <td>
-                                 {{data.locality}}
-                              </td>
-                            </tr>
+                           <tr >
+                             
+                            <td>{{forloop.counter0|add:1}}</td>
+                            <td>{{data.category}}</td>
+                            <td>{{data.creator }}</td>
+                            <td>{{data.date|date:"Y-m-d"}}</td>
+                            <td>{{data.start_time|time:"h:i:s"}}</td>
+                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>
+                               {{data.locality}}
+                            </td>
+             
+                          </tr>
                             {% endfor %}
                             
                           </tbody>
@@ -443,10 +461,6 @@
                             <th>
                               #
                             </th>
-                            
-                            
-                      
-                           
                             <th>
                               Category
                             </th>
@@ -457,25 +471,30 @@
                               Date
                             </th>
                             <th>
-                              Time
+                                Start Time
+                            </th>
+                            <th>
+                              End Time
                             </th>
                             <th>
                               Location
                             </th>
-                            
                           </thead>
                           <tbody>
                            {% for data in reqcan %}
-                            <tr >
-                              <td>{{forloop.counter0|add:1}}</td>
-                              <td>{{data.category}}</td>
-                              <td>{{data.username }}</td>
-                              <td>{{data.date|date:"Y-m-d"}}</td>
-                              <td>{{data.time|time:"h:i:s"}}</td>
-                              <td>
-                                 {{data.locality}}
-                              </td>
-                            </tr>
+                           <tr >
+                             
+                            <td>{{forloop.counter0|add:1}}</td>
+                            <td>{{data.category}}</td>
+                            <td>{{data.creator }}</td>
+                            <td>{{data.date|date:"Y-m-d"}}</td>
+                            <td>{{data.start_time|time:"h:i:s"}}</td>
+                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>
+                               {{data.locality}}
+                            </td>
+             
+                          </tr>
                             {% endfor %}
                             
                           </tbody>
@@ -493,42 +512,43 @@
                     <div class="table-responsive">
                        <table class="table">
                          <thead class=" text-primary">
-                           <th>
-                             #
-                           </th>
-                           
-                           
-                     
-                          
-                           <th>
-                             Category
-                           </th>
-                           <th>
-                             Organized By
-                           </th>
-                           <th>
-                             Date
-                           </th>
-                           <th>
-                             Time
-                           </th>
-                           <th>
-                             Location
-                           </th>
-                           
+                          <th>
+                            #
+                          </th>
+                          <th>
+                            Category
+                          </th>
+                          <th>
+                            Organized By
+                          </th>
+                          <th>
+                            Date
+                          </th>
+                          <th>
+                              Start Time
+                          </th>
+                          <th>
+                            End Time
+                          </th>
+                          <th>
+                            Location
+                          </th>
                          </thead>
                          <tbody>
                            {% for data in reqrej %}
-                            <tr >
-                              <td>{{forloop.counter0|add:1}}</td>
-                              <td>{{data.category}}</td>
-                              <td>{{data.username}}</td>
-                              <td>{{data.date|date:"Y-m-d"}}</td>
-                              <td>{{data.time|time:"h:i:s"}}</td>
-                              <td>
-                                 {{data.locality}}
-                              </td>
-                            </tr>
+                           <tr >
+                             
+                            <td>{{forloop.counter0|add:1}}</td>
+                            <td>{{data.category}}</td>
+                            <td>{{data.creator }}</td>
+                            <td>{{data.date|date:"Y-m-d"}}</td>
+                            <td>{{data.start_time|time:"h:i:s"}}</td>
+                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>
+                               {{data.locality}}
+                            </td>
+             
+                          </tr>
                             {% endfor %}
                             
                           </tbody>

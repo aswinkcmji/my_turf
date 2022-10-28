@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../../training/SARA_ASWIN/sara_django/task_3"
+		},
+		{
+			"path": "../../../../../training/docker-project"
+		}
+	],
+	"settings": {}
+}

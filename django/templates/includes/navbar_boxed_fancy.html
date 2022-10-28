@@ -226,15 +226,21 @@
               <img src="/static/assets/images/avatars/avtar_5.png" alt="User-Profile" class="theme-color-yellow-img img-fluid avatar avatar-50 avatar-rounded">
               <img src="/static/assets/images/avatars/avtar_3.png" alt="User-Profile" class="theme-color-pink-img img-fluid avatar avatar-50 avatar-rounded">
               <div class="caption ms-3 ">
-                  <h6 class="mb-0 caption-title">Austin Robertson</h6>
-                  <p class="mb-0 caption-sub-title">Marketing Administrator</p>
+                {% if request.user.is_authenticated%}
+                <h6 class="mb-0 caption-title">Logged in as<h6>
+                <p class="mb-0 caption-sub-title">{{user.username}}</p>
+              {%endif%} 
               </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="/static/dashboard/app/user-profile.html">Profile</a></li>
               <li><a class="dropdown-item" href="/static/dashboard/app/user-privacy-setting.html">Privacy Setting</a></li>
               <li><hr class="dropdown-divider"></li>
+              {% if request.user.is_authenticated%}
               <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+              {%else%}
+              <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+              {%endif%}
             </ul>
           </li>
         </ul>

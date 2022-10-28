@@ -9,9 +9,10 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import creatematchForm
-from datetime import datetime
+from .forms import creatematchForm,updatematchform
+from datetime import datetime,timedelta
 from django.utils import timezone
+from django.contrib import messages
 # from .models import slotModel
 
 # Create your views here.
@@ -46,15 +47,17 @@ class AllMatchesView(View):
                 return render(request, 'errors/error404.html')
             category=request.POST.get('id_category')
             date=request.POST.get('id_date')
-            time=request.POST.get('id_time')
+            start_time=request.POST.get('id_start_time')
+            end_time=request.POST.get('id_end_time')
             username=request.user.username
             phoneno=request.user.phone
             location=request.POST.get('id_locality')
-            print(category,date,time,username,phoneno,location,match_id)
+            print(category,date,start_time,end_time,username,phoneno,location,match_id)
             data={
                 'category':category,
                 'date':date,
-                'time':time,
+                'start_time':start_time,
+                'end_time':end_time,
                 'username':username,
                 'locality':location,
                 'status':"Pending",
@@ -104,19 +107,23 @@ class MyMatchesView(View):
 class CreateMatchesView(View):
     template = 'Matches/create-matches.html'
     def get(self, request, *args, **kwargs):
-        print(datetime.now().strftime('%H:%M:%S'))
+        print(datetime.now()+timedelta(hours=1))
+        end_time=(datetime.now()+timedelta(hours=1)).strftime('%H:%M:%S')
+        print(end_time)
         now = timezone.now()
+        print(now)
         data={
             'category':'Cricket',
             'date':datetime.now().date(),
-            'time':now,
+            'start_time':datetime.now().strftime('%H:%M:%S'),
+            'end_time':end_time,
             'locality':request.user.location,
             'creator' : request.user.username,
             "status": "Upcoming",
             "slot_available": 0,
             "slots": 1,
         }
-        form = creatematchForm(data)
+        form = creatematchForm(data,request=request)
         # user = request.user
         print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
         context = {'form': form,
@@ -127,19 +134,25 @@ class CreateMatchesView(View):
         return render(request,self.template,context)
 
     def post(self, request, *args, **kwargs):
-        form=creatematchForm(request.POST)
-        print(form)
+        form=creatematchForm(request.POST,request=request)
+        # print(form)
         slots=int(request.POST['slots'])
         # print(form.slot_available)
-        print(form)
+        # print(form)
+        # print(request.POST['date']>datetime.now().date(),"djkASGHDGVDGUIJFSABV")
         if form.is_valid():
             print("kikikiki")
+            print(form.errors.as_data())
             obj=form.save()
-            RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
-        else:
-            print(form.errors)
+            RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
+            messages.success(request	,'Your match has been succesfully created. Visit My Match to see .')
             return HttpResponseRedirect(reverse('create-matches'))
-        return HttpResponseRedirect(reverse('my-matches'))
+
+        else:
+            # print(form.errors['start_time'])
+            messages.error(request	,'Please do not change the fields')
+            return render(request,self.template,{'form':form})
+        
 
 ############################################################ View for listing requested matches ###########################################################################
 @method_decorator(login_required,name='dispatch')
@@ -203,7 +216,6 @@ class TurfsView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'turf/main.html',{ })
 
-
 ############################################################## View for editing matches created by user #####################################################################
 class EditMatchesView(View):
     def get(self, request,id, *args, **kwargs):
@@ -211,7 +223,8 @@ class EditMatchesView(View):
         data={
             'category':editobj.category,
             'date':editobj.date,
-            'time':editobj.time,
+            'start_time':editobj.start_time,
+            'end_time':editobj.end_time,
             'locality':editobj.locality,
             'status':editobj.status,
             "creator" : request.user.username,
@@ -219,31 +232,70 @@ class EditMatchesView(View):
             'slot_available':editobj.slot_available,
             'match_id':editobj.id,
         }
-        form=updatematchform(data)
+        form=updatematchform(data,request=request)
         context={
             'form':form
         }
-        return render(request,'Matches/join-matches.html',context)
-        return render(request, 'Matches/match-history.html',context)
+        return render(request,'Matches/edit-matches.html',context)
+        
     def post(self, request, *args, **kwargs):
         match_id = request.POST['match_id']
-        form=updatematchform(request.POST)
-        print(form)
+        form=updatematchform(request.POST,request=request)
+        # print(form)
         # print(form.slot_available)
-        print(form)
+        # print(form)
         if form.is_valid():
-            print("kikikiki")
+            print("kikfjsdhgusdjgusikiki")
             # form.save()
             updatedRecord = MatchModel.objects.get(id=match_id)
             updatedRecord. category = form.cleaned_data['category']
             updatedRecord. date = form.cleaned_data['date']
-            updatedRecord. time = form.cleaned_data['time']
+            updatedRecord. start_time = form.cleaned_data['start_time']
+            updatedRecord. end_time = form.cleaned_data['end_time']
             updatedRecord. locality = form.cleaned_data['locality']
             updatedRecord. slots = form.cleaned_data['slots']
             updatedRecord. slot_available = form.cleaned_data['slot_available']
             updatedRecord.save()
+            messages.success(request	,'Your match has been succesfully edit. Visit My Match to see .')
+            return render(request,'Matches/edit-matches.html',{'form':updatematchform(request.POST,request=request)})
             # RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
         else:
-            print(form.errors)
-            return HttpResponseRedirect(reverse('create-matches'))
-        return HttpResponseRedirect(reverse('my-matches'))
+            print(form.errors.as_data())
+            messages.error(request	,'Please do not change the fields')
+            return render(request,'Matches/edit-matches.html',{'form':updatematchform(request.POST,request=request)})
+        # return HttpResponseRedirect(reverse('my-matches'))
+
+
+
+##################################################################### View for Requests viewing #######################################################################
+class RequestsView(View):
+    def get(self, request,*args, **kwargs):
+        id_list=MatchModel.objects.filter(creator=request.user.username,status="Upcoming").values_list('id',flat=True)
+        print(list(id_list))
+        requests=RequestModel.objects.filter(status='Pending',match_id__in=list(id_list)).values()
+        # print(requests)
+        context={}
+        context['requests']=requests
+        return render(request,'Matches/requests.html',context)
+    def  post(self, request, *args, **kwargs):
+        selected=request.POST.getlist('selected[]')
+        print(selected)
+        if 'Accept' in request.POST:
+            print("Accepted requests")
+            requests=RequestModel.objects.filter(id__in=selected)
+            for requesti in requests:
+                requesti.status="Accepted"
+                requesti.save()
+                match_id=requesti.match_id.pk
+                print(match_id,type(match_id))
+                obj=MatchModel.objects.get(id=match_id)
+                obj.slot_available=obj.slot_available-1
+                obj.save()
+            return HttpResponseRedirect(reverse('requests'))
+        elif 'Reject' in request.POST:
+            print("Rejected requests")
+            requests=RequestModel.objects.filter(id__in=selected)
+            for request in requests:
+                request.status="Rejected"
+                request.save()
+            return HttpResponseRedirect(reverse('requests'))
