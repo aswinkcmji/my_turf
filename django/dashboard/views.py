@@ -1,5 +1,7 @@
+from contextvars import Context
 from datetime import datetime
 import json
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.urls import reverse
@@ -158,10 +160,40 @@ class TurfScheduleDelete(View):
 @method_decorator(login_required,name='dispatch')
 class ManageUser(View):
     def get (self, request, *args, **kwargs):
-        return render(request,'admin/manage_user.html',{})
+        turfs = UserModel.objects.filter(is_turf=True)
+        context = {'turfs':turfs}
+        return render(request,'admin/manage_user.html',context)
 
 
 @method_decorator(login_required,name='dispatch')
 class ManageTurf(View):
     def get (self, request, *args, **kwargs):
-        return render(request,'admin/manage_turf.html',{})
+        turfs = UserModel.objects.filter(is_turf=True)
+        context = {'turfs':turfs}
+        return render(request,'admin/manage_turf.html',context)
+    def post (self, request, *args, **kwargs):
+        selected=request.POST.getlist('checkbox_turf_table')
+        if selected != []: 
+            if 'Unblock' in request.POST:
+                turfs = UserModel.objects.filter(is_turf=True,id__in=selected)
+                print(turfs,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+                for turf in turfs:
+                    if not turf.is_active:
+                        turf.is_active = True
+                        turf.save()
+                messages.success(request,'Unblocked')
+                return HttpResponseRedirect(reverse('manage_turf'))
+            elif 'Block' in request.POST:
+                turfs = UserModel.objects.filter(is_turf=True,id__in=selected)
+                for turf in turfs:
+                    if  turf.is_active:
+                        turf.is_active = False
+                        turf.save()
+                messages.success(request,'Blocked')
+                return HttpResponseRedirect(reverse('manage_turf'))
+            messages.error(request,'Something went wrong')
+            return HttpResponseRedirect(reverse('manage_turf'))
+            
+        else:
+            messages.error(request	,'NO Turf selected')
+            return HttpResponseRedirect(reverse('manage_turf'))
