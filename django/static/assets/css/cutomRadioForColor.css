@@ -1,0 +1,112 @@
+
+.card_cusRadCol{
+    height: 5rem;
+    width: 6rem;
+    position: relative;
+}
+@media screen and (max-width:400px) {
+    .card_cusRadCol{
+        height: 10vh;
+        width: 10vh;
+        position: relative;
+    }
+}
+.card_cusRadCol input[type="radio"]{
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: white;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    position: absolute;
+    box-shadow: 7px 7px 15px rgba(2,28,53,0.08);
+    cursor: pointer;
+    outline: none;
+}
+.card_cusRadCol input[type="radio"]:before{
+    content: "";
+    position: absolute;
+    height: 22px;
+    width: 22px;
+    background-color: #f9fafd;
+    border: 1px solid #e2e6f3;
+    border-radius: 50%;
+    top: 35px;
+    right: 20px;
+}
+.card_cusRadCol input[type="radio"]:after{
+    content: "";
+    position: absolute;
+    height: 13px;
+    width: 13px;
+    background-color: transparent;
+    border-radius: 50%;
+    top: 39.5px;
+    right: 24.5px;
+}
+.label_cusRadCol{
+    position: absolute;
+    margin: 20px;
+    cursor: pointer;
+}
+.card_cusRadCol input[type="radio"]:hover{
+    transform: scale(1.05);
+}
+
+
+
+
+
+
+.red input[type="radio"]{
+    background-color: rgba(206,32,20,0.4);
+}
+.red input[type="radio"]:checked{
+    border: 3px solid rgba(206,32,20);
+}
+.red input[type="radio"]:checked:after{
+    background-color: rgba(206,32,20);
+}
+
+
+.green input[type="radio"]{
+    background-color: rgba(8,130,12,0.4);
+}
+.green input[type="radio"]:checked{
+    border: 3px solid rgba(8,130,12);
+}
+.green input[type="radio"]:checked:after{
+    background-color: rgba(8,130,12);
+}
+
+
+.blue input[type="radio"]{
+    background-color: rgba(58,87,232,0.4);
+}
+.blue input[type="radio"]:checked{
+    border: 3px solid rgba(58,87,232);
+}
+.blue input[type="radio"]:checked:after{
+    background-color: rgba(58,87,232);
+}
+
+
+.orange input[type="radio"]{
+    background-color: rgba(235,153,27,0.4);
+}
+.orange input[type="radio"]:checked{
+    border: 3px solid rgb(235,153,27);
+}
+.orange input[type="radio"]:checked:after{
+    background-color: rgb(235,153,27);
+}
+
+.gray input[type="radio"]{
+    background-color: rgba(108,117,125,0.4);
+}
+.gray input[type="radio"]:checked{
+    border: 3px solid rgba(108,117,125);
+}
+.gray input[type="radio"]:checked:after{
+    background-color: rgba(108,117,125);
+}

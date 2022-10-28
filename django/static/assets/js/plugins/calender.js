@@ -6,6 +6,9 @@ NOTE: This file contains the all calender events.
 */
 "use strict"
 
+var my_events = [ ]
+
+
 if (document.querySelectorAll('#calendar1').length) {
   document.addEventListener('DOMContentLoaded', function () {
     let calendarEl = document.getElementById('calendar1');
@@ -15,8 +18,8 @@ if (document.querySelectorAll('#calendar1').length) {
       timeZone: "UTC",
       defaultView: "dayGridMonth",
       contentHeight: "auto",
-      eventLimit: true,
-      dayMaxEvents: 4,
+      eventLimit: false,
+      dayMaxEvents: 0,
       header: {
           left: "prev,next today",
           center: "title",
@@ -27,18 +30,11 @@ if (document.querySelectorAll('#calendar1').length) {
           $('#schedule-end-date').val(info.dateStr)
           $('#date-event').modal('show')
       },
-      events: [
-        {
-            title: 'Click for Google',
-            url: 'http://google.com/',
-            start: moment(new Date(), 'YYYY-MM-DD').add(-20, 'days').format('YYYY-MM-DD') + 'T05:30:00.000Z',
-            backgroundColor: 'rgba(58,87,232,0.2)',
-            textColor: 'rgba(58,87,232,1)',
-            borderColor: 'rgba(58,87,232,1)'
-        }
-      ]
+      events: my_events
   });
   calendar1.render();
   });
   
 }
+
+// console.log(my_events)
