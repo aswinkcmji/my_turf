@@ -62,10 +62,10 @@ class creatematchForm(ModelForm):
         start_time=self.cleaned_data.get('start_time')
         end_time=self.cleaned_data.get('end_time')
         print(slots)
-        if slots != None and slots >= 1:
+        if slots != None and slots >= 2:
             self.cleaned_data['slot_available']=slots-1
         else :
-            self._errors['slots']=self.error_class([''])
+            self._errors['slots']=self.error_class(['No of slots can not be less than 2'])
         # self.cleaned_data['creator']=self.request.user.username
         if creator !=  self.request.user.username:
             self._errors['creator']=self.error_class([''])
@@ -125,10 +125,10 @@ class updatematchform(ModelForm):
         start_time=self.cleaned_data.get('start_time')
         end_time=self.cleaned_data.get('end_time')
         print("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",type(slots))
-        if slots != None and slots >= 1:
+        if slots != None and slots >= 2:
             self.cleaned_data['slot_available']=slots-1
         else :
-            self._errors['slots']=self.error_class([''])
+            self._errors['slots']=self.error_class(['No of slots can not be less than 2'])
         # self.cleaned_data['creator']=self.request.user.username
         if creator !=  self.request.user.username:
             self._errors['creator']=self.error_class([''])

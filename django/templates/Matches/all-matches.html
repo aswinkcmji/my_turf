@@ -2,6 +2,12 @@
 {% block content %}
 
 <div class="row  bg-light justify-content-around">
+  {% if messages %}
+  {% for message in messages %}
+      <p class="d-none" id="messagetag">{{message.tags}}</p>
+      <p class="d-none " id="messagecontent">{{message}}</p>
+  {% endfor %}
+    {% endif %} 
 {% if matches%}
 {% for match in matches%}
 <div class="column col-md-4">
@@ -24,19 +30,19 @@
         </div>
       </div>
  </div>
- <div class="modal fade" id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+ <div class="modal " id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="false">
   <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
           <div class="modal-header">
               <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body ml-2">
             <form role="form" method="POST" action="">
               {% csrf_token %} 
-            <label >Game Category:</label>
+            <label>Game Category:</label>
             <input type="text" value="{{match.category}}" readonly name="id_category"> 
-            <label>Date of Match:</label> 
+            <label class="pr-2">Date of Match:</label> 
             <input type="text" value="{{match.date|date:"Y-m-d"}}" readonly name="id_date">
             <label>Start Time of Match:</label> 
             <input type="text" value="{{match.start_time|time:"h:i:s"}}" readonly name="id_start_time">
@@ -74,7 +80,23 @@
 </div>
 
 {%endif%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+      
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 <script>
     document.getElementById('matches-li').classList.add('active')
+    $(document).ready(function(){
+        let tag=$('#messagetag').html()
+        let message = $('#messagecontent').html()
+          if( tag == 'error'){
+            toastr.error(message);
+            $('#creatematch').trigger('reset');
+          }
+          if( tag == 'success' ){
+            toastr.success(message);
+            $('#creatematch').trigger('reset');
+          }
+      });
 </script>
 {% endblock content %}
