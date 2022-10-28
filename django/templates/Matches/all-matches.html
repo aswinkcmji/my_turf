@@ -5,8 +5,7 @@
 {% if matches%}
 {% for match in matches%}
 <div class="column col-md-4">
-    <div class="card p-2 m-5">
-<<<<<<< HEAD
+    <div class="card p-2 m-4">
       {% if match.category == "Cricket" %}
         <img src="https://cdn.britannica.com/47/148847-050-C4FB5341/Cricket-bat-ball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
         {% elif match.category == "Football" %}
@@ -23,12 +22,8 @@
         <img src="https://btcpeers.com/content/images/2022/04/Basketball-Swish.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
         
         {%endif%}
-     <div class="card-body">
-=======
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEU83iw_VAtyC3PEYitQPfOwwClXtI1xKlUhqtmDzwWbOTCGFrI_HDd6Y8IxW1Dgg3IbQ&usqp=CAU" class="card-img-top" alt="Product 1" >
-        <div class="card-body">
->>>>>>> 4c1ae76f78abc97a3cc3c89805b07a44e01d568a
-       <h2>{{match.category}}</h2>
+        <div class="card-body p-1 ">
+          <h2>{{match.category}}</h2>
           <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
           <p class="card-text text-dark">Start Time:{{match.start_time|time:"H:i:s"}}</p>
           <p class="card-text text-dark">End Time:{{match.end_time|time:"H:i:s"}}</p>
@@ -51,7 +46,7 @@
               <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
+       <div class="card p-2 m-5">
             <form role="form" method="POST" action="">
               {% csrf_token %} 
             <label >Game Category:</label>
@@ -82,7 +77,7 @@
 {%endfor%}
 </div>
 {% else %}
-<div class="column col-md-4">
+<div class="column">
     <div class="card text-white bg-soft-info m-5" > 
       <div class="card-body">   
         <h3 class="mt-3 text-center">There aren't any more matches happening in your locality</h3>

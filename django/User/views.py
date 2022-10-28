@@ -33,7 +33,7 @@ class AllMatchesView(View):
         id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
         matches=MatchModel.objects.filter(locality=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
         form=RequestForm()
-        # print("hllo",matches)
+        print("hllo",matches)
         context['matches']=matches
         context['form']=form
         return render(request, 'Matches/all-matches.html',context)
@@ -139,7 +139,7 @@ class CreateMatchesView(View):
         slots=int(request.POST['slots'])
         # print(form.slot_available)
         # print(form)
-        print(request.POST['date']>datetime.now().date(),"djkASGHDGVDGUIJFSABV")
+        # print(request.POST['date']>datetime.now().date(),"djkASGHDGVDGUIJFSABV")
         if form.is_valid():
             print("kikikiki")
             print(form.errors.as_data())
