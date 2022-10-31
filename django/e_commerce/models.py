@@ -24,3 +24,16 @@ class CartModel(models.Model):
     
     def __str__(self):
         return str(self.id)
+
+class CheckoutModel(models.Model):
+
+    orderno = models.IntegerField(blank=False)
+    username = models.TextField(max_length=100, blank=False)
+    product_id = models.TextField(blank=False )
+    product_name = models.TextField(max_length=100, blank=False)
+    price = models.TextField(blank=False)
+    quantity = models.TextField(blank=False,)
+    image = models.TextField(max_length=100, blank=False)
+
+    def __str__(self):
+        return str(self.id)
