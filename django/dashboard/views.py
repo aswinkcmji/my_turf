@@ -1,5 +1,7 @@
+from contextvars import Context
 from datetime import datetime
 import json
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.urls import reverse
@@ -158,7 +160,9 @@ class TurfScheduleDelete(View):
 @method_decorator(login_required,name='dispatch')
 class ManageUser(View):
     def get (self, request, *args, **kwargs):
-        return render(request,'admin/manage_user.html',{})
+        turfs = UserModel.objects.filter(is_turf=True)
+        context = {'turfs':turfs}
+        return render(request,'admin/manage_user.html',context)
 
 
 @method_decorator(login_required,name='dispatch')
