@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import TurfScheduleForm
 from django.utils.dateparse import parse_datetime
 from .models import TurfScheduleModel
+import random
 
 
 # Create your views here.
@@ -158,23 +159,50 @@ class TurfScheduleDelete(View):
 @method_decorator(login_required,name='dispatch')
 class ManageUser(View):
     def get (self, request, *args, **kwargs):
-        turfs = UserModel.objects.filter(is_turf=True)
-        context = {'turfs':turfs}
+        users = UserModel.objects.filter(is_turf=False, is_superuser=False)
+        context = {'users':users,
+                'media_url':settings.MEDIA_URL}
         return render(request,'admin/manage_user.html',context)
+    def post (self, request, *args, **kwargs):
+        selected=request.POST.getlist('checkbox_user_table')
+        if selected != []: 
+            if 'Unblock' in request.POST:
+                users = UserModel.objects.filter(is_turf=False,id__in=selected)
+                for user in users:
+                    if not user.is_active:
+                        user.is_active = True
+                        user.save()
+                messages.success(request,'Unblocked')
+                return HttpResponseRedirect(reverse('manage_user'))
+            elif 'Block' in request.POST:
+                users = UserModel.objects.filter(is_turf=False,id__in=selected)
+                for user in users:
+                    # print(user,"userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+                    if  user.is_active:
+                        user.is_active = False
+                        user.save()
+                messages.success(request,'Blocked')
+                return HttpResponseRedirect(reverse('manage_user'))
+            messages.error(request,'Something went wrong')
+            return HttpResponseRedirect(reverse('manage_user'))
+            
+        else:
+            messages.error(request	,'NO Turf selected')
+            return HttpResponseRedirect(reverse('manage_user'))
 
 
 @method_decorator(login_required,name='dispatch')
 class ManageTurf(View):
     def get (self, request, *args, **kwargs):
         turfs = UserModel.objects.filter(is_turf=True)
-        context = {'turfs':turfs}
+        context = {'turfs':turfs,
+                'media_url':settings.MEDIA_URL}
         return render(request,'admin/manage_turf.html',context)
     def post (self, request, *args, **kwargs):
         selected=request.POST.getlist('checkbox_turf_table')
         if selected != []: 
             if 'Unblock' in request.POST:
                 turfs = UserModel.objects.filter(is_turf=True,id__in=selected)
-                print(turfs,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
                 for turf in turfs:
                     if not turf.is_active:
                         turf.is_active = True
