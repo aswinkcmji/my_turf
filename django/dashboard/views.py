@@ -11,9 +11,12 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import TurfScheduleForm
+from .forms import GalleryImgForm, TurfScheduleForm
 from django.utils.dateparse import parse_datetime
-from .models import TurfScheduleModel
+from .models import GalleryImg, TurfScheduleModel
+from django.contrib import messages
+
+
 
 
 # Create your views here.
@@ -40,7 +43,6 @@ class AddStockView(View):
 class Turf_Dashboard(View):
     def get(self,request):
 
-        # turfDetails = UserModel.objects.all().exclude(username="admin")
 
         turfDetails = UserModel.objects.filter(username = request.user.username).values()
         
@@ -163,3 +165,38 @@ class ManageUser(View):
 class ManageTurf(View):
     def get (self, request, *args, **kwargs):
         return render(request,'admin/manage_turf.html',{})
+class Turf_Gallery(View):
+    def get(self,request):
+
+
+        turfGallery = GalleryImg.objects.filter(username = request.user.username).values()
+        print(" ",turfGallery)
+        context = {
+            'form': GalleryImgForm(),
+            'turfGallery': turfGallery,
+            'media_url':settings.MEDIA_URL,
+
+        }
+        print(" ",context)
+
+
+        return render(request,'turf/turf_gallery.html',context)         
+            # else:
+    def post(self,request,*args,**kwargs):
+
+        if request.method == 'POST':
+                form = GalleryImgForm(request.POST,request.FILES)
+                print("====form===",form)
+                if form.is_valid():
+                    form.save()
+                
+                    messages.success(self.request, "Images added Successfully")
+                    return HttpResponseRedirect(reverse('turf_gallery')) 
+                else:  
+                    messages.error(self.request, "Images failed")
+                    
+                    return HttpResponseRedirect(reverse('turf_gallery'))           
+            #     context['form'] = form
+            #     return render(request, 'accounts/turf-sign-up.html',context)
+
+

@@ -9,7 +9,7 @@ from django.utils.dateparse import parse_datetime
 
 
 from django.forms import ModelForm
-from .models import TurfScheduleModel
+from .models import TurfScheduleModel, GalleryImg
 
 
 class TurfScheduleForm(ModelForm):
@@ -75,3 +75,14 @@ class TurfScheduleForm(ModelForm):
         if " - " in user:
             raise forms.ValidationError('"Cannot Contain " - "')
         return user
+
+class GalleryImgForm(ModelForm):
+    username=forms.CharField()
+    images1=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    images2=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    images3=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    images4=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+
+    class Meta:
+        model = GalleryImg
+        fields = '__all__'
