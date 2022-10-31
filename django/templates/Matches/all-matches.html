@@ -1,14 +1,15 @@
 {% extends 'layouts/base.html' %}
-{% block content %}
 
-<div class="row  bg-light justify-content-around">
-  {% if messages %}
+{% block content %}
+{% if messages %}
   {% for message in messages %}
       <p class="d-none" id="messagetag">{{message.tags}}</p>
       <p class="d-none " id="messagecontent">{{message}}</p>
   {% endfor %}
-    {% endif %} 
-{% if matches%}
+    {% endif %}
+<div class="row bg-soft-light d-flex justify-content-around"  {% if is_requestform %} style="display: none ;" {% else %}
+style="display: block ;" {% endif %}>
+   
 {% for match in matches%}
 <div class="column col-md-4">
     <div class="card p-2 m-5">
@@ -21,54 +22,16 @@
           <p class="card-text text-dark ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text text-dark">Locality:{{match.locality}}</p>
           {% if match.creator != request.user.username %}
-          <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{match.id}}">
-           JOIN NOW
-        </button>
+         <a class="btn btn-primary" href="join/{{match.id}}">JOIN NOW</a>
         {%else%}
          <p>You are the organizer.<br>Visit <a class="" href="{% url 'my-matches' %}" id="my-matches-li">My Match</a> to edit</p>
          {%endif%}
         </div>
       </div>
  </div>
- <div class="modal " id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="false">
-  <div class="modal-dialog modal-dialog-scrollable">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body ml-2">
-            <form role="form" method="POST" action="">
-              {% csrf_token %} 
-            <label>Game Category:</label>
-            <input type="text" value="{{match.category}}" readonly name="id_category"> 
-            <label class="pr-2">Date of Match:</label> 
-            <input type="text" value="{{match.date|date:"Y-m-d"}}" readonly name="id_date">
-            <label>Start Time of Match:</label> 
-            <input type="text" value="{{match.start_time|time:"h:i:s"}}" readonly name="id_start_time">
-            <label>End Time of Match:</label> 
-            <input type="text" value="{{match.end_time|time:"h:i:s"}}" readonly name="id_end_time">
-            <label>Organized By:</label> 
-            <input type="text" value="{{match.creator}}" readonly name="id_user"><br>
-            <label>Location:</label> 
-            <input type="text" value="{{match.locality}}" readonly name="id_locality">
-            <input type="number" value="{{match.id}}" hidden name="id">
-          <div class="card text-white bg-secondary" > 
-            <div class="card-body">   
-                This is some text within a card body.
-            </div>
-            </div>
-              <button type="button" class="btn btn-secondary" >Close</button>
-              <button type="submit" class="btn btn-primary">Request to Join</button>
-        </form>
-      </div>
-  </div>
-  </div>
-  </div>
-{%endfor%}
-</div>
-{% else %}
-<div class="column col-md-4">
+{%empty%}
+<div class="column col-md-4"{% if is_requestform %} style="display: none ;" {% else %}
+style="display: block ;" {% endif %}>
     <div class="card text-white bg-soft-info m-5" > 
       <div class="card-body">   
         <h3 class="mt-3 text-center">There aren't any more matches happening in your locality</h3>
@@ -78,8 +41,132 @@
       </div>
       </div>
 </div>
+</div>
+{%endfor%}
+<div class="row mt-5" id="RequestForm" {% if is_requestform  %} style="display: flex ;" {% else %}
+style="display: none ;" {% endif %}>
+<div class="col-lg-6 mx-auto">
+    <div class=" card ">
+        <div class="card-body">
+            <form method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title mx-auto">Send join request
+                    </h5> 
+                </div>
+                <div class="modal-body p-4">
+                    {% csrf_token %}
+                    <!-- {{RequestForm.errors}} -->
 
-{%endif%}
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="category" class="form-label">Category</label>
+                                {{RequestForm.category}}
+                            </div>
+                            <span class="text-error text-danger">{{ RequestForm.category.errors }}</span>
+                        </div>
+
+                        <!-- <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="user" class="form-label">User Identification</label>
+                                {{RequestForm.username}}
+                            </div> -->
+                            <span class="text-error text-danger">{{ RequestForm.username.errors }}</span>
+                        </div>
+
+                        <div class="col-lg-12">
+                          <div class="form-group">
+                              <label for="start" class="form-label">Date</label>
+                              {{RequestForm.date}}
+                          </div>
+                          <span class="text-error text-danger">{{ RequestForm.date.errors }}</span>
+                      </div>
+
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="start" class="form-label">Start Time</label>
+                                {{RequestForm.start_time}}
+                            </div>
+                            <span class="text-error text-danger">{{ RequestForm.start_time.errors }}</span>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="end" class="form-label">End Time</label>
+                                {{RequestForm.end_time}}
+                            </div>
+                            <span class="text-error text-danger">{{ RequestForm.end_time.errors }}</span>
+                        </div>
+
+                        <!-- <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="color" class="form-label">Colour</label>
+                                {{addScheduleform.color}}
+                            </div>
+                            <span class="text-error text-danger">{{ addScheduleform.color.errors }}</span>
+                        </div> -->
+
+                        <div class="col-lg-12">
+                          <div class="form-group">
+                              <label for="end" class="form-label">Location</label>
+                              {{RequestForm.locality}}
+                          </div>
+                          <span class="text-error text-danger">{{ RequestForm.start_time.errors }}</span>
+                      </div>
+                    </div>
+
+
+
+
+
+                    {{RequestForm.username}}
+
+                    {{RequestForm.status}}
+
+
+                    {{RequestForm.phoneno}}
+
+                    {{RequestForm.match_id}}
+
+                </div>
+                <div class="modal-footer">
+                  
+                    <!--  <a href="{% url 'turf_schedule' %}" class="btn btn-secondary">Close</a> -->
+                 
+                    <!-- <button type="button"  class="btn btn-secondary"
+                        onclick="closeRequestForm()">Close</button> -->
+                    
+                    
+                    <button type="submit" class="btn btn-success"> Send requests</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<div class="col-lg-2 mx-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="text-center">The Team</h3>
+        </div>
+        <div class="card-body bg-light">
+            {% for joined in joined%}
+            {% if match.creator == joined.username%}
+            <div class="card row d-flex flex-row bg-danger text-white">
+            <div class="col-4"><img src="/static/assets/images/avatars/01.png" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-50"></div>
+            <div class="col-8 my-auto">{{joined.username}}</div>
+        </div>
+            {%else%}
+            <div class="card row d-flex flex-row">
+            <div class="col-4 "><img src="/static/assets/images/avatars/01.png" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-50"></div>
+            <div class="col-8 my-auto ">{{joined.username}}</div></div>
+            {%endif%}
+            
+            {%endfor%}
+        </div>
+    </div>
+</div>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
       

@@ -2,23 +2,68 @@ from pickle import NONE
 from time import time
 from django import forms
 from django.forms import ModelForm
+# from requests import request
 # from django.contrib.auth import authenticate
 from .models import *
 
 class RequestForm(ModelForm):
     category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'true'}))
-    date = forms.DateField(widget=forms.DateInput(attrs={'readonly':'true','type': 'date'}))
-    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'readonly':'true','type': 'time'}))
-    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'readonly':'true','type': 'time'}))
+    date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','readonly':'true','type': 'date'}))
+    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
+    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
     username= forms.CharField(widget=forms.HiddenInput(attrs={'class': 'form-control','readonly':'true'}))
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
     status=forms.CharField(widget=forms.HiddenInput())
     # match_id= forms.ModelMultipleChoiceField(queryset=RequestModel.objects.all())
+    match_id=forms.IntegerField(widget=forms.HiddenInput())
     phoneno=forms.IntegerField(widget=forms.HiddenInput())
     class Meta():
-        model = RequestModel
+        model = RequestModel    
         # exclude = '__all__'
         fields =('category','date','start_time','end_time','username','locality','status','phoneno')
+    
+
+    def __init__(self,*args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(RequestForm, self).__init__(*args, **kwargs)
+    
+    def clean(self):
+        print("---------------Inside RequestForm's Clean Method-------------------")
+        self.cleaned_data = super().clean()
+        print(self.cleaned_data.get('match_id'))
+        print(self.cleaned_data.get('category'))
+        match=MatchModel.objects.get(id=int(self.cleaned_data.get('match_id')))
+        print(match.category)
+        if self.cleaned_data.get('category') != match.category:
+            self._errors['category']=self.error_class(['Do not change the category'])
+            print(" category  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        if self.cleaned_data.get('date')!=match.date:
+            self._errors['date']=self.error_class(['Do not change the date'])
+            print("date  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        if self.cleaned_data.get('start_time')!=match.start_time:
+            self._errors['date']=self.error_class(['Do not change the start_time'])
+            print("start_time   erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        if self.cleaned_data.get('end_time')!=match.end_time:
+            self._errors['date']=self.error_class(['Do not change the end_time'])
+            print("end_time  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        if self.cleaned_data.get('locality')!=match.locality:
+            self._errors['date']=self.error_class(['Do not change the locality'])
+            print("locality  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")   
+        if self.cleaned_data.get('username')!=self.request.user.username:
+            self._errors['username']=self.error_class(['Do not change the username'])
+            print("username  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")  
+        # print("phone number in form",self.cleaned_data.get('phoneno'),"its type is",type(self.cleaned_data.get('phoneno')))
+        # print("phone number in session",self.request.user.phone,"its type is",type(self.request.user.phone))
+        if self.cleaned_data.get('phoneno')!=int(self.request.user.phone):
+            self._errors['phoneno']=self.error_class(['Do not change the phone number'])
+            print("phone number  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr") 
+        if self.cleaned_data.get('status')!="Pending":
+            self._errors['status']=self.error_class(['Do not change the status'])
+            print("status  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        else:
+            print("no erorrrrrrrrrrrrrrrrrrrrrrr")
+        return self.cleaned_data
+
 # choices=OPTIONS
 
 
