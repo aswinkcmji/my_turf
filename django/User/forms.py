@@ -7,9 +7,9 @@ from .models import *
 
 class RequestForm(ModelForm):
     category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'true'}))
-    date = forms.DateField(widget=forms.DateInput(attrs={'readonly':'true','type': 'date'}))
-    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'readonly':'true','type': 'time'}))
-    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'readonly':'true','type': 'time'}))
+    date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','readonly':'true','type': 'date'}))
+    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
+    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
     username= forms.CharField(widget=forms.HiddenInput(attrs={'class': 'form-control','readonly':'true'}))
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
     status=forms.CharField(widget=forms.HiddenInput())
