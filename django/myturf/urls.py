@@ -28,7 +28,7 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('home/', include('app.urls')),
     path('', include('User.urls')),
-    path('turf_dashboard/',include('dashboard.urls')),
+    path('',include('dashboard.urls')),
     path('',include('accounts.urls')),
 
 ]

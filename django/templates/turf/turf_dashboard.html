@@ -1,5 +1,10 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
+
+<script>
+  document.getElementById('turfdash-li').classList.add('active');
+</script>
+
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="mb-2 navbar-nav ms-auto align-items-center navbar-list mb-lg-0">
                  <li class="nav-item dropdown">
@@ -236,18 +241,11 @@
                             <img src="{{media_url}}{{data.avatar}}" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-100">
                            </div>
                            <div class="d-flex flex-wrap align-items-center mb-3 mb-sm-0">
-                              <h4 class="me-2 h4">MARACANA FOOTBALL TURF</h4>
-                              <span> -Palakkad</span>
+                              <h2 class="me-2 h2">{{ data.turf_name}}</h2>
                            </div>
                         </div>
                         
-
-
-
-
-
-
-                        <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
+                        <!-- <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
                           <li class="nav-item">
                              <a class="nav-link active show" data-bs-toggle="tab" href="#profile-feed" role="tab" aria-selected="false">Feed</a>
                           </li>
@@ -260,7 +258,7 @@
                           <li class="nav-item">
                              <a class="nav-link" data-bs-toggle="tab" href="#profile-profile" role="tab" aria-selected="false">Profile</a>
                           </li>
-                       </ul>
+                       </ul> -->
                     </div>
                  </div>
             </div>
@@ -277,22 +275,6 @@
                  <p>{{data.location}} , {{data.landmark}}</p>
                  <div class="mb-1">Email: <a href="#" class="ms-3">{{data.email}}</a></div>
                  <div class="mb-1">Phone: <a href="#" class="ms-3">{{data.phone}}</a></div>
-
-                 <div class="btn-group">
-                  <button type="button" class="btn btn-success">Hours</button>
-                  <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                      <span class="visually-hidden">5:00am to 11:59pm</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Sunday &nbsp <span style="color: rgb(18, 53, 53)">5am-11pm</span></a></li>
-                      <li><a class="dropdown-item" href="#">Monday &nbsp <span style="color: rgb(18, 53, 53)">5am-11pm</span></a></li>
-                      <li><a class="dropdown-item" href="#">Tuesday &nbsp <span style="color: rgb(18, 53, 53)">5am-11pm</span></a></li>
-                      <li><a class="dropdown-item" href="#">Wednesday &nbsp <span style="color: rgb(18, 53, 53)">5am-11pm</span></a></li>
-                      <li><a class="dropdown-item" href="#">Monday &nbsp <span style="color: rgb(18, 53, 53)">5am-11pm</span></a></li>
-                      <li><a class="dropdown-item" href="#">Monday &nbsp <span style="color: rgb(18, 53, 53)">5am-11pm</span></a></li>
-                      <li><a class="dropdown-item" href="#">Monday &nbsp <span style="color: rgb(18, 53, 53)">5am-11pm</span></a></li>
-                  </ul>
-              </div> 
 
               {% endfor %}
 
