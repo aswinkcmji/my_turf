@@ -1,0 +1,120 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row  bg-light justify-content-around">
+    {% if messages %}
+    {% for message in messages %}
+        <p class="d-none" id="messagetag">{{message.tags}}</p>
+        <p class="d-none " id="messagecontent">{{message}}</p>
+    {% endfor %}
+      {% endif %} 
+  {% if tournament%}
+  {% for tournament in tournaments%}
+  <div class="column col-md-4">
+    <div class="card p-2 m-4">
+      {% if tournament.category == "Cricket" %}
+        <img src="https://cdn.britannica.com/47/148847-050-C4FB5341/Cricket-bat-ball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+        {% elif tournament.category == "Football" %}
+        <img src="https://images.squarespace-cdn.com/content/v1/51e6a2b7e4b038b7a667f1b3/1375240864715-15RNHVOTAV215YF2R60V/PES%2B2014%2BBall%2Bgrass.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+        {% elif tournament.category == "Baseball" %}
+        <img src="https://techcrunch.com/wp-content/uploads/2019/03/GettyImages-844016022.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+        {% elif tournament.category == "Badminton" %}
+        <img src="https://gumlet.assettype.com/dtnext/import/Articles/2022/Feb/202202200142305523_Ball-Badminton-Nationals-in-Dindigul-from-Feb-22_SECVPF.gif?w=1200&h=675&auto=format%2Ccompress&fit=max" class="card-img-top" alt="Product 1" style="height:350px;">
+        {% elif tournament.category == "Tennis" %}
+        <img src="https://thumbs.dreamstime.com/b/tennis-ball-racket-16093106.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+        {% elif tournament.category == "Volleyball" %}
+        <img src="https://sportslounge.co.in/file/2020/09/volleyball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+        {% elif tournament.category == "Basketball" %}
+        <img src="https://btcpeers.com/content/images/2022/04/Basketball-Swish.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+        
+        {%endif%}
+        <div class="card-body p-1 ">
+          <h2>{{tournament.category}}</h2>
+          <p class="card-text text-dark">Date of Match:{{tournament.date|date:"Y-m-d"}}</p>
+          <p class="card-text text-dark">Start Time:{{tournament.start_time|time:"H:i:s"}}</p>
+          <p class="card-text text-dark">End Time:{{tournament.end_time|time:"H:i:s"}}</p>
+          <p class="card-text text-dark ">Available Slots:{{tournament.slot_available}}/{{tournament.slots}}</p>
+          <p class="card-text text-dark">Locality:{{tournament.locality}}</p>
+          {% if tournament.creator != request.user.username %}
+          <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{tournament.id}}">
+           JOIN NOW
+        </button>
+        {%else%}
+         <p>You are the organizer.<br>Visit <a class="" href="{% url 'tournaments' %}" id="my-matches-li">My Match</a> to edit</p>
+         {%endif%}
+          </div>
+        </div>
+   </div>
+       <div class="modal fade" id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+             <div class="card p-2 m-5">
+                  <form role="form" method="POST" action="">
+                    {% csrf_token %} 
+                  <label >Game Category:</label>
+                  <input type="text" value="{{tournament.category}}" readonly name="id_category"> 
+                  <label>Date of Match:</label> 
+                  <input type="text" value="{{tournament.date|date:"Y-m-d"}}" readonly name="id_date">
+                  <label>Start Time of Match:</label> 
+                  <input type="text" value="{{tournament.start_time|time:"h:i:s"}}" readonly name="id_start_time">
+                  <label>End Time of Match:</label> 
+                  <input type="text" value="{{tournament.end_time|time:"h:i:s"}}" readonly name="id_end_time">
+                  <label>Organized By:</label> 
+                  <input type="text" value="{{tournament.creator}}" readonly name="id_user"><br>
+                  <label>Location:</label> 
+                  <input type="text" value="{{tournament.locality}}" readonly name="id_locality">
+                  <input type="number" value="{{tournament.id}}" hidden name="id">
+                <div class="card text-white bg-secondary" > 
+                  <div class="card-body">   
+                      This is some text within a card body.
+                  </div>
+                  </div>
+                    <button type="button" class="btn btn-secondary" >Close</button>
+                    <button type="submit" class="btn btn-primary">Request to Join</button>
+              </form>
+            </div>
+        </div>
+        </div>
+        </div>
+      {%endfor%}
+      </div>
+      {% else %}
+      <div class="column">
+          <div class="card text-white bg-soft-info m-5" > 
+            <div class="card-body">   
+              <h3 class="mt-3 text-center">There aren't any more matches happening in your locality</h3>
+              <p class="mt-3 text-center">
+                Visit <a class="" href="{% url 'tournaments' %}" id="my-matches-li">My Match</a> to see the matches you created or joined
+              </p>
+            </div>
+            </div>
+      </div>
+  </div>
+  
+  {%endif%}
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+      
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+<script>
+    document.getElementById('matches-li').classList.add('active')
+    $(document).ready(function(){
+        let tag=$('#messagetag').html()
+        let message = $('#messagecontent').html()
+          if( tag == 'error'){
+            toastr.error(message);
+            $('#creatematch').trigger('reset');
+          }
+          if( tag == 'success' ){
+            toastr.success(message);
+            $('#creatematch').trigger('reset');
+          }
+      });
+</script>
+{% endblock content %}

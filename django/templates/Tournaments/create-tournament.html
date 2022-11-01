@@ -31,10 +31,10 @@
                         {% if addForm.label != "Category" %}
                         <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
                             {% render_field addForm class="form-control" placeholder="Place Holder" min="1"%}
-                            {% if addform.type != "hidden"%}
+                            {% if addForm.type != "hidden"%}
                             <label >{{addForm.label}}</label>
                             {%endif%}
-                            <p>{{addform.type}}</p>
+                            <p>{{addForm.type}}</p>
                         </div>
                         {% else %}
                             {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
@@ -73,7 +73,9 @@
       });
       $(document).ready(function() {
       var today = new Date().toISOString().split('T')[0];
-      $("#id_date").attr('min', today);
+      $("#id_start_date").attr('min', today);
+      $("#id_end_date").attr('min', today);
+
       $('#createtournament').trigger('reset');
       });
   </script>

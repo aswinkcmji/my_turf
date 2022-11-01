@@ -6,7 +6,7 @@ from django.forms import ModelForm
 from .models import *
 from datetime import datetime
 
-dt = datetime.now() 
+
 
 
 class RequestForm(ModelForm):
@@ -156,7 +156,8 @@ class createtournamentForm(ModelForm):
 
 
     category= forms.ChoiceField(choices=options)
-    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     start_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
     end_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
     teams = forms.IntegerField()          
@@ -165,32 +166,31 @@ class createtournamentForm(ModelForm):
     status=forms.CharField(widget=forms.HiddenInput())
     team_space_available=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
-        model = MatchModel
+        model = TournamentModel
         fields = '__all__'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
-        super(creatematchForm, self).__init__(*args, **kwargs)
+        super(createtournamentForm, self).__init__(*args, **kwargs)
 
+   
     def clean(self):
-        print("hasgfsdyfgsdhjfdg")
         self.cleaned_data = super().clean()
-        slots=self.cleaned_data.get('teams')
+        teams=self.cleaned_data.get('teams')
         creator=self.cleaned_data.get('creator')
         status=self.cleaned_data.get('status')
         start_time=self.cleaned_data.get('start_time')
         end_time=self.cleaned_data.get('end_time')
-        print(slots)
-        if slots != None and slots >= 2:
-            self.cleaned_data['team_space_available']=slots-1
+        print(teams)
+        if teams != None and teams >= 2:
+            self.cleaned_data['team_space_available']=teams-1
         else :
-            self._errors['teams']=self.error_class(['No of teams can not be less than 2'])
+            self._errors['teams']=self.error_class(['No of slots can not be less than 2'])
         self.cleaned_data['creator']=self.request.user.username
         if creator !=  self.request.user.username:
             self._errors['creator']=self.error_class([''])
         if status != "Upcoming":
             self._errors['status']=self.error_class([''])
-        # self.cleaned_data['status']="Upcoming"
         if   start_time != None and end_time !=None :
                 if start_time >= end_time:
                     self._errors['start_time']=self.error_class(['Start time can not be more than end time'])
@@ -198,6 +198,5 @@ class createtournamentForm(ModelForm):
                 self._errors['start_time']=self.error_class(['Start time must be time type'])
         elif  end_time == None:
                 self._errors['end_time']=self.error_class(['End time must be time type'])
-        print("khsfdagjfdghsuj",slots,self.cleaned_data['team_space_available'])
+        print("khsfdagjfdghsuj",teams,self.cleaned_data['team_space_available'])
         return self.cleaned_data
-
