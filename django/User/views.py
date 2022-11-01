@@ -32,7 +32,7 @@ class AllMatchesView(View):
                 print(request.user.username)
                 # context={}
                 id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
-                matches=MatchModel.objects.filter(locality=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
+                matches=MatchModel.objects.filter(locality__iexact=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
                 form=RequestForm(request=request)
                 print("hllo",matches)
                 # context['matches']=matches
@@ -69,7 +69,7 @@ class CreateMatchesView(View):
         print(now)
         data={
             'category':'Cricket',
-            'date':datetime.now().date(),
+            'date':datetime.now().date,
             'start_time':datetime.now().strftime('%H:%M:%S'),
             'end_time':end_time,
             'locality':request.user.location,
@@ -98,6 +98,10 @@ class CreateMatchesView(View):
         if form.is_valid():
             print("kikikiki")
             print(form.errors.as_data())
+            
+            start_date= form.cleaned_data['date']
+            print(start_date)
+
             obj=form.save()
             RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
             messages.success(request	,'Your match has been succesfully created. Visit My Match to see .')
@@ -178,6 +182,9 @@ class TurfsView(View):
         return render(request, 'turf/main.html',{ })
 
 ############################################################## View for editing matches created by user #####################################################################
+
+
+@method_decorator(login_required,name='dispatch')
 class EditMatchesView(View):
     def get(self, request,id, *args, **kwargs):
         editobj=MatchModel.objects.get(id=id)
@@ -229,6 +236,7 @@ class EditMatchesView(View):
 
 
 ##################################################################### View for Requests viewing #######################################################################
+@method_decorator(login_required,name='dispatch')
 class RequestsView(View):
     def get(self, request,*args, **kwargs):
         id_list=MatchModel.objects.filter(creator=request.user.username,status="Upcoming").values_list('id',flat=True)
@@ -339,3 +347,17 @@ class  JoinMatchView(View):
                 print(context)
                 return render(request, 'Matches/all-matches.html',context)
 
+
+################################################################## View for cancelling matches #####################################################################
+
+@method_decorator(login_required,name='dispatch')
+class CancelMatchView(View):
+    def get(self, request,id, *args, **kwargs):
+        try:
+            reqdata=MatchModel.objects.get(id=id,creator=request.user.username,status="Upcoming")
+        except:
+            return render(request, 'errors/error404.html')
+        print("hiiiiiiiiiiiiiiiiiiiiiii",reqdata)
+        reqdata.status="Cancelled"
+        reqdata.save()
+        return HttpResponseRedirect(reverse('match-history'))

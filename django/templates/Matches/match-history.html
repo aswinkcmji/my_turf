@@ -24,7 +24,7 @@
     </div>
     <div class="conatiner-fluid">
        <div class="iq-header-img">
-        <img src="/static/assets/images/dashboard/top-image.jpg" alt="header" class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
+        <img src="/static/assets/images/dashboard/top-header.png" alt="header" class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
         <img src="/static/assets/images/dashboard/top-header1.png" alt="header" class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
         <img src="/static/assets/images/dashboard/top-header2.png" alt="header" class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
         <img src="/static/assets/images/dashboard/top-header3.png" alt="header" class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
@@ -72,7 +72,7 @@
                 </div>
            </div>
         </div>
-        <div class="col-lg-8 ">
+        <div class="col-lg-10 ">
            <div class="profile-content tab-content">
              <div id="profile-feed" class="tab-pane fade active show">
                <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
@@ -308,7 +308,7 @@
                             <th>
                               Location
                             </th>
-                            
+                            <th></th>
                           </thead>
                           <tbody>
                            {% for data in crum %}
@@ -323,7 +323,11 @@
                             <td>
                                {{data.locality}}
                             </td>
-             
+                            <td>
+                              <a  class="btn btn-primary" href="cancel/{{data.id}}">
+                                Cancel Match
+                              </a>
+                            </td>
                           </tr>
                             {% endfor %}
                             
