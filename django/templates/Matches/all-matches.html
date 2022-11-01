@@ -1,15 +1,15 @@
 {% extends 'layouts/base.html' %}
 
-<div class="container-fluid">
-  <div class="row  bg-light justify-content-around">
-    {% if messages %}
-    {% for message in messages %}
-        <p class="d-none" id="messagetag">{{message.tags}}</p>
-        <p class="d-none " id="messagecontent">{{message}}</p>
-    {% endfor %}
-      {% endif %} 
-  {% if matches%}
-  {% for match in matches%}
+{% block content %}
+{% if messages %}
+  {% for message in messages %}
+      <p class="d-none" id="messagetag">{{message.tags}}</p>
+      <p class="d-none " id="messagecontent">{{message}}</p>
+  {% endfor %}
+    {% endif %}
+<div class="row bg-soft-light d-flex justify-content-around"  {% if is_requestform %} style="display: none ;" {% else %}
+style="display: block ;" {% endif %}>
+{% for match in matches%}
   <div class="column col-md-4">
     <div class="card p-2 m-4">
       {% if match.category == "Cricket" %}
@@ -81,7 +81,8 @@
       {%endfor%}
       </div>
  </div>
-{%empty%}
+ {%endif%}
+
 <div class="column col-md-4"{% if is_requestform %} style="display: none ;" {% else %}
 style="display: block ;" {% endif %}>
     <div class="card text-white bg-soft-info m-5" > 
