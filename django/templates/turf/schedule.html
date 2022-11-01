@@ -258,21 +258,21 @@
 {% endfor %}
 
 <script type="text/javascript">
-
     {% for schedule in turf_schedule %}
-    my_events.push({
-        title: '{{schedule.title}}',
-        url: '{% url 'turf_schedule_edit' id=schedule.id %}',
-        start: '{{schedule.start}}',
-        end: '{{schedule.end}}',
-        backgroundColor: '{{schedule.color_bg}}',
-        textColor: '{{schedule.color_txt}}',
-        borderColor: '{{schedule.color_txt}}'
-    })
-    {% endfor %}
 
-
-
+        my_events.push({
+            title: '{{schedule.title}}',
+            url: '{% url "turf_schedule_edit" id=schedule.id %}',
+            start: '{{schedule.start}}',
+            end: '{{schedule.end}}',
+            backgroundColor: '{{schedule.color_bg}}',
+            textColor: '{{schedule.color_txt}}',
+            borderColor: '{{schedule.color_txt}}'
+        })
+        
+        
+        
+        {% endfor %}
 </script>
 
 

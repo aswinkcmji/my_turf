@@ -2,7 +2,7 @@ from datetime import date
 from email import message
 from multiprocessing import context
 from django.shortcuts import render
-from .models import MatchModel,RequestModel
+from .models import *
 from django.views.generic import View
 from .forms import RequestForm, updatematchform
 from django.http import HttpResponseRedirect
@@ -10,10 +10,12 @@ from django.urls import is_valid_path, reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import creatematchForm,updatematchform
+from .forms import *
 from datetime import datetime,timedelta
 from django.utils import timezone
 from django.contrib import messages
+
+from django import template
 # from .models import slotModel
 
 # Create your views here.
@@ -149,12 +151,12 @@ class MatchHistoryView(View):
         jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).values()#joined completed matches
         id_list3=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
         jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).values()#joined cancelled matches
-        crum=MatchModel.objects.filter(creator=request.user.username,locality=request.user.location,status="Upcoming") #created upcoming matches
-        crcom=MatchModel.objects.filter(creator=request.user.username,locality=request.user.location,status="Completed") #created completed matches
-        crcam=MatchModel.objects.filter(creator=request.user.username,locality=request.user.location,status="Cancelled") #created cancelled matches
+        crum=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Upcoming") #created upcoming matches
+        crcom=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Completed") #created completed matches
+        crcam=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Cancelled") #created cancelled matches
         reqcan=RequestModel.objects.filter(username=request.user.username,status="Cancelled")#requests cancelled
         reqrej=RequestModel.objects.filter(username=request.user.username,status="Rejected")#requests rejected
-        id_list4=MatchModel.objects.filter(creator=request.user.username,locality=request.user.location).values_list('id',flat=True)
+        id_list4=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location).values_list('id',flat=True)
         reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted")
         reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected")
         context={}
@@ -361,3 +363,73 @@ class CancelMatchView(View):
         reqdata.status="Cancelled"
         reqdata.save()
         return HttpResponseRedirect(reverse('match-history'))
+
+
+
+
+#**********************************create tournament***********************************
+
+@method_decorator(login_required,name='dispatch')
+class CreateTournamentView(View):
+    template = 'Tournaments/create-tournament.html'
+    def get(self, request, *args, **kwargs):
+        print(datetime.now()+timedelta(hours=1))
+        end_time=(datetime.now()+timedelta(hours=1)).strftime('%H:%M:%S')
+        print(end_time)
+        now = timezone.now()
+        print(now)
+        data={
+            'category':'Cricket',
+            'start_date':datetime.now().date(),
+            'en_date':datetime.now().date(),
+            'start_time':datetime.now().strftime('%H:%M:%S'),
+            'end_time':end_time,
+            'locality':request.user.location,
+            'creator' : request.user.username,
+            "status": "Upcoming",
+            "team_space_available": 0,
+            "teams": 2,
+        }
+        form = createtournamentForm(data,request.POST)
+        user = request.user
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
+        context = {'form': form,
+                    'data': 'Add tournament',
+                    'user': user,
+                    }
+        
+        return render(request,'Tournaments/create-tournament.html',context)
+
+    def post(self, request, *args, **kwargs):
+        form=createtournamentForm(request.POST,request=request)
+        
+        teams=int(request.POST['teams'])
+    
+        if form.is_valid():
+            print(form.errors.as_data())
+            obj=form.save()
+            # RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
+            messages.success(request	,'Your Tournament has been succesfully created. Visit My Tournament to see .')
+            return HttpResponseRedirect(reverse('create-tournament'))
+
+        else:
+            # print(form.errors['start_time'])
+            messages.error(request	,'Please do not change the fields')
+            return render(request,self.template,{'form':form})
+
+
+#############################################################    View for tournaments user has created or joined  ###########################################################
+@method_decorator(login_required,name='dispatch')
+class MyTournamentView(View):
+    def get(self, request, *args, **kwargs):
+        print(request.user.username)
+        print(datetime.now())
+        # id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('id',flat=True)
+        # print(list(id_list))
+        # tournament=TournamentModel.objects.filter(id__in=list(id_list))
+        tournament=TournamentModel.objects.all()
+        context={
+            'tournaments':tournament
+        }
+        return render(request, 'Tournaments/my-tournament.html',context)
+
