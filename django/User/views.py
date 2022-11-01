@@ -1,11 +1,12 @@
 from datetime import date
+from email import message
 from multiprocessing import context
 from django.shortcuts import render
 from .models import MatchModel,RequestModel
 from django.views.generic import View
 from .forms import RequestForm, updatematchform
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import is_valid_path, reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
@@ -29,65 +30,18 @@ class HomeView(View):
 ########################################################## View for listing all matches in user locality which user hasn't requested or joined or created ################################################################################ 
 @method_decorator(login_required,name='dispatch')
 class AllMatchesView(View):
-    def get(self, request, *args, **kwargs):
-        print(request.user.username)
-        context={}
-        id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
-        matches=MatchModel.objects.filter(locality=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
-        form=RequestForm()
-        print("hllo",matches)
-        context['matches']=matches
-        context['form']=form
-        return render(request, 'Matches/all-matches.html',context)
-    def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            print("hello")
-            match_id=request.POST.get('id')
-            try:
-                selected_match=MatchModel.objects.get(id=match_id,status="Upcoming")
-            except:
-                return render(request, 'errors/error404.html')
-            category=request.POST.get('id_category')
-            date=request.POST.get('id_date')
-            start_time=request.POST.get('id_start_time')
-            end_time=request.POST.get('id_end_time')
-            username=request.user.username
-            phoneno=request.user.phone
-            location=request.POST.get('id_locality')
-            print(category,date,start_time,end_time,username,phoneno,location,match_id)
-            data={
-                'category':category,
-                'date':date,
-                'start_time':start_time,
-                'end_time':end_time,
-                'username':username,
-                'locality':location,
-                'status':"Pending",
-                # 'match_id':selected_match,
-                'phoneno':phoneno,
-
-            }
-            form = RequestForm(data)
-            print(form)
-            # form.fields['match_id'].initial = selected_match.id
-            if form.is_valid():
-                print("kikikiki")
-                obj=form.save(commit=False)
-                obj.match_id=selected_match
-                obj.save()
-            else:
-                context={}
+        def get(self, request, *args, **kwargs):
+                print(request.user.username)
+                # context={}
                 id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
                 matches=MatchModel.objects.filter(locality=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
-                form=RequestForm(data   )
+                form=RequestForm(request=request)
                 print("hllo",matches)
-                context['matches']=matches
-                context['form']=form
-                messages.error(request	,'Please do not change the fields')
+                # context['matches']=matches
+                # context['form']=form
+                context ={'RequestForm': form ,'is_requestform':False , 'matches':matches}
+                print(context)
                 return render(request, 'Matches/all-matches.html',context)
-            print(form)
-            # RequestModel.objects.create(match_id=selected_match,category=category,username=username,phoneno=phoneno,status="Pending",date=date,time=time,locality=location)
-            return HttpResponseRedirect(reverse('matches'))
 
 
 #############################################################    View for matches user has created or joined  ###########################################################
@@ -444,4 +398,71 @@ class Tournaments(View):
             # RequestModel.objects.create(match_id=selected_match,category=category,username=username,phoneno=phoneno,status="Pending",date=date,time=time,locality=location)
             return HttpResponseRedirect(reverse('tournament'))    
 
+######################################################################### View for joining matches #######################################################
+@method_decorator(login_required,name='dispatch')
+class  JoinMatchView(View):
+    def get(self, request,id, *args, **kwargs):
+                matches=MatchModel.objects.filter(id=id,locality=request.user.location)
+                if len(matches) == 1:
+                    match = matches[0]
+                if len(matches) == 0:
+                    return render(request,'errors/error404.html',{})
+                joined=RequestModel.objects.filter(status='Accepted',match_id=match.pk).values()
+                request.session['id']=match.id
+                request.session['category']=match.category
+                # request.session['date']=match.date
+                # request.session['start_time']=match.start_time
+                # request.session['end_time']=match.end_time
+                request.session['locality']=match.locality
+                request.session['status']="Pending"
+                data={
+                    'category':match.category,
+                    'date':match.date,
+                    'start_time':match.start_time,
+                    'end_time':match.end_time,
+                    'locality':match.locality,
+                    'username':request.user.username,
+                    'status':"Pending",
+                    'phoneno': request.user.phone,
+                    'match_id':match.id,
+                }
+                form=RequestForm(data,request=request)
+                print(form)
+                context ={'RequestForm': form ,'is_requestform':True ,'match':match,'joined':joined}
+                print(context)
+                return render(request, 'Matches/all-matches.html',context)
+        # except:
+        #     pass
+    def post(self, request, *args, **kwargs):
+
+        try:
+            matchid=int(request.POST['match_id'])
+        except:
+            return  HttpResponseRedirect(reverse('matches'))
+        if matchid!=request.session.get('id'):
+            id=int(request.session.get('id'))
+            matches=MatchModel.objects.filter(id=id)
+            if len(matches) == 1:
+                requested_match = matches[0]
+            context ={'RequestForm': RequestForm(request.POST,request=request) ,'is_requestform':True ,'match':requested_match}
+            return render(request, 'Matches/all-matches.html',context)
+        else:
+            match_id=request.session.get('id')
+            print(match_id)
+            matches=MatchModel.objects.filter(id=match_id)
+            if len(matches) == 1:
+                requested_match = matches[0]
+            form=RequestForm(request.POST,request=request)
+            print(form)
+            if form.is_valid():
+                print("kikikiki")
+                obj=form.save(commit=False)
+                obj.match_id=requested_match
+                obj.save()
+                return  HttpResponseRedirect(reverse('matches'))
+            else:
+                messages.error(request	,'Please do not change the fields')
+                context ={'RequestForm': RequestForm(request.POST,request=request) ,'is_requestform':True ,'match':requested_match}
+                print(context)
+                return render(request, 'Matches/all-matches.html',context)
 

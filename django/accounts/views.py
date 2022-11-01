@@ -88,19 +88,3 @@ class LoginPage(LoginView):
         return HttpResponseRedirect(reverse('login'))
 
 
-class Turf_Gallery(View):
-    def get(self,request):
-
-
-        turfDetails = UserModel.objects.filter(username = request.user.username).values()
-        
-        context = {
-
-            'turfDetails': turfDetails,
-            'media_url':settings.MEDIA_URL,
-
-        }
-        print(" ",context)
-
-
-        return render(request,'turf/turf_gallery.html',context)

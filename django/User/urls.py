@@ -18,4 +18,5 @@ urlpatterns = [
     path('create-tournament/', CreateTournamentView.as_view(), name="create-tournament"),
     path('all-tournaments/', Tournaments.as_view(), name="tournaments"),
 
+    path('matches/join/<int:id>',JoinMatchView.as_view(),name="join")
 ]
