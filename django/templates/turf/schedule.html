@@ -261,20 +261,18 @@
         </div>
         {% endif %}
 
-    </main>
 
-
-    <!-- Fullcalender Javascript -->
-    <script src='/static/assets/vendor/fullcalendar/core/main.js'></script>
-    <script src='/static/assets/vendor/fullcalendar/daygrid/main.js'></script>
-    <script src='/static/assets/vendor/fullcalendar/timegrid/main.js'></script>
-    <script src='/static/assets/vendor/fullcalendar/list/main.js'></script>
-    <script src='/static/assets/vendor/fullcalendar/interaction/main.js'></script>
-    <script src='/static/assets/vendor/moment.min.js'></script>
-    <script src='/static/assets/js/plugins/calender.js'></script>
-    {% for schedule in turf_schedule %}
-    {{schedule.color}}
-    {% endfor %}
+<!-- Fullcalender Javascript -->
+<script src='/static/assets/vendor/fullcalendar/core/main.js'></script>
+<script src='/static/assets/vendor/fullcalendar/daygrid/main.js'></script>
+<script src='/static/assets/vendor/fullcalendar/timegrid/main.js'></script>
+<script src='/static/assets/vendor/fullcalendar/list/main.js'></script>
+<script src='/static/assets/vendor/fullcalendar/interaction/main.js'></script>
+<script src='/static/assets/vendor/moment.min.js'></script>
+<script src='/static/assets/js/plugins/calender.js'></script>
+{% for schedule in turf_schedule %}
+{{schedule.color}}
+{% endfor %}
 
     <script type="text/javascript">
 
