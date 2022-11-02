@@ -11,11 +11,14 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from .forms import *
-from datetime import datetime,timedelta
+from datetime import datetime,timedelta, date, time
 from django.utils import timezone
 from django.contrib import messages
 
 from django import template
+from django.utils.dateparse import parse_time
+
+# import datetime as datetime_
 # from .models import slotModel
 
 # Create your views here.
@@ -65,14 +68,14 @@ class CreateMatchesView(View):
     template = 'Matches/create-matches.html'
     def get(self, request, *args, **kwargs):
         print(datetime.now()+timedelta(hours=1))
-        end_time=(datetime.now()+timedelta(hours=1)).strftime('%H:%M:%S')
+        end_time=(datetime.now()+timedelta(hours=1))
         print(end_time)
         now = timezone.now()
         print(now)
         data={
             'category':'Cricket',
-            'date':datetime.now().date,
-            'start_time':datetime.now().strftime('%H:%M:%S'),
+            'date':datetime.now().date(),
+            'start_time':datetime.now(),
             'end_time':end_time,
             'locality':request.user.location,
             'creator' : request.user.username,
@@ -100,12 +103,34 @@ class CreateMatchesView(View):
         if form.is_valid():
             print("kikikiki")
             print(form.errors.as_data())
-            
-            start_date= form.cleaned_data['date']
-            print(start_date)
+        
+            start_date =form.cleaned_data["date"]
+            start_time= parse_time(request.POST["start_time_f"])
+            end_time= parse_time(request.POST["end_time_f"])
 
-            obj=form.save()
-            RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
+            # start_datetime=datetime(start_date.year,start_date.month,start_date.day,start_time.hour,start_time.minute,start_time.second)
+            # end_datetime=datetime(start_date.year,start_date.month,start_date.day,end_time.hour,end_time.minute,end_time.second)
+            
+            # start_datetime=pd.Timestamp.combine(date(start_date.year, start_date.month, start_date.day), time(start_time.hour,start_time.minute,start_time.second))
+            # end_datetime=pd.Timestamp.combine(date(start_date.year, start_date.month, start_date.day), time(end_time.hour,end_time.minute,end_time.second))
+            from pytz import timezone
+            print(type(start_time))
+            start_datetime= datetime.combine(start_date, start_time).astimezone(timezone('UTC'))
+            end_datetime= datetime.combine(start_date, end_time).astimezone(timezone('UTC'))
+
+
+            # now = timezone.now()
+            # print(now,"adddddddttttttttttttttttttddddddddddddddddddddddddddddddddddddddddddddddd")
+
+
+            form_cf=form.save(commit=False)
+            form_cf.start_time=start_datetime
+            form_cf.end_time=end_datetime
+            print(start_datetime,end_datetime,"ssssssssssssssssssssssssssssssssssss")
+            form_cf.save()
+
+
+            RequestModel.objects.create(match_id=form_cf,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
             messages.success(request	,'Your match has been succesfully created. Visit My Match to see .')
             return HttpResponseRedirect(reverse('create-matches'))
 
