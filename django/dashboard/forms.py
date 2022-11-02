@@ -77,11 +77,9 @@ class TurfScheduleForm(ModelForm):
         return user
 
 class GalleryImgForm(ModelForm):
-    username=forms.CharField()
-    images1=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
-    images2=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
-    images3=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
-    images4=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    username = forms.CharField()
+    image = forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    caption = forms.CharField()
 
     class Meta:
         model = GalleryImg
