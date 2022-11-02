@@ -1,7 +1,7 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
-
+<!-- 
     {% if messages %}
 
     {% for message in messages %}
@@ -9,7 +9,7 @@
         <p class="d-none " id="messagecontent">{{message}}</p>
     {% endfor %}
 
-    {% endif %}
+    {% endif %} -->
     <div class="row bg-soft-light d-flex justify-content-around"  {% if is_requestform %} style="display: none ;" {% else %}
     style="display: block ;" {% endif %}>
     {% for match in matches%}
@@ -46,7 +46,7 @@
                     </div>
             </div>
         </div>
-       <div class="modal fade" id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+       <!-- <div class="modal fade" id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -229,17 +229,17 @@ style="display: none ;" {% endif %}>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 <script>
     document.getElementById('matches-li').classList.add('active')
-    $(document).ready(function(){
-        let tag=$('#messagetag').html()
-        let message = $('#messagecontent').html()
-          if( tag == 'error'){
-            toastr.error(message);
-            $('#creatematch').trigger('reset');
-          }
-          if( tag == 'success' ){
-            toastr.success(message);
-            $('#creatematch').trigger('reset');
-          }
-      });
+    // $(document).ready(function(){
+    //     let tag=$('#messagetag').html()
+    //     let message = $('#messagecontent').html()
+    //       if( tag == 'error'){
+    //         toastr.error(message);
+    //         $('#creatematch').trigger('reset');
+    //       }
+    //       if( tag == 'success' ){
+    //         toastr.success(message);
+    //         $('#creatematch').trigger('reset');
+    //       }
+    //   });
 </script>
 {% endblock content %}
