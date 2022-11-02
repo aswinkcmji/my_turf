@@ -8,13 +8,14 @@ from datetime import datetime,timedelta
 class MatchModel(models.Model):
     category = models.CharField(max_length=30,null=False,blank=False)
     date= models.DateField(blank=True)
-    start_time= models.TimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
-    end_time= models.TimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
+    start_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
+    end_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
     locality = models.CharField(max_length=30,null=True,blank=False)
     creator = models.CharField(max_length=30,null=True,blank=False)
     status = models.CharField(default="Upcoming",max_length=30,null=False,blank=False)
     slots =models.IntegerField(default=2,null=False,blank=False)
     slot_available =models.IntegerField(default = 1,null=False,blank=False)
+    cron =models.IntegerField(default = 1,null=True,blank=False)
 
 
 class RequestModel(models.Model):
