@@ -43,7 +43,7 @@ style="display: block ;" {% endif %}>
           </div>
         </div>
    </div>
-       <div class="modal fade" id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+       <!-- <div class="modal fade" id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -77,12 +77,8 @@ style="display: block ;" {% endif %}>
             </div>
         </div>
         </div>
-        </div>
-      {%endfor%}
-      </div>
- </div>
- {%endif%}
-
+        </div> -->
+ {% empty %}
 <div class="column col-md-4"{% if is_requestform %} style="display: none ;" {% else %}
 style="display: block ;" {% endif %}>
     <div class="card text-white bg-soft-info m-5" > 
