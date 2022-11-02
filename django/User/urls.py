@@ -17,8 +17,10 @@ urlpatterns = [
     path("my-matches/edit/<int:id>",EditMatchesView.as_view(),name="edit"),
     path('requests/',RequestsView.as_view(), name="requests"),
     path('create-tournament/', CreateTournamentView.as_view(), name="create-tournament"),
-    # path('all-tournaments/', MyTournamentsView.as_view(), name="tournaments"),
+    # path('all-tournaments/', TournamentView.as_view(), name="tournaments"),
     path('my-tournaments/', MyTournamentView.as_view(), name="my-tournaments"),
+    path("my-tournaments/edit/<int:id>",EditTournamentView.as_view(),name="edit"),
+
 
 
 ]
