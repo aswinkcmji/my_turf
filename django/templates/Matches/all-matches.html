@@ -1,12 +1,12 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
-{% if messages %}
+<!-- {% if messages %}
   {% for message in messages %}
       <p class="d-none" id="messagetag">{{message.tags}}</p>
       <p class="d-none " id="messagecontent">{{message}}</p>
   {% endfor %}
-    {% endif %}
+    {% endif %} -->
 <div class="row bg-soft-light d-flex justify-content-around"  {% if is_requestform %} style="display: none ;" {% else %}
 style="display: block ;" {% endif %}>
 {% for match in matches%}
@@ -222,17 +222,17 @@ style="display: none ;" {% endif %}>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 <script>
     document.getElementById('matches-li').classList.add('active')
-    $(document).ready(function(){
-        let tag=$('#messagetag').html()
-        let message = $('#messagecontent').html()
-          if( tag == 'error'){
-            toastr.error(message);
-            $('#creatematch').trigger('reset');
-          }
-          if( tag == 'success' ){
-            toastr.success(message);
-            $('#creatematch').trigger('reset');
-          }
-      });
+    // $(document).ready(function(){
+    //     let tag=$('#messagetag').html()
+    //     let message = $('#messagecontent').html()
+    //       if( tag == 'error'){
+    //         toastr.error(message);
+    //         $('#creatematch').trigger('reset');
+    //       }
+    //       if( tag == 'success' ){
+    //         toastr.success(message);
+    //         $('#creatematch').trigger('reset');
+    //       }
+    //   });
 </script>
 {% endblock content %}

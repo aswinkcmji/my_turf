@@ -14,7 +14,7 @@ from .forms import *
 from datetime import datetime,timedelta, date, time
 from django.utils import timezone
 from django.contrib import messages
-
+from pytz import timezone
 from django import template
 from django.utils.dateparse import parse_time
 
@@ -56,7 +56,7 @@ class MyMatchesView(View):
         context={}
         id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
         print(list(id_list))
-        matches=MatchModel.objects.filter(id__in=list(id_list))
+        matches=MatchModel.objects.filter(id__in=list(id_list),status="Upcoming")
         context['matches']=matches
         context[request]=request
         return render(request, 'Matches/my-matches.html',context)
@@ -70,18 +70,20 @@ class CreateMatchesView(View):
         print(datetime.now()+timedelta(hours=1))
         end_time=(datetime.now()+timedelta(hours=1))
         print(end_time)
-        now = timezone.now()
-        print(now)
+        # now = timezone.now()
+        # print(now)
         data={
             'category':'Cricket',
             'date':datetime.now().date(),
+            'start_time_f':datetime.now().strftime("%H:%M:%S"),
+            'end_time_f':end_time.strftime("%H:%M:%S"),
             'start_time':datetime.now(),
             'end_time':end_time,
             'locality':request.user.location,
             'creator' : request.user.username,
-            "status": "Upcoming",
-            "slot_available": 0,
-            "slots": 2,
+            'status' : "Upcoming",
+            'slot_available': 0,
+            'slots': 2,
         }
         form = creatematchForm(data,request=request)
         # user = request.user
@@ -113,7 +115,7 @@ class CreateMatchesView(View):
             
             # start_datetime=pd.Timestamp.combine(date(start_date.year, start_date.month, start_date.day), time(start_time.hour,start_time.minute,start_time.second))
             # end_datetime=pd.Timestamp.combine(date(start_date.year, start_date.month, start_date.day), time(end_time.hour,end_time.minute,end_time.second))
-            from pytz import timezone
+         
             print(type(start_time))
             start_datetime= datetime.combine(start_date, start_time).astimezone(timezone('UTC'))
             end_datetime= datetime.combine(start_date, end_time).astimezone(timezone('UTC'))
@@ -136,7 +138,8 @@ class CreateMatchesView(View):
 
         else:
             # print(form.errors['start_time'])
-            messages.error(request	,'Please do not change the fields')
+            if  not form.has_error('start_time_f', code=None) or not form.has_error('end_time_f', code=None):
+                     messages.error(request	,'Please do not change the fields')
             return render(request,self.template,{'form':form})
         
 
@@ -182,8 +185,8 @@ class MatchHistoryView(View):
         reqcan=RequestModel.objects.filter(username=request.user.username,status="Cancelled")#requests cancelled
         reqrej=RequestModel.objects.filter(username=request.user.username,status="Rejected")#requests rejected
         id_list4=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location).values_list('id',flat=True)
-        reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted")
-        reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected")
+        reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted").exclude(username=request.user.username)
+        reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected").exclude(username=request.user.username)
         context={}
         context={
             'jum':jum,
@@ -218,6 +221,8 @@ class EditMatchesView(View):
         data={
             'category':editobj.category,
             'date':editobj.date,
+            'start_time_f':editobj.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+            'end_time_f':editobj.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
             'start_time':editobj.start_time,
             'end_time':editobj.end_time,
             'locality':editobj.locality,
@@ -242,11 +247,17 @@ class EditMatchesView(View):
         if form.is_valid():
             print("kikfjsdhgusdjgusikiki")
             # form.save()
+            start_date =form.cleaned_data["date"]
+            start_time= parse_time(request.POST["start_time_f"])
+            end_time= parse_time(request.POST["end_time_f"])
+            print(type(start_time))
+            start_datetime= datetime.combine(start_date, start_time).astimezone(timezone('UTC'))
+            end_datetime= datetime.combine(start_date, end_time).astimezone(timezone('UTC'))
             updatedRecord = MatchModel.objects.get(id=match_id)
             updatedRecord. category = form.cleaned_data['category']
             updatedRecord. date = form.cleaned_data['date']
-            updatedRecord. start_time = form.cleaned_data['start_time']
-            updatedRecord. end_time = form.cleaned_data['end_time']
+            updatedRecord. start_time = start_datetime
+            updatedRecord. end_time = end_datetime
             updatedRecord. locality = form.cleaned_data['locality']
             updatedRecord. slots = form.cleaned_data['slots']
             updatedRecord. slot_available = form.cleaned_data['slot_available']
@@ -380,10 +391,10 @@ class  JoinMatchView(View):
 @method_decorator(login_required,name='dispatch')
 class CancelMatchView(View):
     def get(self, request,id, *args, **kwargs):
-        try:
-            reqdata=MatchModel.objects.get(id=id,creator=request.user.username,status="Upcoming")
-        except:
-            return render(request, 'errors/error404.html')
+        # try:
+        reqdata=MatchModel.objects.get(id=id,creator=request.user.username,status="Upcoming")
+        # except:
+        #     return render(request, 'errors/error404.html')
         print("hiiiiiiiiiiiiiiiiiiiiiii",reqdata)
         reqdata.status="Cancelled"
         reqdata.save()
@@ -401,12 +412,12 @@ class CreateTournamentView(View):
         print(datetime.now()+timedelta(hours=1))
         end_time=(datetime.now()+timedelta(hours=1)).strftime('%H:%M:%S')
         print(end_time)
-        now = timezone.now()
-        print(now)
+        # # now = timezone.now()
+        # print(now)
         data={
-            'category':'Cricket',
+            'category':'Football',
             'start_date':datetime.now().date(),
-            'en_date':datetime.now().date(),
+            'end_date':datetime.now().date(),
             'start_time':datetime.now().strftime('%H:%M:%S'),
             'end_time':end_time,
             'locality':request.user.location,
@@ -415,7 +426,7 @@ class CreateTournamentView(View):
             "team_space_available": 0,
             "teams": 2,
         }
-        form = createtournamentForm(data,request.POST)
+        form = createtournamentForm(data,request=request)
         user = request.user
         print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
         context = {'form': form,

@@ -2,9 +2,6 @@
 {% block content %}
 
 <div class="container-fluid">
-  {% if matches%}
-<div class="row bg-light justify-content-around">
-{% if matches%}
 <div class="row bg-light justify-content-around container-fluid">
 {% for match in matches%}
 <div class="column col-md-4">
@@ -47,9 +44,8 @@
         </div>
       </div>
  </div>
- {%endfor%}
  </div>
- {% else %}
+ {% empty %}
  <div class="row bg-light justify-content-center">
 <div class="column col-md-4 justify-content-md-around">
     <div class="card text-white bg-soft-info m-5" > 
@@ -62,6 +58,7 @@
       </div>
 </div>
 </div>
+{%endfor%}
 </div>
 
 
@@ -69,7 +66,7 @@
     document.getElementById('my-matches-li').classList.add('active')
   
 </script>
-{%endif%}
-{%endif%}
+
+
 
 {% endblock content %}

@@ -3,12 +3,12 @@
 {% block content %}
 <section class="ecommerce-addstock-section container-fluid my-3" >
   <!-- ecommerce topbar -->
-  {% if messages %}
+  <!-- {% if messages %}
   {% for message in messages %}
       <p class="d-none" id="messagetag">{{message.tags}}</p>
       <p class="d-none " id="messagecontent">{{message}}</p>
   {% endfor %}
-    {% endif %}
+    {% endif %} -->
   <div class="ecomerce-top-bar ">
       <div class="row">
               <h1 class=" mt-5"style="text-align:center">EDIT YOUR MATCH</h1>
@@ -29,9 +29,14 @@
                       <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
                           {% render_field addForm class="form-control" placeholder="Place Holder" %}
                           {% if addform.type != "hidden"%}
-                          <label >{{addForm.label}}</label>
-                          {%endif%}
-                          <p>{{addform.type}}</p>
+                            {% if addForm.label == "Start time f" %}
+                            <label >Start Time</label>
+                            {% elif addForm.label == "End time f" %}
+                            <label >End Time</label>
+                            {% else %}
+                            <label >{{addForm.label}}</label>
+                            {% endif %}
+                            {%endif%}
                       </div>
                       {% else %}
                           {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
@@ -54,16 +59,16 @@
       
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
   <script type="text/javascript">
-     $(document).ready(function(){
-        let tag=$('#messagetag').html()
-        let message = $('#messagecontent').html()
-          if( tag == 'error'){
-            toastr.error(message);
-          }
-          if( tag == 'success' ){
-            toastr.success(message);
-          }
-      });
+    //  $(document).ready(function(){
+    //     let tag=$('#messagetag').html()
+    //     let message = $('#messagecontent').html()
+    //       if( tag == 'error'){
+    //         toastr.error(message);
+    //       }
+    //       if( tag == 'success' ){
+    //         toastr.success(message);
+    //       }
+    //   });
       $(document).ready(function() {
       var today = new Date().toISOString().split('T')[0];
       $("#id_date").attr('min', today);
