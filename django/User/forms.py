@@ -86,16 +86,19 @@ class creatematchForm(ModelForm):
 
     category= forms.ChoiceField(choices=options)
     date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
-    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
+    start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
+    end_time_f = forms.TimeField(required=False, widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
+    start_time = forms.DateTimeField(widget=forms.HiddenInput())
+    end_time = forms.DateTimeField(widget=forms.HiddenInput())
     slots = forms.IntegerField()#nos = number of slots           
     creator= forms.CharField(widget=forms.HiddenInput())
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
-    status=forms.CharField(widget=forms.HiddenInput())
+    # status=forms.CharField(widget=forms.HiddenInput())
     slot_available=forms.IntegerField(widget=forms.HiddenInput())
+    # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model = MatchModel
-        fields = '__all__'
+        fields = 'category','date','start_time_f','end_time_f','start_time','end_time','slots','creator','locality','creator'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -114,11 +117,11 @@ class creatematchForm(ModelForm):
             self.cleaned_data['slot_available']=slots-1
         else :
             self._errors['slots']=self.error_class(['No of slots can not be less than 2'])
-        self.cleaned_data['creator']=self.request.user.username
-        if creator !=  self.request.user.username:
-            self._errors['creator']=self.error_class([''])
-        if status != "Upcoming":
-            self._errors['status']=self.error_class([''])
+        # self.cleaned_data['creator']=self.request.user.username
+        # if creator !=  self.request.user.username:
+        #     self._errors['creator']=self.error_class([''])
+        # if status != "Upcoming":
+        #     self._errors['status']=self.error_class([''])
         # self.cleaned_data['status']="Upcoming"
         if   start_time != None and end_time !=None :
                 if start_time >= end_time:
