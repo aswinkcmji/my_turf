@@ -1,11 +1,14 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 
+<div class="container-fluid">
+  {% if matches%}
+<div class="row bg-light justify-content-around">
 {% if matches%}
 <div class="row bg-light justify-content-around container-fluid">
 {% for match in matches%}
-<div class="column col-md-4 g-4">
-    <div class="card p-2 m-4.2">
+<div class="column col-md-4">
+  <div class="card p-2 m-4">
         {% if match.category == "Cricket" %}
         <img src="https://cdn.britannica.com/47/148847-050-C4FB5341/Cricket-bat-ball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
         {% elif match.category == "Football" %}
@@ -25,7 +28,8 @@
         <div class="card-body p-1 ">
        <h2 class="card-text p-1">{{match.category}}</h2>
           <p class="card-text ">Date of Match:{{match.date|date:"Y-m-d"}}</p>
-          <p class="card-text">Time:{{match.time|time:"H:i:s"}}</p>
+          <p class="card-text">Start-Time:{{match.start_time|time:"H:i:s"}}</p>
+          <p class="card-text">End-Time:{{match.end_time|time:"H:i:s"}}</p>
           <p class="card-text">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text">Locality:{{match.locality}}</p>
           <!-- <p>{{match.creator}}</p>
@@ -55,9 +59,14 @@
       </div>
 </div>
 </div>
-{%endif%}
+</div>
+
+
 <script>
     document.getElementById('my-matches-li').classList.add('active')
   
 </script>
+{%endif%}
+{%endif%}
+
 {% endblock content %}

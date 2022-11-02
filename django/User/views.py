@@ -10,10 +10,12 @@ from django.urls import is_valid_path, reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import creatematchForm,updatematchform
+from .forms import *
 from datetime import datetime,timedelta
 from django.utils import timezone
 from django.contrib import messages
+
+from django import template
 # from .models import slotModel
 
 # Create your views here.
@@ -90,11 +92,9 @@ class CreateMatchesView(View):
 
     def post(self, request, *args, **kwargs):
         form=creatematchForm(request.POST,request=request)
-        # print(form)
+        
         slots=int(request.POST['slots'])
-        # print(form.slot_available)
-        # print(form)
-        # print(request.POST['date']>datetime.now().date(),"djkASGHDGVDGUIJFSABV")
+    
         if form.is_valid():
             print("kikikiki")
             print(form.errors.as_data())
@@ -271,6 +271,7 @@ class RequestsView(View):
             print("hyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyiiiiiiiiiiiiiiiiiiiiiiiiiiiiihyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
             messages.error(request	,'NO user selected')
             return HttpResponseRedirect(reverse('requests'))
+
 ######################################################################### View for joining matches #######################################################
 @method_decorator(login_required,name='dispatch')
 class  JoinMatchView(View):
@@ -339,3 +340,72 @@ class  JoinMatchView(View):
                 print(context)
                 return render(request, 'Matches/all-matches.html',context)
 
+
+
+
+
+#**********************************create tournament***********************************
+
+@method_decorator(login_required,name='dispatch')
+class CreateTournamentView(View):
+    template = 'Tournaments/create-tournament.html'
+    def get(self, request, *args, **kwargs):
+        print(datetime.now()+timedelta(hours=1))
+        end_time=(datetime.now()+timedelta(hours=1)).strftime('%H:%M:%S')
+        print(end_time)
+        now = timezone.now()
+        print(now)
+        data={
+            'category':'Cricket',
+            'start_date':datetime.now().date(),
+            'en_date':datetime.now().date(),
+            'start_time':datetime.now().strftime('%H:%M:%S'),
+            'end_time':end_time,
+            'locality':request.user.location,
+            'creator' : request.user.username,
+            "status": "Upcoming",
+            "team_space_available": 0,
+            "teams": 2,
+        }
+        form = createtournamentForm(data,request.POST)
+        user = request.user
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
+        context = {'form': form,
+                    'data': 'Add tournament',
+                    'user': user,
+                    }
+        
+        return render(request,'Tournaments/create-tournament.html',context)
+
+    def post(self, request, *args, **kwargs):
+        form=createtournamentForm(request.POST,request=request)
+        
+        teams=int(request.POST['teams'])
+    
+        if form.is_valid():
+            print(form.errors.as_data())
+            obj=form.save()
+            # RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
+            messages.success(request	,'Your Tournament has been succesfully created. Visit My Tournament to see .')
+            return HttpResponseRedirect(reverse('create-tournament'))
+
+        else:
+            # print(form.errors['start_time'])
+            messages.error(request	,'Please do not change the fields')
+            return render(request,self.template,{'form':form})
+
+
+#############################################################    View for tournaments user has created or joined  ###########################################################
+@method_decorator(login_required,name='dispatch')
+class MyTournamentView(View):
+    def get(self, request, *args, **kwargs):
+        print(request.user.username)
+        print(datetime.now())
+        # id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('id',flat=True)
+        # print(list(id_list))
+        # tournament=TournamentModel.objects.filter(id__in=list(id_list))
+        tournament=TournamentModel.objects.all()
+        context={
+            'tournaments':tournament
+        }
+        return render(request, 'Tournaments/my-tournament.html',context)
