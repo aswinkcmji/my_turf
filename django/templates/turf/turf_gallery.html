@@ -1,7 +1,18 @@
 {% extends 'layouts/base.html' %}
 {% load widget_tweaks %}
 {% block content %}
-<div class="container-fluid py-2">
+
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700">
+
+
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/masonry/3.1.5/masonry.pkgd.min.js"></script>
+<script src="/static/assets/js/script.js"></script>
+
+
+<div class="container-fluid py-2 lead_gallery">
     <div>
         <div class="row">
             <div class="col-md-12">
@@ -80,283 +91,97 @@
     </div>
 
     <!-- Gallery -->
+    <div id="grid_gallery">
+		<div id="posts_gallery">
+            {% for data in turfGallery %}
+			<div class="post_gallery">
+				<img src={{media_url}}{{data.image}} ><br>
+				<br>
+				<strong> {{data.caption}} </strong>
+			</div>
+            {% endfor %}
+        </div>
+    </div>
     
-    <!-- <div class="row">
-    {% for data in turfGallery %}
-        <div class="column">
-            <div class="col-md-6 col-12 col-lg-4">
-                <div style="color: black; text-align: center;" >
-                        <img
-                            src={{media_url}}{{data.image}}
-                            class="w-100 shadow-1-strong rounded mb-2"
-                            alt="Boat on Calm Water"
-                        />
-                        <div class="caption">
-                            <p>
-                                {{data.caption}}    
-                            </p>                
-                        </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div> -->
-    <div class="row align-items-stretch">
-        <div class="col-6 col-md-6 col-lg-8 aos-init aos-animate" data-aos="fade-up">
-        <a href="single.html" class="d-block photo-item">
-        <script data-pagespeed-no-defer="">//<![CDATA[
-        (function(){for(var g="function"==typeof Object.defineProperties?Object.defineProperty:function(b,c,a){if(a.get||a.set)throw new TypeError("ES3 does not support getters and setters.");b!=Array.prototype&&b!=Object.prototype&&(b[c]=a.value)},h="undefined"!=typeof window&&window===this?this:"undefined"!=typeof global&&null!=global?global:this,k=["String","prototype","repeat"],l=0;l<k.length-1;l++){var m=k[l];m in h||(h[m]={});h=h[m]}
-        var n=k[k.length-1],p=h[n],q=p?p:function(b){var c;if(null==this)throw new TypeError("The 'this' value for String.prototype.repeat must not be null or undefined");c=this+"";if(0>b||1342177279<b)throw new RangeError("Invalid count value");b|=0;for(var a="";b;)if(b&1&&(a+=c),b>>>=1)c+=c;return a};q!=p&&null!=q&&g(h,n,{configurable:!0,writable:!0,value:q});var t=this;
-        function u(b,c){var a=b.split("."),d=t;a[0]in d||!d.execScript||d.execScript("var "+a[0]);for(var e;a.length&&(e=a.shift());)a.length||void 0===c?d[e]?d=d[e]:d=d[e]={}:d[e]=c};function v(b){var c=b.length;if(0<c){for(var a=Array(c),d=0;d<c;d++)a[d]=b[d];return a}return[]};function w(b){var c=window;if(c.addEventListener)c.addEventListener("load",b,!1);else if(c.attachEvent)c.attachEvent("onload",b);else{var a=c.onload;c.onload=function(){b.call(this);a&&a.call(this)}}};var x;function y(b,c,a,d,e){this.h=b;this.j=c;this.l=a;this.f=e;this.g={height:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight,width:window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth};this.i=d;this.b={};this.a=[];this.c={}}
-        function z(b,c){var a,d,e=c.getAttribute("data-pagespeed-url-hash");if(a=e&&!(e in b.c))if(0>=c.offsetWidth&&0>=c.offsetHeight)a=!1;else{d=c.getBoundingClientRect();var f=document.body;a=d.top+("pageYOffset"in window?window.pageYOffset:(document.documentElement||f.parentNode||f).scrollTop);d=d.left+("pageXOffset"in window?window.pageXOffset:(document.documentElement||f.parentNode||f).scrollLeft);f=a.toString()+","+d;b.b.hasOwnProperty(f)?a=!1:(b.b[f]=!0,a=a<=b.g.height&&d<=b.g.width)}a&&(b.a.push(e),
-        b.c[e]=!0)}y.prototype.checkImageForCriticality=function(b){b.getBoundingClientRect&&z(this,b)};u("pagespeed.CriticalImages.checkImageForCriticality",function(b){x.checkImageForCriticality(b)});u("pagespeed.CriticalImages.checkCriticalImages",function(){A(x)});
-        function A(b){b.b={};for(var c=["IMG","INPUT"],a=[],d=0;d<c.length;++d)a=a.concat(v(document.getElementsByTagName(c[d])));if(a.length&&a[0].getBoundingClientRect){for(d=0;c=a[d];++d)z(b,c);a="oh="+b.l;b.f&&(a+="&n="+b.f);if(c=!!b.a.length)for(a+="&ci="+encodeURIComponent(b.a[0]),d=1;d<b.a.length;++d){var e=","+encodeURIComponent(b.a[d]);131072>=a.length+e.length&&(a+=e)}b.i&&(e="&rd="+encodeURIComponent(JSON.stringify(B())),131072>=a.length+e.length&&(a+=e),c=!0);C=a;if(c){d=b.h;b=b.j;var f;if(window.XMLHttpRequest)f=
-        new XMLHttpRequest;else if(window.ActiveXObject)try{f=new ActiveXObject("Msxml2.XMLHTTP")}catch(r){try{f=new ActiveXObject("Microsoft.XMLHTTP")}catch(D){}}f&&(f.open("POST",d+(-1==d.indexOf("?")?"?":"&")+"url="+encodeURIComponent(b)),f.setRequestHeader("Content-Type","application/x-www-form-urlencoded"),f.send(a))}}}
-        function B(){var b={},c;c=document.getElementsByTagName("IMG");if(!c.length)return{};var a=c[0];if(!("naturalWidth"in a&&"naturalHeight"in a))return{};for(var d=0;a=c[d];++d){var e=a.getAttribute("data-pagespeed-url-hash");e&&(!(e in b)&&0<a.width&&0<a.height&&0<a.naturalWidth&&0<a.naturalHeight||e in b&&a.width>=b[e].o&&a.height>=b[e].m)&&(b[e]={rw:a.width,rh:a.height,ow:a.naturalWidth,oh:a.naturalHeight})}return b}var C="";u("pagespeed.CriticalImages.getBeaconData",function(){return C});
-        u("pagespeed.CriticalImages.Run",function(b,c,a,d,e,f){var r=new y(b,c,a,e,f);x=r;d&&w(function(){window.setTimeout(function(){A(r)},0)})});})();
-        
-        pagespeed.CriticalImages.Run('/mod_pagespeed_beacon','https://preview.colorlib.com/theme/shutter/','-ilGEe-FWC',true,false,'kXAex1OH6ic');
-        //]]></script><img src="images/ximg_4.jpg.pagespeed.ic.1AGLk_uYZP.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="3729797881" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <h3 class="heading">Photos Title Here</h3>
-
-        <h3 class="heading">Photos Title Here</h3>
-        <h3 class="heading">Photos Title Here</h3>
-        <h3 class="heading">Photos Title Here</h3>
-
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_5.jpg.pagespeed.ic.GVwZNPhK8N.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="4024297802" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3 aos-init aos-animate" data-aos="fade-up">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_1.jpg.pagespeed.ic.dIQD0PoM1C.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="2846298118" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-6 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_2.jpg.pagespeed.ic.d4PcVB-OEV.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="3140798039" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3 aos-init aos-animate" data-aos="fade-up" data-aos-delay="300">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_3.jpg.pagespeed.ic.UMYv3g3msu.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="3435297960" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-6 aos-init aos-animate" data-aos="fade-up" data-aos-delay="">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_6.jpg.pagespeed.ic.URquzofIR5.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="23830427" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-6 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_7.jpg.pagespeed.ic.5evS8jSPgz.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="318330348" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_8.jpg.pagespeed.ic.HTTB9pZ7JK.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="612830269" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_9.jpg.pagespeed.ic.cD5E5t8_uQ.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="907330190" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_10.jpg.pagespeed.ic.ZZANhXrtl9.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="3951878700" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3 aos-init aos-animate" data-aos="fade-up" data-aos-delay="">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_1.jpg.pagespeed.ic.dIQD0PoM1C.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="2846298118" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-6 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_2.jpg.pagespeed.ic.d4PcVB-OEV.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="3140798039" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_3.jpg.pagespeed.ic.UMYv3g3msu.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="3435297960" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-8 aos-init aos-animate" data-aos="fade-up" data-aos-delay="">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_4.jpg.pagespeed.ic.1AGLk_uYZP.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="3729797881" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_5.jpg.pagespeed.ic.GVwZNPhK8N.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="4024297802" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-6 aos-init" data-aos="fade-up" data-aos-delay="">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_6.jpg.pagespeed.ic.URquzofIR5.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="23830427" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-6 aos-init" data-aos="fade-up" data-aos-delay="100">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_7.jpg.pagespeed.ic.5evS8jSPgz.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="318330348" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-4 aos-init" data-aos="fade-up" data-aos-delay="">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_8.jpg.pagespeed.ic.HTTB9pZ7JK.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="612830269" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        <div class="col-6 col-md-6 col-lg-8 aos-init" data-aos="fade-up" data-aos-delay="100">
-        <a href="single.html" class="d-block photo-item">
-        <img src="images/ximg_9.jpg.pagespeed.ic.cD5E5t8_uQ.webp" alt="Image" class="img-fluid" data-pagespeed-url-hash="907330190" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
-        <div class="photo-text-more">
-        <div class="photo-text-more">
-        <h3 class="heading">Photos Title Here</h3>
-        <span class="meta">42 Photos</span>
-        </div>
-        </div>
-        </a>
-        </div>
-        </div>
+   
 
 </div>
 <!-- end -->
-
-<style>
-    .turf-gallery{
-        position: relative;
-    }
-    .turf-gallery-edit-icon{
-        position: absolute;
-    top: 2rem;
-    visibility: hidden;    }
-.turf-gallery-img-div:hover ~ .turf-gallery-edit-icon{
-    visibility: visible;
-    
-}
-
-</style>
 
 <script>
     document.getElementById('turfgallery-li').classList.add('active');
 </script>
 
 
-  <!-- Including jQuery -->
-  <script src=
-  "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js">
+<!-- Including jQuery -->
+<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js">
       </script>
 
+      <!-- <script >
+        jQuery(window).load(function () {
+
+
+
+// Takes the gutter width from the bottom margin of .post_gallery
+
+var gutter = parseInt(jQuery('.post_gallery').css('marginBottom'));
+var container = jQuery('#posts_gallery');
+
+
+
+// Creates an instance of Masonry on #posts_gallery
+
+container.masonry({
+    gutter: gutter,
+    itemSelector: '.post_gallery',
+    columnWidth: '.post_gallery'
+});
+
+
+
+// This code fires every time a user resizes the screen and only affects .post_gallery elements
+// whose parent class isn't .container. Triggers resize first so nothing looks weird.
+
+jQuery(window).bind('resize', function () {
+    if (!jQuery('#posts_gallery').parent().hasClass('container')) {
+        
+        
+        
+        // Resets all widths to 'auto' to sterilize calculations
+        
+        post_width = jQuery('.post_gallery').width() + gutter;
+        jQuery('#posts_gallery, body > #grid_gallery').css('width', 'auto');
+        
+        
+        
+        // Calculates how many .post_gallery elements will actually fit per row. Could this code be cleaner?
+        
+        posts_gallery_per_row = jQuery('#posts_gallery').innerWidth() / post_width;
+        floor_posts_gallery_width = (Math.floor(posts_gallery_per_row) * post_width) - gutter;
+        ceil_posts_gallery_width = (Math.ceil(posts_gallery_per_row) * post_width) - gutter;
+        posts_gallery_width = (ceil_posts_gallery_width > jQuery('#posts_gallery').innerWidth()) ? floor_posts_gallery_width : ceil_posts_gallery_width;
+        if (posts_gallery_width == jQuery('.post_gallery').width()) {
+            posts_gallery_width = '100%';
+        }
+        
+        
+        
+        // Ensures that all top-level elements have equal width and stay centered
+        
+        jQuery('#posts_gallery, #grid_gallery').css('width', posts_gallery_width);
+        jQuery('#grid_gallery').css({'margin': '0 auto'});
+            
+    
+    
+    }
+}).trigger('resize');
+
+
+
+});
+        
+      </script> -->
 <script type="text/javascript">
     setTimeout(function () {
 
@@ -364,46 +189,5 @@
         $('#alerts-disimissible-component').alert('close');
     }, 1000);
 </script>
-<style>
 
-.row {
-  display: -ms-flexbox; /* IE10 */
-  display: flex;
-  -ms-flex-wrap: wrap; /* IE10 */
-  flex-wrap: wrap;
-  padding: 0 4px;
-}
-
-/* Create four equal columns that sits next to each other */
-.column {
-  -ms-flex: 25%; /* IE10 */
-  flex: 25%;
-  max-width: 100%;
-  padding: 0 4px;
-}
-
-.column img {
-  margin-top: 8px;
-  vertical-align: middle;
-  width: 100%;
-}
-
-/* Responsive layout - makes a two column-layout instead of four columns */
-@media screen and (max-width: 800px) {
-  .column {
-    -ms-flex: 50%;
-    flex: 50%;
-    max-width: 50%;
-  }
-}
-
-/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-  .column {
-    -ms-flex: 100%;
-    flex: 100%;
-    max-width: 100%;
-  }
-}
-</style>
 {% endblock content %}
