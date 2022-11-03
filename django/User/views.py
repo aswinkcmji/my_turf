@@ -1,6 +1,7 @@
 from datetime import date
 from email import message
 from multiprocessing import context
+from tkinter import FLAT
 from django.shortcuts import render
 from .models import *
 from django.views.generic import View
@@ -56,7 +57,7 @@ class MyMatchesView(View):
         context={}
         id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
         print(list(id_list))
-        matches=MatchModel.objects.filter(id__in=list(id_list),status="Upcoming")
+        matches=MatchModel.objects.filter(id__in=list(id_list))
         context['matches']=matches
         context[request]=request
         return render(request, 'Matches/my-matches.html',context)
@@ -72,8 +73,9 @@ class CreateMatchesView(View):
         print(end_time)
         # now = timezone.now()
         # print(now)
+        # print(CategoriesModel.objects.get(id=1))
         data={
-            'category':'Cricket',
+            'category':CategoriesModel.objects.get(id=1),
             'date':datetime.now().date(),
             'start_time_f':datetime.now().strftime("%H:%M:%S"),
             'end_time_f':end_time.strftime("%H:%M:%S"),
@@ -261,10 +263,12 @@ class EditMatchesView(View):
             updatedRecord. locality = form.cleaned_data['locality']
             updatedRecord. slots = form.cleaned_data['slots']
             updatedRecord. slot_available = form.cleaned_data['slot_available']
+            # if updatedRecord. start_time > datetime.now.astimezone(timezone('UTC')):
+            #     updatedRecord.status="Upcomming"
             updatedRecord.save()
             messages.success(request	,'Your match has been succesfully edit. Visit My Match to see .')
-            return render(request,'Matches/edit-matches.html',{'form':updatematchform(request.POST,request=request)})
-            # RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
+            RequestModel.objects.filter(match_id=updatedRecord).update(category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time_f'],end_time=form.cleaned_data['end_time_f'],locality=form.cleaned_data['locality'])
+            return HttpResponseRedirect(reverse('my-matches'))
         else:
             print(form.errors.as_data())
             messages.error(request	,'Please do not change the fields')
@@ -337,8 +341,8 @@ class  JoinMatchView(View):
                 data={
                     'category':match.category,
                     'date':match.date,
-                    'start_time':match.start_time,
-                    'end_time':match.end_time,
+                    'start_time':match.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                    'end_time':match.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
                     'locality':match.locality,
                     'username':request.user.username,
                     'status':"Pending",
@@ -391,10 +395,11 @@ class  JoinMatchView(View):
 @method_decorator(login_required,name='dispatch')
 class CancelMatchView(View):
     def get(self, request,id, *args, **kwargs):
-        # try:
-        reqdata=MatchModel.objects.get(id=id,creator=request.user.username,status="Upcoming")
-        # except:
-        #     return render(request, 'errors/error404.html')
+        try:
+            reqdata=MatchModel.objects.get(id=id,creator=request.user.username,status="Upcoming")
+        except:
+             messages.error(request,'You cannot cancel this match')
+             return HttpResponseRedirect(reverse('my-matches'))
         print("hiiiiiiiiiiiiiiiiiiiiiii",reqdata)
         reqdata.status="Cancelled"
         reqdata.save()
