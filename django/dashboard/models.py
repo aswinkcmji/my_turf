@@ -31,3 +31,6 @@ class GalleryImg(models.Model):
 class CategoriesModel(models.Model):
     category = models.CharField(max_length=100)
     image = models.ImageField( null=True , upload_to='images/category')
+
+    def __str__(self):
+        return self.category

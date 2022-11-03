@@ -73,7 +73,7 @@ class CreateMatchesView(View):
         print(end_time)
         # now = timezone.now()
         # print(now)
-        print(CategoriesModel.objects.get(id=1))
+        # print(CategoriesModel.objects.get(id=1))
         data={
             'category':CategoriesModel.objects.get(id=1),
             'date':datetime.now().date(),
@@ -263,10 +263,12 @@ class EditMatchesView(View):
             updatedRecord. locality = form.cleaned_data['locality']
             updatedRecord. slots = form.cleaned_data['slots']
             updatedRecord. slot_available = form.cleaned_data['slot_available']
+            # if updatedRecord. start_time > datetime.now.astimezone(timezone('UTC')):
+            #     updatedRecord.status="Upcomming"
             updatedRecord.save()
             messages.success(request	,'Your match has been succesfully edit. Visit My Match to see .')
-            return render(request,'Matches/edit-matches.html',{'form':updatematchform(request.POST,request=request)})
-            # RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],time=form.cleaned_data['time'],locality=form.cleaned_data['locality'])
+            RequestModel.objects.filter(match_id=updatedRecord).update(category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time_f'],end_time=form.cleaned_data['end_time_f'],locality=form.cleaned_data['locality'])
+            return HttpResponseRedirect(reverse('my-matches'))
         else:
             print(form.errors.as_data())
             messages.error(request	,'Please do not change the fields')

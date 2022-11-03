@@ -3,15 +3,11 @@ from unicodedata import category
 from django.db import models
 from unittest.util import _MAX_LENGTH
 from datetime import datetime,timedelta
-
+from dashboard.models import CategoriesModel
 # Create your models here.
 
-class CategoriesModel(models.Model):
-    category=models.CharField(max_length=30,null=False,blank=False)
-    image = models.ImageField(upload_to='images')
 
-    def __str__(self):
-        return self.category
+   
 class MatchModel(models.Model):
     category = models.ForeignKey(CategoriesModel, on_delete=models.CASCADE)
     date= models.DateField(blank=True)
