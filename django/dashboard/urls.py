@@ -13,5 +13,8 @@ urlpatterns = [
     path('manage_user/', ManageUser.as_view(), name="manage_user"),
     path('manage_turf/', ManageTurf.as_view(), name="manage_turf"),
     path('gallery/', Turf_Gallery.as_view(), name="turf_gallery"),
+    path('categories/', CategoriesView.as_view(), name="categories"),
+    path('categories/<slug:id>/', CategoriesEditView.as_view(), name="categories_edit"),
+    path('categoriesdel/<slug:id>/', CategoriesDeleteView.as_view(), name="categories_delete"),
 
 ]

@@ -1,6 +1,7 @@
 from email.policy import default
 from enum import unique
 from unicodedata import category
+from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.forms import CharField
 from accounts.models import UserModel
@@ -25,3 +26,8 @@ class GalleryImg(models.Model):
     images2 = models.ImageField( null=True , upload_to='images/images')
     images3 = models.ImageField( null=True , upload_to='images/images')
     images4 = models.ImageField( null=True , upload_to='images/images')
+
+
+class CategoriesModel(models.Model):
+    category = models.CharField(max_length=100)
+    image = models.ImageField( null=True , upload_to='images/category')
