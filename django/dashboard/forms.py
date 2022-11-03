@@ -13,11 +13,10 @@ from .models import TurfScheduleModel, GalleryImg, CategoriesModel
 
 
 class TurfScheduleForm(ModelForm):
-    CHOICES_category = [('1', '1'),
-         ('2', '2'),
-         ('3', '3'), ]
-    category = forms.ChoiceField(required=True, choices=CHOICES_category, widget=forms.Select(
-        attrs={'class': 'form-select', 'defualt': "Category"}))
+    # CHOICES_category = [('1', '1'),
+    #      ('2', '2'),
+    #      ('3', '3'), ]
+    category = forms.ModelChoiceField(queryset=CategoriesModel.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     user = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': "Username/phone/email..."}))
     start = forms.CharField(widget=forms.DateTimeInput(attrs={
@@ -90,7 +89,7 @@ class GalleryImgForm(ModelForm):
 
 class CategoriesForm(ModelForm):
     category = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control'}))
-    image=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    image=forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
     class Meta:
         model = CategoriesModel 
         fields = '__all__'

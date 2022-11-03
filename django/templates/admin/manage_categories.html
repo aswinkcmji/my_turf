@@ -128,6 +128,8 @@
                                         </div>
                                         <span class="text-danger">{{addCategoryform.category.errors}}</span>
 
+
+                                        {% if is_editform %}
                                         <div id="category_old_img">
                                         <label >Old Image</label>
                                        
@@ -136,12 +138,14 @@
                                         <img   class="rounded bg-soft-primary img-fluid  me-3" style="max-height: 25vh;" src="{{media_url}}{{image}}" alt="image">
                                         </div></div>
                                         
-                                        <button id="category_image_bt" type="button" onclick="toggle_image_edit()" class="btn-icon my-2 bg-soft-primary border-primary btn  text-primary">Select New</button>
+                                        <a id="category_image_bt"  onclick="toggle_image_edit()" class="btn-icon my-2 bg-soft-primary border-primary btn  text-primary">Select New</a>
                                         
-                                        <div id="category_image_input" class="d-none">
-                                              <div  class="form-floating custom-form-floating custom-form-floating-sm form-group mb-5 mt-3">
+
+                                        {% endif %}
+                                        <div id="category_image_input" class=" {% if is_editform %}d-none {% endif %}">
+                                            <div  class="form-floating custom-form-floating custom-form-floating-sm form-group mb-5 mt-3">
                                             {{addCategoryform.image}}
-                                            <label for="image">Select New</label>
+                                            <label for="image">{% if is_editform %}Select New {% else %} Select Image {% endif %}</label>
                                             
                                             
                                         </div>
@@ -263,7 +267,7 @@
         </div>
         {% endif %}
         <script>
-            document.getElementById('turf-schedule-li').classList.add('active');
+            document.getElementById('categories-li').classList.add('active');
         
             function closeAddScheduleForm() {
         

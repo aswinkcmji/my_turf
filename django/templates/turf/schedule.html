@@ -111,8 +111,7 @@
                         <div class="card-body">
                             <form method="POST">
                                 <div class="modal-header">
-                                    <h5 class="modal-title mx-auto"> {% if is_editform %}Edit or Delete Schedule {% else
-                                        %}Add New Match To Your Calendar{% endif %}
+                                    <h5 class="modal-title mx-auto"> {% if is_editform %}Edit or Delete Schedule {% else%}Add New Match To Your Calendar{% endif %}
                                     </h5>
                                     {% if is_editform %}
                                     <button data-bs-toggle="modal" data-bs-target="#exampleModalDefault" type="button"
@@ -222,8 +221,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" id="calendar_view" {% if is_addform or is_editform %} style="display: none ;" {% else %}
-                style="display: block ;" {% endif %}>
+            <div class="row" id="calendar_view" {% if is_addform or is_editform %} style="display: none ;" {% else %} style="display: block ;" {% endif %}>
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">
