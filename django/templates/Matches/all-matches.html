@@ -1,49 +1,52 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
-{% if messages %}
-  {% for message in messages %}
-      <p class="d-none" id="messagetag">{{message.tags}}</p>
-      <p class="d-none " id="messagecontent">{{message}}</p>
-  {% endfor %}
-    {% endif %}
-<div class="row bg-soft-light d-flex justify-content-around"  {% if is_requestform %} style="display: none ;" {% else %}
-style="display: block ;" {% endif %}>
-{% for match in matches%}
-  <div class="column col-md-4">
-    <div class="card p-2 m-4">
-      {% if match.category == "Cricket" %}
-        <img src="https://cdn.britannica.com/47/148847-050-C4FB5341/Cricket-bat-ball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Football" %}
-        <img src="https://images.squarespace-cdn.com/content/v1/51e6a2b7e4b038b7a667f1b3/1375240864715-15RNHVOTAV215YF2R60V/PES%2B2014%2BBall%2Bgrass.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Baseball" %}
-        <img src="https://techcrunch.com/wp-content/uploads/2019/03/GettyImages-844016022.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Badminton" %}
-        <img src="https://gumlet.assettype.com/dtnext/import/Articles/2022/Feb/202202200142305523_Ball-Badminton-Nationals-in-Dindigul-from-Feb-22_SECVPF.gif?w=1200&h=675&auto=format%2Ccompress&fit=max" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Tennis" %}
-        <img src="https://thumbs.dreamstime.com/b/tennis-ball-racket-16093106.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Volleyball" %}
-        <img src="https://sportslounge.co.in/file/2020/09/volleyball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Basketball" %}
-        <img src="https://btcpeers.com/content/images/2022/04/Basketball-Swish.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        
-        {%endif%}
-        <div class="card-body p-1 ">
-          <h2>{{match.category}}</h2>
-          <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
-          <p class="card-text text-dark">Start Time:{{match.start_time|time:"H:i:s"}}</p>
-          <p class="card-text text-dark">End Time:{{match.end_time|time:"H:i:s"}}</p>
-          <p class="card-text text-dark ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
-          <p class="card-text text-dark">Locality:{{match.locality}}</p>
-          {% if match.creator != request.user.username %}
-         <a class="btn btn-primary" href="join/{{match.id}}">JOIN NOW</a>
-        {%else%}
-         <p>You are the organizer.<br>Visit <a class="" href="{% url 'my-matches' %}" id="my-matches-li">My Match</a> to edit</p>
-         {%endif%}
-          </div>
+<!-- 
+    {% if messages %}
+
+    {% for message in messages %}
+        <p class="d-none" id="messagetag">{{message.tags}}</p>
+        <p class="d-none " id="messagecontent">{{message}}</p>
+    {% endfor %}
+
+    {% endif %} -->
+    <div class="row bg-soft-light d-flex justify-content-around"  {% if is_requestform %} style="display: none ;" {% else %}
+    style="display: block ;" {% endif %}>
+    {% for match in matches%}
+        <div class="column col-md-4">
+            <div class="card p-2 m-4">
+                {% if match.category == "Cricket" %}
+                    <img src="https://cdn.britannica.com/47/148847-050-C4FB5341/Cricket-bat-ball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+                    {% elif match.category == "Football" %}
+                    <img src="https://images.squarespace-cdn.com/content/v1/51e6a2b7e4b038b7a667f1b3/1375240864715-15RNHVOTAV215YF2R60V/PES%2B2014%2BBall%2Bgrass.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+                    {% elif match.category == "Baseball" %}
+                    <img src="https://techcrunch.com/wp-content/uploads/2019/03/GettyImages-844016022.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+                    {% elif match.category == "Badminton" %}
+                    <img src="https://gumlet.assettype.com/dtnext/import/Articles/2022/Feb/202202200142305523_Ball-Badminton-Nationals-in-Dindigul-from-Feb-22_SECVPF.gif?w=1200&h=675&auto=format%2Ccompress&fit=max" class="card-img-top" alt="Product 1" style="height:350px;">
+                    {% elif match.category == "Tennis" %}
+                    <img src="https://thumbs.dreamstime.com/b/tennis-ball-racket-16093106.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+                    {% elif match.category == "Volleyball" %}
+                    <img src="https://sportslounge.co.in/file/2020/09/volleyball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+                    {% elif match.category == "Basketball" %}
+                    <img src="https://btcpeers.com/content/images/2022/04/Basketball-Swish.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+                    
+                {%endif%}
+                    <div class="card-body p-1 ">
+                        <h2>{{match.category}}</h2>
+                        <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
+                        <p class="card-text text-dark">Start Time:{{match.start_time|time:"H:i:s"}}</p>
+                        <p class="card-text text-dark">End Time:{{match.end_time|time:"H:i:s"}}</p>
+                        <p class="card-text text-dark ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
+                        <p class="card-text text-dark">Locality:{{match.locality}}</p>
+                        {% if match.creator != request.user.username %}
+                            <a class="btn btn-primary" href="join/{{match.id}}">JOIN NOW</a>
+                        {%else%}
+                            <p>You are the organizer.<br>Visit <a class="" href="{% url 'my-matches' %}" id="my-matches-li">My Match</a> to edit</p>
+                        {%endif%}
+                    </div>
+            </div>
         </div>
-   </div>
-       <div class="modal fade" id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+       <!-- <div class="modal fade" id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -78,10 +81,10 @@ style="display: block ;" {% endif %}>
         </div>
         </div>
         </div>
-      {%endfor%}
+      {% comment %} {%endfor%} {% endcomment %}
       </div>
  </div>
- {%endif%}
+ {% comment %} {%endif%} {% endcomment %}
 
 <div class="column col-md-4"{% if is_requestform %} style="display: none ;" {% else %}
 style="display: block ;" {% endif %}>
@@ -226,17 +229,17 @@ style="display: none ;" {% endif %}>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 <script>
     document.getElementById('matches-li').classList.add('active')
-    $(document).ready(function(){
-        let tag=$('#messagetag').html()
-        let message = $('#messagecontent').html()
-          if( tag == 'error'){
-            toastr.error(message);
-            $('#creatematch').trigger('reset');
-          }
-          if( tag == 'success' ){
-            toastr.success(message);
-            $('#creatematch').trigger('reset');
-          }
-      });
+    // $(document).ready(function(){
+    //     let tag=$('#messagetag').html()
+    //     let message = $('#messagecontent').html()
+    //       if( tag == 'error'){
+    //         toastr.error(message);
+    //         $('#creatematch').trigger('reset');
+    //       }
+    //       if( tag == 'success' ){
+    //         toastr.success(message);
+    //         $('#creatematch').trigger('reset');
+    //       }
+    //   });
 </script>
 {% endblock content %}

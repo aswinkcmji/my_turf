@@ -1,0 +1,29 @@
+{% if messages %}
+{% for message in messages %}
+    <p class="d-none" id="messagetag">{{message.tags}}</p>
+    <p class="d-none " id="messagecontent">{{message}}</p>
+{% endfor %}
+  {% endif %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+      
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+  <script type="text/javascript">
+     $(document).ready(function(){
+        let tag=$('#messagetag').html()
+        let message = $('#messagecontent').html()
+          if( tag == 'error'){
+            toastr.error(message);
+            $('#creatematch').trigger('reset');
+          }
+          if( tag == 'success' ){
+            toastr.success(message);
+            $('#creatematch').trigger('reset');
+          }
+      });
+    //   $(document).ready(function() {
+    //   var today = new Date().toISOString().split('T')[0];
+    //   $("#id_date").attr('min', today);
+    //   $('#creatematch').trigger('reset');
+    //   });
+  </script>
