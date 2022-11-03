@@ -75,7 +75,6 @@ class CreateMatchesView(View):
         # print(now)
         # print(CategoriesModel.objects.get(id=1))
         data={
-            'category':CategoriesModel.objects.get(id=1),
             'date':datetime.now().date(),
             'start_time_f':datetime.now().strftime("%H:%M:%S"),
             'end_time_f':end_time.strftime("%H:%M:%S"),
