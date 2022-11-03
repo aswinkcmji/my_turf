@@ -1,6 +1,7 @@
 from contextvars import Context
 from datetime import datetime
 import json
+from unicodedata import category
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
@@ -13,9 +14,9 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import GalleryImgForm, TurfScheduleForm
+from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm
 from django.utils.dateparse import parse_datetime
-from .models import GalleryImg, TurfScheduleModel
+from .models import GalleryImg, TurfScheduleModel , CategoriesModel
 
 
 
@@ -258,4 +259,72 @@ class Turf_Gallery(View):
             #     context['form'] = form
             #     return render(request, 'accounts/turf-sign-up.html',context)
 
+@method_decorator(login_required,name='dispatch')
+class CategoriesView(View):
+    def get(self, request, *args, **kwargs):
+        categories   = CategoriesModel.objects.all()
 
+        addCategoryform = CategoriesForm()
+        context ={'addCategoryform': addCategoryform ,'is_addform':False , 'media_url':settings.MEDIA_URL,'categories':categories}
+        return render(request,"admin/manage_categories.html",context)
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            form = CategoriesForm(request.POST, request.FILES)
+             
+            if form.is_valid():
+                form.save()
+                    
+                    
+                messages.success(self.request, "Category Added successfully")
+                return HttpResponseRedirect(reverse('categories'))
+                      
+            else:
+                categories   = CategoriesModel.objects.all()
+                context ={'addCategoryform': form, 'is_addform':True ,'media_url':settings.MEDIA_URL,'categories':categories}
+                return render(request,"admin/manage_categories.html",context)
+        
+
+@method_decorator(login_required,name='dispatch')
+class CategoriesEditView(View):
+    def get(self, request, *args, **kwargs):
+        id = kwargs.pop('id')
+        category = CategoriesModel.objects.filter(id=id).first()
+        editCategoryForm = CategoriesForm(initial={'category':category.category})
+        context={'addCategoryform':editCategoryForm,
+                 'is_editform':True,
+                 'category_id':id,
+                 'media_url':settings.MEDIA_URL,
+                 "image":category.image}
+        return render(request,"admin/manage_categories.html",context)
+    def post(self, request, *args, **kwargs):
+        id = kwargs.pop('id')
+
+        if request.method == 'POST':
+            form = CategoriesForm(request.POST, request.FILES)
+            
+            category = CategoriesModel.objects.filter(id=id).first()
+            if form.is_valid():
+                
+               
+                category.category = request.POST['category']
+                category.image = request.FILES['image']
+                
+                category.save()
+                    
+                    # messages.success(self.request, "Account Created Successfully")
+                return HttpResponseRedirect(reverse('categories'))
+            else:
+                categories   = CategoriesModel.objects.all()
+                context =  {'addCategoryform': form, 'is_addform':True ,
+                            'categories':categories,
+                            'is_editform':True,
+                            'category_id':id}
+                return render(request,"admin/manage_categories.html",context)
+
+@method_decorator(login_required,name='dispatch')
+class CategoriesDeleteView(View):
+    def get (self, request, *args, **kwargs):
+        id = kwargs.pop('id')
+        category = CategoriesModel.objects.filter(id=id).first()
+        category.delete()
+        return redirect('categories')
