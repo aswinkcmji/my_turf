@@ -8,10 +8,13 @@
 
         document.getElementById('addScheduleForm').style.display = 'none';
         document.getElementById('calendar_view').style.display = 'block';
+        document.getElementById('add-schedule-bt').style.display = 'block';
     }
     function openAddForm() {
 
         document.getElementById('addScheduleForm').style.display = 'block';
+        document.getElementById('add-schedule-bt').style.display = 'none';
+        document.getElementById('calendar_view').style.display = 'none';
     }
 
 </script>
@@ -89,7 +92,7 @@
                             </div>
                             <div class="card-action">
                                 {% if not is_addform and not is_editform %}
-                                <button type="button" class="btn btn-outline-success" onclick="openAddForm()">
+                                <button  type="button" class="btn btn-outline-success" id="add-schedule-bt" onclick="openAddForm()">
                                     + Add to Schedule
                                 </button>
                                 {% endif %}
@@ -212,8 +215,7 @@
                                         onclick="closeAddScheduleForm()">Close</button>
                                     {% endif %}
 
-                                    <button type="submit" class="btn btn-success">{% if is_editform %} Update{% else
-                                        %}Add{% endif %}</button>
+                                    <button type="submit" class="btn btn-success">{% if is_editform %} Update{% else %}Add{% endif %}</button>
                                 </div>
                             </form>
                         </div>
