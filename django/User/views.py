@@ -1,6 +1,7 @@
 from datetime import date
 from email import message
 from multiprocessing import context
+from tkinter import FLAT
 from django.shortcuts import render
 from .models import *
 from django.views.generic import View
@@ -56,7 +57,7 @@ class MyMatchesView(View):
         context={}
         id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
         print(list(id_list))
-        matches=MatchModel.objects.filter(id__in=list(id_list),status="Upcoming")
+        matches=MatchModel.objects.filter(id__in=list(id_list))
         context['matches']=matches
         context[request]=request
         return render(request, 'Matches/my-matches.html',context)
@@ -72,8 +73,9 @@ class CreateMatchesView(View):
         print(end_time)
         # now = timezone.now()
         # print(now)
+        print(CategoriesModel.objects.get(id=1))
         data={
-            'category':'Cricket',
+            'category':CategoriesModel.objects.get(id=1),
             'date':datetime.now().date(),
             'start_time_f':datetime.now().strftime("%H:%M:%S"),
             'end_time_f':end_time.strftime("%H:%M:%S"),
@@ -337,8 +339,8 @@ class  JoinMatchView(View):
                 data={
                     'category':match.category,
                     'date':match.date,
-                    'start_time':match.start_time,
-                    'end_time':match.end_time,
+                    'start_time':match.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                    'end_time':match.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
                     'locality':match.locality,
                     'username':request.user.username,
                     'status':"Pending",

@@ -6,12 +6,12 @@ from django.forms import ModelForm
 # from django.contrib.auth import authenticate
 from .models import *
 from datetime import datetime
-
+from pytz import timezone
 
 
 
 class RequestForm(ModelForm):
-    category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'true'}))
+    category = forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
     date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','readonly':'true','type': 'date'}))
     start_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
     end_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
@@ -30,7 +30,10 @@ class RequestForm(ModelForm):
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(RequestForm, self).__init__(*args, **kwargs)
-    
+        self.fields['category'].disabled = True
+
+
+
     def clean(self):
         print("---------------Inside RequestForm's Clean Method-------------------")
         self.cleaned_data = super().clean()
@@ -44,14 +47,14 @@ class RequestForm(ModelForm):
         if self.cleaned_data.get('date')!=match.date:
             self._errors['date']=self.error_class(['Do not change the date'])
             print("date  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-        if self.cleaned_data.get('start_time')!=match.start_time:
-            self._errors['date']=self.error_class(['Do not change the start_time'])
+        if self.cleaned_data.get('start_time')!=match.start_time.astimezone(timezone('Asia/Kolkata')).time():
+            self._errors['start_time']=self.error_class(['Do not change the start_time'])
             print("start_time   erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-        if self.cleaned_data.get('end_time')!=match.end_time:
-            self._errors['date']=self.error_class(['Do not change the end_time'])
+        if self.cleaned_data.get('end_time')!=match.end_time.astimezone(timezone('Asia/Kolkata')).time():
+            self._errors['end_time']=self.error_class(['Do not change the end_time'])
             print("end_time  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         if self.cleaned_data.get('locality')!=match.locality:
-            self._errors['date']=self.error_class(['Do not change the locality'])
+            self._errors['locality']=self.error_class(['Do not change the locality'])
             print("locality  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")   
         if self.cleaned_data.get('username')!=self.request.user.username:
             self._errors['username']=self.error_class(['Do not change the username'])
@@ -82,9 +85,16 @@ class creatematchForm(ModelForm):
         ("Volleyball","Volleyball"),
         ("Basketball","Basketball")
     ]
+    # cat=CategoriesModel.objects.all().values_list('category')
+    # print(cat)
+    # print("------------------------hardcoded options--------------------------",options)
+    # options1 =[
+    #     # for c in cat:
+    #     #     (c,c)
+    # ]
+    # print(options1)
 
-
-    category= forms.ChoiceField(choices=options)
+    category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
     date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
     end_time_f = forms.TimeField(required=False, widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
@@ -148,7 +158,7 @@ class updatematchform(ModelForm):
     ]
 
     match_id = forms.ModelChoiceField(queryset=MatchModel.objects.all(),widget=forms.HiddenInput())
-    category= forms.ChoiceField(choices=options)
+    category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
     date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
     end_time_f = forms.TimeField(required=False, widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
