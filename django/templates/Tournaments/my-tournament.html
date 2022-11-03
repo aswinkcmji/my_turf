@@ -34,7 +34,7 @@
             <p class="card-text">Available Slots:{{r.team_space_available}}/{{r.team_space_available}}</p>
             <p class="card-text">Locality:{{r.locality}}</p>
             {% if r.creator == request.user.username %}
-            <a href="edit/{r.id}} "  class="btn btn-primary">
+            <a href="edit/{{r.id}} "  class="btn btn-primary">
                 EDIT
             </a>
             {%else%}
