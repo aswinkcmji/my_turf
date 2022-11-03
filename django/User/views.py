@@ -395,10 +395,11 @@ class  JoinMatchView(View):
 @method_decorator(login_required,name='dispatch')
 class CancelMatchView(View):
     def get(self, request,id, *args, **kwargs):
-        # try:
-        reqdata=MatchModel.objects.get(id=id,creator=request.user.username,status="Upcoming")
-        # except:
-        #     return render(request, 'errors/error404.html')
+        try:
+            reqdata=MatchModel.objects.get(id=id,creator=request.user.username,status="Upcoming")
+        except:
+             messages.error(request,'You cannot cancel this match')
+             return HttpResponseRedirect(reverse('my-matches'))
         print("hiiiiiiiiiiiiiiiiiiiiiii",reqdata)
         reqdata.status="Cancelled"
         reqdata.save()

@@ -31,18 +31,18 @@
           <p class="card-text">Locality:{{match.locality}}</p>
           <!-- <p>{{match.creator}}</p>
           <p>{{request.user.username}}</p> -->
-          {% if match.creator == request.user.username %}
+          {% if match.creator == request.user.username and match.status == "Upcoming" %}
           <a href="edit/{{match.id}} "  class="btn btn-primary">
             EDIT
         </a>
         <a  class="btn btn-primary" href="cancel/{{match.id}}">
           Cancel
         </a>
-        {%else%}
-        <p class="card-text ">Organized By:{{match.creator}}</p>
+        {%elif match.creator == request.user.username%}
+        <div class="col-4 "><img src="/static/assets/images/avatars/01.png" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-50"></div>
         {%endif%}
-        </div>
       </div>
+ </div>
  </div>
  {% empty %}
  <div class="column col-md-4 justify-content-md-around">
@@ -55,7 +55,6 @@
       </div>
     </div>
   </div>
-</div>
 </div>
 {%endfor%}
 </div>
