@@ -82,6 +82,7 @@ class TurfSchedule(View):
 
             
             if form.is_valid():
+                category = CategoriesModel.objects.get(id=request.POST['category'])
                 form2 =form.save(commit=False)
                 for key,value in enumerate(bg_colors):
                     
@@ -90,7 +91,7 @@ class TurfSchedule(View):
                         form2.color_bg =bg_colors[key]
                 # form2.start= parse_datetime(request.POST['start'])
                 # form2.end= parse_datetime(request.POST['end'])
-                form2.title = request.POST['category']+" - "+request.POST['user']
+                form2.title = category.category +" - "+request.POST['user']
                 form2.turf = request.user
                 form2.save()
                     
@@ -108,8 +109,11 @@ class TurfScheduleEdit(View):
     def get(self, request, *args, **kwargs):
         id = kwargs.pop('id')
         schedule = TurfScheduleModel.objects.filter(id=id).first()
-        title = schedule.title.split(' - ')
-        editTurfForm = TurfScheduleForm(initial={'category':title[0],'user':title[1] ,'start':schedule.start, 'end':schedule.end, 'turf':schedule.turf})
+        title = ""
+        editTurfForm = TurfScheduleForm()
+        if schedule:
+            title = schedule.title.split(' - ')
+            editTurfForm = TurfScheduleForm(initial={'category':schedule.category,'user':title[1] ,'start':schedule.start, 'end':schedule.end, 'turf':schedule.turf})
         context={'addScheduleform':editTurfForm,
                  'is_editform':True,
                  'schedule_id':id}
@@ -289,7 +293,7 @@ class CategoriesEditView(View):
     def get(self, request, *args, **kwargs):
         id = kwargs.pop('id')
         category = CategoriesModel.objects.filter(id=id).first()
-        editCategoryForm = CategoriesForm(initial={'category':category.category})
+        editCategoryForm = CategoriesForm(initial={'category':category.category , 'image':category.image})
         context={'addCategoryform':editCategoryForm,
                  'is_editform':True,
                  'category_id':id,
@@ -307,7 +311,10 @@ class CategoriesEditView(View):
                 
                
                 category.category = request.POST['category']
-                category.image = request.FILES['image']
+
+                if request.FILES:
+                    if request.FILES['image']:
+                        category.image = request.FILES['image']
                 
                 category.save()
                     
