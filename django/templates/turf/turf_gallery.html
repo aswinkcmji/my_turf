@@ -2,8 +2,10 @@
 {% load widget_tweaks %}
 {% block content %}
 
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> -->
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700">
+<link rel='stylesheet' href='/static/assets/css/style.css' />
+
 
 
 <script src="http://code.jquery.com/jquery.js"></script>
@@ -108,80 +110,31 @@
 </div>
 <!-- end -->
 
+<style>
+    .turf-gallery{
+        position: relative;
+    }
+    .turf-gallery-edit-icon{
+        position: absolute;
+    top: 2rem;
+    visibility: hidden;    }
+.turf-gallery-img-div:hover ~ .turf-gallery-edit-icon{
+    visibility: visible;
+    
+}
+
+</style>
+
 <script>
     document.getElementById('turfgallery-li').classList.add('active');
 </script>
 
 
-<!-- Including jQuery -->
-<script src=
-"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js">
+  <!-- Including jQuery -->
+  <script src=
+  "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js">
       </script>
 
-      <!-- <script >
-        jQuery(window).load(function () {
-
-
-
-// Takes the gutter width from the bottom margin of .post_gallery
-
-var gutter = parseInt(jQuery('.post_gallery').css('marginBottom'));
-var container = jQuery('#posts_gallery');
-
-
-
-// Creates an instance of Masonry on #posts_gallery
-
-container.masonry({
-    gutter: gutter,
-    itemSelector: '.post_gallery',
-    columnWidth: '.post_gallery'
-});
-
-
-
-// This code fires every time a user resizes the screen and only affects .post_gallery elements
-// whose parent class isn't .container. Triggers resize first so nothing looks weird.
-
-jQuery(window).bind('resize', function () {
-    if (!jQuery('#posts_gallery').parent().hasClass('container')) {
-        
-        
-        
-        // Resets all widths to 'auto' to sterilize calculations
-        
-        post_width = jQuery('.post_gallery').width() + gutter;
-        jQuery('#posts_gallery, body > #grid_gallery').css('width', 'auto');
-        
-        
-        
-        // Calculates how many .post_gallery elements will actually fit per row. Could this code be cleaner?
-        
-        posts_gallery_per_row = jQuery('#posts_gallery').innerWidth() / post_width;
-        floor_posts_gallery_width = (Math.floor(posts_gallery_per_row) * post_width) - gutter;
-        ceil_posts_gallery_width = (Math.ceil(posts_gallery_per_row) * post_width) - gutter;
-        posts_gallery_width = (ceil_posts_gallery_width > jQuery('#posts_gallery').innerWidth()) ? floor_posts_gallery_width : ceil_posts_gallery_width;
-        if (posts_gallery_width == jQuery('.post_gallery').width()) {
-            posts_gallery_width = '100%';
-        }
-        
-        
-        
-        // Ensures that all top-level elements have equal width and stay centered
-        
-        jQuery('#posts_gallery, #grid_gallery').css('width', posts_gallery_width);
-        jQuery('#grid_gallery').css({'margin': '0 auto'});
-            
-    
-    
-    }
-}).trigger('resize');
-
-
-
-});
-        
-      </script> -->
 <script type="text/javascript">
     setTimeout(function () {
 
@@ -189,5 +142,6 @@ jQuery(window).bind('resize', function () {
         $('#alerts-disimissible-component').alert('close');
     }, 1000);
 </script>
+
 
 {% endblock content %}
