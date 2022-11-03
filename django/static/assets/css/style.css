@@ -1,0 +1,59 @@
+/* Default tags and Bootstrap classes */
+
+.lead_gallery { padding: 40px 0; }
+
+
+
+/* Grid */
+
+#posts_gallery { margin: 30px auto 0; }
+.post_gallery {
+	margin: 0 0 50px;
+	text-align: center;
+	width: 100%;
+}
+.post_gallery img { padding: 0 15px; width: 100%; }
+
+#grid_gallery.container_gallery .post_gallery img { padding: 0; }
+
+
+/* Medium devices */
+
+@media (min-width: 768px) {
+	#grid_gallery > #posts_gallery .post_gallery { width: 335px; }
+	#grid_gallery > #posts_gallery .post_gallery.cs2_gallery { width: 100%; }
+	.post_gallery img { padding: 0; }
+}
+
+
+
+/* Medium devices */
+
+@media (min-width: 992px) {
+	#grid_gallery > #posts_gallery .post_gallery { width: 445px; }
+	#grid_gallery > #posts_gallery .post_gallery.cs2_gallery { width: 100%; }
+}
+
+
+
+/* Large devices */
+
+@media (min-width: 1200px) {
+	#grid_gallery > #posts_gallery .post_gallery { width: 346px; }
+	#grid_gallery > #posts_gallery .post_gallery.cs2_gallery { width: 742px; }
+}
+
+
+@media (min-width: 1300px) {
+	#grid_gallery {
+		left: -50px;
+		padding-left: 50px;
+		padding-right: 50px;
+		position: relative;
+    	}
+	#grid_gallery.container_gallery {
+		left: auto;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+}
