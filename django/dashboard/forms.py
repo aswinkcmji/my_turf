@@ -78,7 +78,7 @@ class TurfScheduleForm(ModelForm):
 class GalleryImgForm(ModelForm):
     username = forms.CharField()
     image = forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
-    caption = forms.CharField()
+    caption = forms.CharField(required=False)
 
     class Meta:
         model = GalleryImg
