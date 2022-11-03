@@ -6,12 +6,12 @@
 
 <section class="ecommerce-addstock-section container-fluid my-3"  >
     <!-- ecommerce topbar -->
-    {% if messages %}
+    <!-- {% if messages %}
     {% for message in messages %}
         <p class="d-none" id="messagetag">{{message.tags}}</p>
         <p class="d-none " id="messagecontent">{{message}}</p>
     {% endfor %}
-      {% endif %}
+      {% endif %} -->
     <div class="ecomerce-top-bar ">
         <div class="row">
                 <h1 class=" mt-5"style="text-align:center">CREATE YOUR OWN MATCH</h1>
@@ -23,7 +23,7 @@
             <div class="">
                 <form method="POST" id="creatematch">
                     {% csrf_token %}
-                    {{form.errors}}
+                    <!-- {{form.errors}} -->
                     
         
                     {% for addForm in form.visible_fields %}
@@ -41,13 +41,15 @@
                             <label >{{addForm.label}}</label>
                             {% endif %}
                             {%endif%}
-                            <p>{{addform.type}}</p>
+                            <!-- <p>{{addform.type}} helllll</p> -->
+                            <span class="text-danger">{{addForm.errors}}</span>
                         </div>
                         {% else %}
                             {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
-                        {% endif %}
-                        <span class="text-danger">{{addForm.errors}}</span>
-                        
+                           
+                            {% endif %}
+                      
+                          
         
                     {% endfor %}
                     {%for dontForm in form.hidden_fields%}
@@ -66,18 +68,18 @@
       
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
   <script type="text/javascript">
-     $(document).ready(function(){
-        let tag=$('#messagetag').html()
-        let message = $('#messagecontent').html()
-          if( tag == 'error'){
-            toastr.error(message);
-            $('#creatematch').trigger('reset');
-          }
-          if( tag == 'success' ){
-            toastr.success(message);
-            $('#creatematch').trigger('reset');
-          }
-      });
+    //  $(document).ready(function(){
+    //     let tag=$('#messagetag').html()
+    //     let message = $('#messagecontent').html()
+    //       if( tag == 'error'){
+    //         toastr.error(message);
+    //         $('#creatematch').trigger('reset');
+    //       }
+    //       if( tag == 'success' ){
+    //         toastr.success(message);
+    //         $('#creatematch').trigger('reset');
+    //       }
+    //   });
       $(document).ready(function() {
       var today = new Date().toISOString().split('T')[0];
       $("#id_date").attr('min', today);

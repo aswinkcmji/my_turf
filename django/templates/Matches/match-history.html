@@ -2,8 +2,8 @@
 {% block content %}
 <div class="iq-navbar-header " style="height: 215px;">
     <div class="">
-       <div class="iq-header-img" style="width: 83.5vw;">
-        <img src="/static/assets/images/dashboard/top-image.jpg" alt="header" class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
+       <div class="iq-header-img" style="width: 86vw;">
+        <img src="/static/assets/images/dashboard/top-header.png" alt="header" class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
         <img src="/static/assets/images/dashboard/top-header1.png" alt="header" class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
         <img src="/static/assets/images/dashboard/top-header2.png" alt="header" class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
         <img src="/static/assets/images/dashboard/top-header3.png" alt="header" class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
@@ -28,50 +28,109 @@
                           <img src="/static/assets/images/avatars/avtar_5.png" alt="User-Profile" class="theme-color-yellow-img img-fluid rounded-pill avatar-100">
                           <img src="/static/assets/images/avatars/avtar_3.png" alt="User-Profile" class="theme-color-pink-img img-fluid rounded-pill avatar-100">
                       </div>
-                      <div class="d-flex flex-wrap align-items-center mb-3 mb-sm-0">
+                      <div >
                           <h4 class="me-2 h4 pb-5">{{request.user}}</h4>
-                          
                       </div>
-                      <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
-                         <li class="nav-item">
-                            <a class="nav-link active show" data-bs-toggle="tab" href="#profile-feed" role="tab" aria-selected="false">Joined Matches</a>
-                         </li>
-                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#profile-activity" role="tab" aria-selected="false">Created Matches</a>
-                         </li>
-                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#profile-friends" role="tab" aria-selected="false">Requested Matches</a>
-                         </li>
-                         <li class="nav-item">
-                          <a class="nav-link" data-bs-toggle="tab" href="#profile-requests" role="tab" aria-selected="false">Requests Recieved</a>
-                       </li>
-                      </ul>
-                   </div>
+                    </div>
+                      <div class="d-flex  align-items-center mb-3 mb-sm-0">
+                  
+                        <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
+                          <li class="nav-item">
+                             <a class="nav-link active show" data-bs-toggle="tab" href="#profile-feed" role="tab" aria-selected="false">Joined Matches</a>
+                          </li>
+                          <li class="nav-item">
+                             <a class="nav-link" data-bs-toggle="tab" href="#profile-activity" role="tab" aria-selected="false">Created Matches</a>
+                          </li>
+                          <li class="nav-item">
+                             <a class="nav-link" data-bs-toggle="tab" href="#profile-friends" role="tab" aria-selected="false">Requested Matches</a>
+                          </li>
+                          <li class="nav-item">
+                           <a class="nav-link" data-bs-toggle="tab" href="#profile-requests" role="tab" aria-selected="false">Requests Recieved</a>
+                        </li>
+                       </ul>
+                      </div>
                 </div>
               </div>
         </div>
-      </div>
-      <div class="col-lg-8 ">
-        <div class="profile-content tab-content">
-          <div id="profile-feed" class="tab-pane fade active show">
-            <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
-                <li class="nav-item">
-                  <a class="nav-link active show" data-bs-toggle="tab" href="#joined-upcoming-matches" role="tab" aria-selected="false">Upcoming Matches</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" data-bs-toggle="tab" href="#joined-completed-matches" role="tab" aria-selected="false">Completed Matches</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" data-bs-toggle="tab" href="#joined-cancelled-matches" role="tab" aria-selected="false">Cancelled Matches</a>
-                </li>
-            </ul>
-            <div class="profile-content tab-content">
-              <div  id="joined-upcoming-matches" class="card tab-pane fade active show">
-                <div class="card-header d-flex align-items-center justify-content-between pb-4">
-                    <div class="header-title">
-                      <h2>Upcoming Matches</h2>
-                    </div>                        
+        </div>
+        <div class="col-lg-10 ">
+           <div class="profile-content tab-content">
+             <div id="profile-feed" class="tab-pane fade active show">
+               <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
+                  <li class="nav-item">
+                     <a class="nav-link active show" data-bs-toggle="tab" href="#joined-upcoming-matches" role="tab" aria-selected="false">Upcoming Matches</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" data-bs-toggle="tab" href="#joined-completed-matches" role="tab" aria-selected="false">Completed Matches</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" data-bs-toggle="tab" href="#joined-cancelled-matches" role="tab" aria-selected="false">Cancelled Matches</a>
+                  </li>
+               </ul>
+               <div class="profile-content tab-content">
+                <div  id="joined-upcoming-matches" class="card tab-pane fade active show">
+                   <div class="card-header d-flex align-items-center justify-content-between pb-4">
+                      <div class="header-title">
+                         <h2>Upcoming Matches</h2>
+                      </div>                        
+                   </div>
+                   <div class="card-body p-0">
+                     <div class="table-responsive">
+                        <table class="table">
+                          <thead class=" text-primary">
+                            <th>
+                              #
+                            </th>
+                            <th>
+                              Category
+                            </th>
+                            <th>
+                              Organized By
+                            </th>
+                            <th>
+                              Date
+                            </th>
+                            <th>
+                                Start Time
+                            </th>
+                            <th>
+                              End Time
+                            </th>
+                            <th>
+                              Location
+                            </th>
+                            
+                          </thead>
+                          <tbody>
+                           {% for data in jum %}
+                          
+                            <tr >
+                              {% if data.creator != request.user.username%}
+                              <td>{{forloop.counter0|add:1}}</td>
+                              <td>{{data.category}}</td>
+                              <td>{{data.creator }}</td>
+                              <td>{{data.date|date:"Y-m-d"}}</td>
+                              <td>{{data.start_time|time:"H:i:s"}}</td>
+                              <td>{{data.end_time|time:"H:i:s"}}</td>
+                              <td>
+                                 {{data.locality}}
+                              </td>
+               
+                            </tr>
+                            {%endif%}
+                            {% endfor %}
+                            
+                          </tbody>
+                        </table>
+                      </div>                           
+                   </div>
                 </div>
+                <div  id="joined-completed-matches" class="card tab-pane fade ">
+                  <div class="card-header d-flex align-items-center justify-content-between pb-4">
+                     <div class="header-title">
+                        <h2>Completed Matches</h2>
+                     </div>                        
+                  </div>
                 <div class="card-body p-0">
                   <div class="table-responsive">
                       <table class="table">
@@ -96,153 +155,93 @@
                           </th>
                           <th>
                             Location
-                          </th>
-                          
-                        </thead>
-                        <tbody>
-                        {% for data in jum %}
-                        
-                          <tr >
-                            {% if data.creator != request.user.username%}
+                          </th> 
+                         </thead>
+                         <tbody>
+                           {% for data in jcom %}
+                           {% if data.creator != request.user.username%}
+                           
+                           <tr >
+                             
                             <td>{{forloop.counter0|add:1}}</td>
                             <td>{{data.category}}</td>
                             <td>{{data.creator }}</td>
                             <td>{{data.date|date:"Y-m-d"}}</td>
-                            <td>{{data.start_time|time:"h:i:s"}}</td>
-                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>{{data.start_time|time:"H:i:s"}}</td>
+                            <td>{{data.end_time|time:"H:i:s"}}</td>
                             <td>
-                              {{data.locality}}
+                               {{data.locality}}
                             </td>
-            
+             
                           </tr>
-                          {%endif%}
-                          {% endfor %}
-                          
-                        </tbody>
-                      </table>
-                    </div>                           
-                </div>
-              </div>
-              <div  id="joined-completed-matches" class="card tab-pane fade ">
-                <div class="card-header d-flex align-items-center justify-content-between pb-4">
-                  <div class="header-title">
-                      <h2>Completed Matches</h2>
-                  </div>                        
-                </div>
-                <div class="card-body p-0">
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead class=" text-primary">
-                        <th>
-                          #
-                        </th>
-                        
-                        
-                  
-                        
-                        <th>
-                          Category
-                        </th>
-                        <th>
-                          Organized By
-                        </th>
-                        <th>
-                          Date
-                        </th>
-                        <th>
-                          Time
-                        </th>
-                        <th>
-                          Location
-                        </th>
-                        
-                      </thead>
-                      <tbody>
-                        {% for data in jcom %}
-                        {% if data.creator != request.user.username%}
-                        
-                        <tr >
-                          
-                          <td>{{forloop.counter0|add:1}}</td>
-                          <td>{{data.category}}</td>
-                          <td>{{data.creator }}</td>
-                          <td>{{data.date|date:"Y-m-d"}}</td>
-                          <td>{{data.start_time|time:"h:i:s"}}</td>
-                          <td>{{data.end_time|time:"h:i:s"}}</td>
-                          <td>
-                            {{data.locality}}
-                          </td>
-          
-                        </tr>
-                          {%endif%}
-                          {% endfor %}
-                          
-                        </tbody>
-                    </table>
-                  </div>                           
-                </div>
-            </div>
-              <div  id="joined-cancelled-matches" class="card tab-pane fade">             
-                <div class="card-header d-flex align-items-center justify-content-between pb-4">
-                  <div class="header-title">
-                      <h2>Cancelled Matches</h2>
-                  </div>                        
-                </div>
-                <div class="card-body p-0">
-                  <div class="table-responsive">
-                      <table class="table">
-                        <thead class=" text-primary">
-                          <th>
-                            #
-                          </th>
-                          
-                          
-                    
-                        
-                          <th>
-                            Category
-                          </th>
-                          <th>
-                            Organized By
-                          </th>
-                          <th>
-                            Date
-                          </th>
-                          <th>
-                            Time
-                          </th>
-                          <th>
-                            Location
-                          </th>
-                          
-                        </thead>
-                        <tbody>
-                        {% for data in jcam %}
-                        {% if data.creator != request.user.username%}
+                            {%endif%}
+                            {% endfor %}
                             
-                        <tr >
-                          
-                          <td>{{forloop.counter0|add:1}}</td>
-                          <td>{{data.category}}</td>
-                          <td>{{data.creator }}</td>
-                          <td>{{data.date|date:"Y-m-d"}}</td>
-                          <td>{{data.start_time|time:"h:i:s"}}</td>
-                          <td>{{data.end_time|time:"h:i:s"}}</td>
-                          <td>
-                            {{data.locality}}
-                          </td>
-          
-                        </tr>
-                          {%endif%}
-                          {% endfor %}
-                          
-                        </tbody>
-                      </table>
-                    </div>                           
-                </div>
-            </div>
-          </div>
-          </div>
+                          </tbody>
+                       </table>
+                     </div>                           
+                  </div>
+               </div>
+                <div  id="joined-cancelled-matches" class="card tab-pane fade">             
+                  <div class="card-header d-flex align-items-center justify-content-between pb-4">
+                     <div class="header-title">
+                        <h2>Cancelled Matches</h2>
+                     </div>                        
+                  </div>
+                  <div class="card-body p-0">
+                     <div class="table-responsive">
+                        <table class="table">
+                          <thead class=" text-primary">
+                            <th>
+                              #
+                            </th>
+                            <th>
+                              Category
+                            </th>
+                            <th>
+                              Organized By
+                            </th>
+                            <th>
+                              Date
+                            </th>
+                            <th>
+                                Start Time
+                            </th>
+                            <th>
+                              End Time
+                            </th>
+                            <th>
+                              Location
+                            </th> 
+                           </thead>
+                          <tbody>
+                           {% for data in jcam %}
+                           {% if data.creator != request.user.username%}
+                               
+                           <tr >
+                             
+                            <td>{{forloop.counter0|add:1}}</td>
+                            <td>{{data.category}}</td>
+                            <td>{{data.creator }}</td>
+                            <td>{{data.date|date:"Y-m-d"}}</td>
+                            <td>{{data.start_time|time:"H:i:s"}}</td>
+                            <td>{{data.end_time|time:"H:i:s"}}</td>
+                            <td>
+                               {{data.locality}}
+                            </td>
+             
+                          </tr>
+                            {%endif%}
+                            {% endfor %}
+                            
+                          </tbody>
+                        </table>
+                      </div>                           
+                   </div>
+               </div>
+             </div>
+             </div>
+   
           <div id="profile-activity" class="tab-pane fade">
             <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
                 <li class="nav-item">
@@ -290,6 +289,61 @@
                            
                          </thead>
                          <tbody>
+                           {% for data in crum %}
+                           <tr >
+                             
+                            <td>{{forloop.counter0|add:1}}</td>
+                            <td>{{data.category}}</td>
+                            <td>{{data.creator }}</td>
+                            <td>{{data.date|date:"Y-m-d"}}</td>
+                            <td>{{data.start_time|time:"H:i:s"}}</td>
+                            <td>{{data.end_time|time:"H:i:s"}}</td>
+                            <td>
+                               {{data.locality}}
+                            </td>
+             
+                          </tr>
+                            {% endfor %}
+                            
+                          </tbody>
+                       </table>
+                     </div>                           
+                  </div>
+               </div>
+               <div  id="created-completed-matches" class="card tab-pane fade ">
+                <div class="card-header d-flex align-items-center justify-content-between pb-4">
+                    <div class="header-title">
+                      <h2>Completed Matches</h2>
+                    </div>                        
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                      <table class="table">
+                        <thead class=" text-primary">
+                          <th>
+                            #
+                          </th>
+                          <th>
+                            Category
+                          </th>
+                          <th>
+                            Organized By
+                          </th>
+                          <th>
+                            Date
+                          </th>
+                          <th>
+                              Start Time
+                          </th>
+                          <th>
+                            End Time
+                          </th>
+                          <th>
+                            Location
+                          </th>
+                           
+                         </thead>
+                         <tbody>
                            {% for data in crcom %}
                            <tr >
                              
@@ -297,8 +351,8 @@
                             <td>{{data.category}}</td>
                             <td>{{data.creator }}</td>
                             <td>{{data.date|date:"Y-m-d"}}</td>
-                            <td>{{data.start_time|time:"h:i:s"}}</td>
-                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>{{data.start_time|time:"H:i:s"}}</td>
+                            <td>{{data.end_time|time:"H:i:s"}}</td>
                             <td>
                                {{data.locality}}
                             </td>
@@ -352,8 +406,8 @@
                             <td>{{data.category}}</td>
                             <td>{{data.creator }}</td>
                             <td>{{data.date|date:"Y-m-d"}}</td>
-                            <td>{{data.start_time|time:"h:i:s"}}</td>
-                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>{{data.start_time|time:"H:i:s"}}</td>
+                            <td>{{data.end_time|time:"H:i:s"}}</td>
                             <td>
                                {{data.locality}}
                             </td>
@@ -418,8 +472,8 @@
                             <td>{{data.category}}</td>
                             <!-- <td>{{data.creator}}</td> -->
                             <td>{{data.date|date:"Y-m-d"}}</td>
-                            <td>{{data.start_time|time:"h:i:s"}}</td>
-                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>{{data.start_time|time:"H:i:s"}}</td>
+                            <td>{{data.end_time|time:"H:i:s"}}</td>
                             <td>
                                {{data.locality}}
                             </td>
@@ -474,8 +528,8 @@
                           <td>{{data.category}}</td>
                           <td>{{data.creator }}</td>
                           <td>{{data.date|date:"Y-m-d"}}</td>
-                          <td>{{data.start_time|time:"h:i:s"}}</td>
-                          <td>{{data.end_time|time:"h:i:s"}}</td>
+                          <td>{{data.start_time|time:"H:i:s"}}</td>
+                          <td>{{data.end_time|time:"H:i:s"}}</td>
                           <td>
                             {{data.locality}}
                           </td>
@@ -528,8 +582,8 @@
                             <td>{{data.category}}</td>
                             <td>{{data.creator }}</td>
                             <td>{{data.date|date:"Y-m-d"}}</td>
-                            <td>{{data.start_time|time:"h:i:s"}}</td>
-                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>{{data.start_time|time:"H:i:s"}}</td>
+                            <td>{{data.end_time|time:"H:i:s"}}</td>
                             <td>
                                {{data.locality}}
                             </td>
@@ -542,7 +596,6 @@
                      </div>                           
                   </div>
                </div>
-             </div>
              </div>
              <div id="profile-requests" class="tab-pane fade">
               <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
@@ -597,8 +650,8 @@
                            <td>{{data.category}}</td>
                            <td>{{data.username }}</td>
                            <td>{{data.date|date:"Y-m-d"}}</td>
-                           <td>{{data.start_time|time:"h:i:s"}}</td>
-                           <td>{{data.end_time|time:"h:i:s"}}</td>
+                           <td>{{data.start_time|time:"H:i:s"}}</td>
+                           <td>{{data.end_time|time:"H:i:s"}}</td>
                            <td>
                               {{data.locality}}
                            </td>
@@ -657,8 +710,8 @@
                             <td>{{data.category}}</td>
                             <td>{{data.username }}</td>
                             <td>{{data.date|date:"Y-m-d"}}</td>
-                            <td>{{data.start_time|time:"h:i:s"}}</td>
-                            <td>{{data.end_time|time:"h:i:s"}}</td>
+                            <td>{{data.start_time|time:"H:i:s"}}</td>
+                            <td>{{data.end_time|time:"H:i:s"}}</td>
                             <td>
                                {{data.locality}}
                             </td>
@@ -678,7 +731,7 @@
             </div>
           </div>
         </div>
-      </div>
+ 
   </div>
 
 

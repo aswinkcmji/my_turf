@@ -16,7 +16,7 @@
        <link rel='stylesheet' href='/static/assets/vendor/fullcalendar/list/main.css' />
       
   </head>
-  <body class="  ">
+  <body class="">
 
     <!-- loader Start -->
     <div id="loading">
@@ -32,19 +32,25 @@
         <div class="position-relative iq-banner">
 
     {% include 'includes/navbar.html' %}
+    {% include 'includes/messages.html'%}
 
-
     
     
-    {% block content %}{% endblock content %}
+          <div style="position: relative;top: 4.5rem;margin-bottom: 3rem;">
+            {% block content %}
+            
+            {% endblock content %}
+          </div>
     
-    {% include 'includes/footer.html' %}    
-  </main>
+          {% include 'includes/footer.html' %}    
+        </div>
+    </main>
   
-        {% include 'includes/settings.html' %}
+    {% include 'includes/settings.html' %}
 
-     <!-- including javascript -->
-     {% include 'js/js.html' %}
+    <!-- including javascript -->
+     
+    {% include 'js/js.html' %}
 
   </body>
 </html>
