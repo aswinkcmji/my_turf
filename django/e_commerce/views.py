@@ -14,13 +14,6 @@ import random
 
 from django import template
 
-register = template.Library()
-
-@register.simple_tag()
-def multiply(qty, unit_price, *args, **kwargs):
-    # you would need to do any localization of the result here
-    return qty * unit_price
-
 class E_commercePage(View):
     def get(self, request ,*args, **kwargs):
         cartForm = addToCartForm()
@@ -58,6 +51,7 @@ class E_commercePage(View):
                 cartCount = CartModel.objects.filter(username = request.user.username).count()
                 if cartCount < 5 :
                     form.save() 
+
                     return HttpResponseRedirect(reverse('shop'))
                 else:  
                     messages.warning(request, 'Your cart is full Please do purchase...')
@@ -122,7 +116,7 @@ class OrderView(View):
 
         messages.success(request, 'your order confirmed successfully')
         
-        return HttpResponseRedirect(reverse('checkout'))
+        return HttpResponseRedirect(reverse('shop'))
 
 class OutOfStock(View):
     def get(self, request, *args, **kwargs):
