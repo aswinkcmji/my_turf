@@ -24,3 +24,8 @@ class GalleryImg(models.Model):
     username = models.TextField( max_length=55)
     image = models.ImageField( null=True , upload_to='image/image')
     caption = models.TextField( max_length=55)
+   
+
+class CategoriesModel(models.Model):
+    category = models.CharField(max_length=100)
+    image = models.ImageField( null=True , upload_to='images/category')

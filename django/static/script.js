@@ -1,10 +1,5 @@
 // Load is used to ensure all images have been loaded, impossible with document
 
-function hello(){
-	console.log("hellol");
-}
-
-
 jQuery(window).load(function () {
 
 

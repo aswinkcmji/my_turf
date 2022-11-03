@@ -1,20 +1,9 @@
 {% extends 'layouts/base.html' %}
-{% load widget_tweaks %}
 {% block content %}
+{% load widget_tweaks %}
+{% load static%}
 
-<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> -->
-<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700">
-<link rel='stylesheet' href='/static/assets/css/style.css' />
-
-
-
-<script src="http://code.jquery.com/jquery.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/masonry/3.1.5/masonry.pkgd.min.js"></script>
-<script src="/static/assets/js/script.js"></script>
-
-
-<div class="container-fluid py-2 lead_gallery">
+<div class="conatiner-fluid py-0">
     <div>
         <div class="row">
             <div class="col-md-12">
@@ -26,15 +15,13 @@
                         <div class="card-action">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                 Add Images
-                            </button>
-                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                </button>
+                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="staticBackdropLabel">Add Images</h5>                                            
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-
-                                            </button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <form action="" method="POST" enctype="multipart/form-data">
                                             <div class="modal-body">
@@ -43,39 +30,31 @@
 
                                                     <div class="col-lg-12">
                                                         <div class="form-group">
-                                                            <label for="image" class="form-label">
-                                                                Username
-                                                            </label>
+                                                           <label for="images" class="form-label">Username </label> 
                                                            {% render_field form.username type="text" class='form-control' value=request.user.username readonly='true' %}
                                                         </div>
-                                                        <span class="text-error  text-danger">
-                                                            {{ form.username.errors }}
-                                                        </span>
+                                                        <span class="text-error  text-danger">{{ form.username.errors }}</span>
                                                     </div>
                                                     
                                                     <div class="col-lg-12">
                                                         <div class="form-group">
-                                                            <label for="image" class="form-label">
-                                                                Image
-                                                            </label>
+                                                           <label for="images" class="form-label">Image</label>
                                                            {{form.image}}
                                                         </div>
-                                                        <span class="text-error  text-danger">
-                                                            {{ form.Image.errors }}
-                                                        </span>
+                                                        <span class="text-error  text-danger">{{ form.Image.errors }}</span>
                                                     </div>
                                                     <div class="col-lg-12">
                                                         <div class="form-group">
-                                                            <label for="image" class="form-label">
-                                                                Caption
-                                                            </label>
-                                                            {{ form.caption}}
+                                                           <label for="images" class="form-label">Caption</label>
+                                                           {{form.caption}}
                                                         </div>
-                                                        <span class="text-error text-danger">
-                                                            {{ form.caption.errors }}
-                                                        </span>
+                                                        <span class="text-error  text-danger">{{ form.caption.errors }}</span>
                                                     </div>
+    
+                                
                                                 </div>
+    
+    
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -84,64 +63,37 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div> 
     </div>
-
-    <!-- Gallery -->
-    <div id="grid_gallery">
-		<div id="posts_gallery">
-            {% for data in turfGallery %}
-			<div class="post_gallery">
-				<img src={{media_url}}{{data.image}} ><br>
-				<br>
-				<strong> {{data.caption}} </strong>
-			</div>
-            {% endfor %}
-        </div>
-    </div>
-    
-   
-
 </div>
-<!-- end -->
+	
 
-<style>
-    .turf-gallery{
-        position: relative;
-    }
-    .turf-gallery-edit-icon{
-        position: absolute;
-    top: 2rem;
-    visibility: hidden;    }
-.turf-gallery-img-div:hover ~ .turf-gallery-edit-icon{
-    visibility: visible;
-    
-}
-
-</style>
-
-<script>
-    document.getElementById('turfgallery-li').classList.add('active');
-</script>
-
-
-  <!-- Including jQuery -->
-  <script src=
-  "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js">
-      </script>
-
-<script type="text/javascript">
-    setTimeout(function () {
-
-        // Closing the alert
-        $('#alerts-disimissible-component').alert('close');
-    }, 1000);
-</script>
+ 
+	
+	<!-- <div id="grid" class="container"> -->
+        <div id="grid_gallery">
+                    
+            <div id="posts_gallery">
+                {% for data in turfGallery %}
+                <div class="post_gallery">
+                    <img
+                        src={{media_url}}{{data.image}}/><br>
+                        <br>
+                        <strong> {{data.caption}} </strong>
+                                        
+                </div>
+                {% endfor %}
+            </div>
+            
+        </div>
 
 
-{% endblock content %}
+
+
+
+    {% endblock %}
