@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 {% load static%}
 
-<div class="conatiner-fluid py-0">
+<div class="container-fluid py-0">
     <div>
         <div class="row">
             <div class="col-md-12">
@@ -80,11 +80,10 @@
                     
             <div id="posts_gallery">
                 {% for data in turfGallery %}
-                <div class="post_gallery">
-                    <img
-                        src={{media_url}}{{data.image}}/><br>
-                        <br>
-                        <strong> {{data.caption}} </strong>
+                <div class="post_gallery card">
+                    <img class="p-2"
+                        src={{media_url}}{{data.image}}/>
+                        <strong class="text-primary"> {{data.caption}} </strong>
                                         
                 </div>
                 {% endfor %}
@@ -95,5 +94,8 @@
 
 
 
-
+{% block js%} 
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/masonry/3.1.5/masonry.pkgd.min.js"></script>	
+<script src="/static/script.js"></script>{% endblock%}
     {% endblock %}
