@@ -30,7 +30,7 @@ class RequestForm(ModelForm):
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(RequestForm, self).__init__(*args, **kwargs)
-        self.fields['category'].disabled = True
+        # self.fields['category'].readonly = True
 
 
 
@@ -41,9 +41,9 @@ class RequestForm(ModelForm):
         print(self.cleaned_data.get('category'))
         match=MatchModel.objects.get(id=int(self.cleaned_data.get('match_id')))
         print(match.category)
-        if self.cleaned_data.get('category') != match.category:
-            self._errors['category']=self.error_class(['Do not change the category'])
-            print(" category  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        # if self.cleaned_data.get('category') != match.category:
+        #     self._errors['category']=self.error_class(['Do not change the category'])
+        #     print(" category  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         if self.cleaned_data.get('date')!=match.date:
             self._errors['date']=self.error_class(['Do not change the date'])
             print("date  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
