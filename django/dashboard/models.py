@@ -23,7 +23,7 @@ class TurfScheduleModel(models.Model):
 class GalleryImg(models.Model):
     username = models.TextField( max_length=55)
     image = models.ImageField( null=True , upload_to='image/image')
-    caption = models.TextField( max_length=55)
+    caption = models.TextField( max_length=55,null=True)
    
 
 class CategoriesModel(models.Model):
