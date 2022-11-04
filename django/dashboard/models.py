@@ -10,9 +10,15 @@ from accounts.models import UserModel
 
 
 # Create your models here.
+class CategoriesModel(models.Model):
+    category = models.CharField(max_length=100)
+    image = models.ImageField( null=True , upload_to='images/category')
+    
+    def __str__(self):
+        return str(self.category)
 
 class TurfScheduleModel(models.Model):
-    category = models.CharField(max_length=255, default="none")
+    category = models.ForeignKey(CategoriesModel, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     start = models.CharField(max_length=255)
     end = models.CharField(max_length=255)
@@ -26,9 +32,3 @@ class GalleryImg(models.Model):
     caption = models.TextField( max_length=55,null=True)
    
 
-class CategoriesModel(models.Model):
-    category = models.CharField(max_length=100)
-    image = models.ImageField( null=True , upload_to='images/category')
-
-    def __str__(self):
-        return self.category
