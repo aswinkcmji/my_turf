@@ -31,17 +31,17 @@
         {%endif%}
         <div class="card-body p-1 ">
           <h2>{{t.category}}</h2>
-          <p class="card-text text-dark">Date of Match:{{t.date|date:"Y-m-d"}}</p>
+          <p class="card-text text-dark">Date of Match:{{t.start_date|date:"Y-m-d"}}</p>
           <p class="card-text text-dark">Start Time:{{t.start_time|time:"H:i:s"}}</p>
           <p class="card-text text-dark">End Time:{{t.end_time|time:"H:i:s"}}</p>
-          <p class="card-text text-dark ">Available Slots:{{t.slot_available}}/{{t.slots}}</p>
+          <p class="card-text text-dark ">Available Slots:{{t.team_space_available}}/{{t.teams}}</p>
           <p class="card-text text-dark">Locality:{{t.locality}}</p>
           {% if t.creator != request.user.username %}
           <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{tour.id}}">
            JOIN NOW
         </button>
         {%else%}
-         <p>You are the organizer.<br>Visit <a class="" href="{% url 'tournaments' %}" id="my-matches-li">My Match</a> to edit</p>
+         <p>You are the organizer.<br>Visit <a class="" href="{% url 'all-tournaments' %}" id="all-tournaments-li">My Match</a> to edit</p>
          {%endif%}
           </div>
         </div>
@@ -59,7 +59,7 @@
                   <label >Game Category:</label>
                   <input type="text" value="{t.category}}" readonly name="id_category"> 
                   <label>Date of Match:</label> 
-                  <input type="text" value="{t.date|date:"Y-m-d"}}" readonly name="id_date">
+                  <input type="text" value="{t.start_date|date:"Y-m-d"}}" readonly name="id_date">
                   <label>Start Time of Match:</label> 
                   <input type="text" value="{t.start_time|time:"h:i:s"}}" readonly name="id_start_time">
                   <label>End Time of Match:</label> 
@@ -103,7 +103,7 @@
       
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 <script>
-    document.getElementById('tournament-li').classList.add('active')
+    document.getElementById('all-tournaments-li').classList.add('active')
     $(document).ready(function(){
         let tag=$('#messagetag').html()
         let message = $('#messagecontent').html()

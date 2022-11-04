@@ -457,11 +457,11 @@ class CreateTournamentView(View):
 
 #############################################################    View for tournaments user has created or joined  ###########################################################
 @method_decorator(login_required,name='dispatch')
-class (View):
+class MyTournamentView(View):
     def get(self, request, *args, **kwargs):
         print(request.user.username)
         print(datetime.now())
-        tournament=TournamentModel.objects.filter(id__in=list(id_tour))
+        # tournament=TournamentModel.objects.filter(id__in=list(id))
         tournament=TournamentModel.objects.all()
         context={
             'tournaments':tournament
@@ -518,18 +518,18 @@ class EditTournamentView(View):
 
 
 
-########################################################## View for listing all tournaments in user locality which user hasn't requested or joined or created ################################################################################ 
+########################################################## View for listing all tournament in user locality which user hasn't requested or joined or created ################################################################################ 
 @method_decorator(login_required,name='dispatch')
-class AllMatchesView(View):
+class AllTournamentView(View):
         def get(self, request, *args, **kwargs):
                 print(request.user.username)
                 # context={}
-                id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
-                matches=TournamentModel.objects.filter(locality__iexact=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
+                id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('tournament_id',flat=True)
+                tournament=TournamentModel.objects.filter(locality__iexact=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
                 form=TournamentRequestForm(request=request)
-                print("hllo",matches)
+                # print("hllo",matches)
                 # context['matches']=matches
                 # context['form']=form
-                context ={'TournamentRequestForm': form ,'tournamentrequestForm':False , 'matches':matches}
+                context ={'TournamentRequestForm': form ,'is_tournamentrequestform':False , 'tournaments':tournament}
                 print(context)
                 return render(request, 'Tournaments/tournaments.html',context)
