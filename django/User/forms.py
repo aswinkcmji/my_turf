@@ -11,12 +11,12 @@ from dashboard.models import CategoriesModel
 
 
 class RequestForm(ModelForm):
-    category = forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
-    date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','readonly':'true','type': 'date'}))
-    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
-    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
-    username= forms.CharField(widget=forms.HiddenInput(attrs={'class': 'form-control','readonly':'true'}))
-    locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
+    category = forms.ModelChoiceField(queryset=CategoriesModel.objects.all(),widget=forms.HiddenInput())
+    date = forms.DateField(widget=forms.HiddenInput())
+    start_time = forms.TimeField(widget=forms.HiddenInput())
+    end_time = forms.TimeField(widget=forms.HiddenInput())
+    username= forms.CharField(widget=forms.HiddenInput())
+    locality=forms.CharField(widget=forms.HiddenInput())
     status=forms.CharField(widget=forms.HiddenInput())
     # match_id= forms.ModelMultipleChoiceField(queryset=RequestModel.objects.all())
     match_id=forms.IntegerField(widget=forms.HiddenInput())
@@ -30,7 +30,7 @@ class RequestForm(ModelForm):
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(RequestForm, self).__init__(*args, **kwargs)
-        # self.fields['category'].readonly = True
+        # self.fields['category'].disabled = True
 
 
 
@@ -41,9 +41,9 @@ class RequestForm(ModelForm):
         print(self.cleaned_data.get('category'))
         match=MatchModel.objects.get(id=int(self.cleaned_data.get('match_id')))
         print(match.category)
-        # if self.cleaned_data.get('category') != match.category:
-        #     self._errors['category']=self.error_class(['Do not change the category'])
-        #     print(" category  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        if self.cleaned_data.get('category') != match.category:
+            self._errors['category']=self.error_class(['Do not change the category'])
+            print(" category  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         if self.cleaned_data.get('date')!=match.date:
             self._errors['date']=self.error_class(['Do not change the date'])
             print("date  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
