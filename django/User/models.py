@@ -57,6 +57,9 @@ class TournamentRequestModel(models.Model):
     end_time= models.TimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
     locality = models.CharField(max_length=30,null=True,blank=False)
 
+# class CreateTeamModel(models.Model):
+#     Name = models.CharField(max_length=30,blank=False,null=False)
+
 
 
 

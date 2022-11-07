@@ -37,16 +37,16 @@
           <p class="card-text text-dark ">Available Slots:{{t.team_space_available}}/{{t.teams}}</p>
           <p class="card-text text-dark">Locality:{{t.locality}}</p>
           {% if t.creator != request.user.username %}
-          <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{tour.id}}">
+          <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable{{t.id}}">
            JOIN NOW
         </button>
         {%else%}
-         <p>You are the organizer.<br>Visit <a class="" href="{% url 'all-tournaments' %}" id="all-tournaments-li">My Match</a> to edit</p>
+         <p>You are the organizer.<br>Visit <a class="" href="{% url 'all-tournaments' %}" id="all-tournaments-li">My Tournaments</a> to edit</p>
          {%endif%}
           </div>
         </div>
    </div>
-       <div class="modal fade" id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+       <div class="modal fade" id="exampleModalCenteredScrollable{{t.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -57,25 +57,32 @@
                   <form role="form" method="POST" action="">
                     {% csrf_token %} 
                   <label >Game Category:</label>
-                  <input type="text" value="{t.category}}" readonly name="id_category"> 
+                  <input type="text" value="{{t.category}}" readonly name="id_category"> 
                   <label>Date of Match:</label> 
-                  <input type="text" value="{t.start_date|date:"Y-m-d"}}" readonly name="id_date">
+                  <input type="text" value="{{t.start_date|date:"Y-m-d"}}" readonly name="id_date">
+                  <label>Date of Match:</label> 
+                  <input type="text" value="{{t.end_date|date:"Y-m-d"}}" readonly name="id_date">
+                  
                   <label>Start Time of Match:</label> 
-                  <input type="text" value="{t.start_time|time:"h:i:s"}}" readonly name="id_start_time">
+                  <input type="text" value="{{t.start_time|time:"h:i:s"}}" readonly name="id_start_time">
                   <label>End Time of Match:</label> 
-                  <input type="text" value="{t.end_time|time:"h:i:s"}}" readonly name="id_end_time">
+                  <input type="text" value="{{t.end_time|time:"h:i:s"}}" readonly name="id_end_time">
                   <label>Organized By:</label> 
-                  <input type="text" value="{t.creator}}" readonly name="id_user"><br>
+                  <input type="text" value="{{t.creator}}" readonly name="id_user"><br>
                   <label>Location:</label> 
-                  <input type="text" value="{t.locality}}" readonly name="id_locality">
-                  <input type="number" value="{t.id}}" hidden name="id">
+                  <input type="text" value="{{t.locality}}" readonly name="id_locality">
+                  <input type="number" value="{{t.id}}" hidden name="id">
                 <div class="card text-white bg-secondary" > 
                   <div class="card-body">   
                       This is some text within a card body.
                   </div>
                   </div>
                     <button type="button" class="btn btn-secondary" >Close</button>
-                    <button type="submit" class="btn btn-primary">Request to Join</button>
+                    <button type="submit" class="btn btn-primary" href="tournament-join/{{t.id}}">Request to Join</button>
+                    <!-- <a href="tournament-join/{{t.id}} "  class="btn btn-primary"> -->
+                        <!-- EDIT -->
+                    <!-- </a> -->
+                    
               </form>
             </div>
         </div>

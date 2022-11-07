@@ -537,3 +537,91 @@ class AllTournamentView(View):
                 context ={'TournamentRequestForm': form ,'is_tournamentrequestform':False , 'tournaments':tournament}
                 print(context)
                 return render(request, 'Tournaments/tournaments.html',context)
+
+
+# @method_decorator(login_required,name='dispatch')
+# class CreateTeamView(View):
+
+############################################################ View for listing requested tournaments ###########################################################################
+@method_decorator(login_required,name='dispatch')
+class RequestedTournamentView(View):
+    def get(self, request, *args, **kwargs):
+        print(request.user.username)
+        context={}
+        id_list=TournamentRequestModel.objects.filter(username=request.user.username,status="Pending").values_list('tournament_id',flat=True)
+        print(list(id_list))
+        tournament=TournamentModel.objects.filter(id__in=list(id_list))
+        context['tournaments']=tournament
+        return render(request, 'Tournaments/requested-tournaments.html',context)
+
+
+###########################################################view for joining tournaments########################################################################
+
+@method_decorator(login_required,name='dispatch')
+class  JoinTournamentView(View):
+    def get(self, request,id, *args, **kwargs):
+                tournament=TournamentModel.objects.filter(id=id,locality=request.user.location)
+                if len(tournament) == 1:
+                    tournament = tournament[0]
+                if len(tournament) == 0:
+                    return render(request,'errors/error404.html',{})
+                joined=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=tournament.pk).values()
+                request.session['tournament_id']=tournament.id
+                request.session['category']=tournament.category
+                request.session['start_date']=tournament.start_date
+                request.session['end_date']=tournament.end_date
+                request.session['start_time']=tournament.start_time
+                request.session['end_time']=tournament.end_time
+                request.session['locality']=tournament.locality
+                request.session['status']="Pending"
+                data={
+                    'category':tournament.category,
+                    'start_date':tournament.start_date,
+                    'end_date':tournament.end_date,
+                    'start_time':tournament.start_time,
+                    'end_time':tournament.end_time,
+                    'locality':tournament.locality,
+                    'username':request.user.username,
+                    'status':"Pending",
+                    'phoneno': request.user.phone,
+                    'tournament_id':tournament.id,
+                }
+                form=TournamentRequestForm(data,request=request)
+                print(form)
+                context ={'TournamentRequestForm': form ,'is_tournamentrequestform':True ,'tournament':tournament,'joined':joined}
+                print(context)
+                return render(request, 'Tournaments/tournaments.html',context)
+        # except:
+        #     pass
+    def post(self, request, *args, **kwargs):
+
+        try:
+            tournament_id=int(request.POST['tournament_id'])
+        except:
+            return  HttpResponseRedirect(reverse('tournament'))
+        if tournament_id!=request.session.get('id'):
+            id=int(request.session.get('id'))
+            tournament=TournamentModel.objects.filter(id=id)
+            if len(tournament) == 1:
+                requested_tournament = tournament[0]
+            context ={'TournamentRequestForm': TournamentRequestForm(request.POST,request=request) ,'is_tournamentrequestform':True ,'tournament':requested_tournament}
+            return render(request, 'Tournaments/tournaments.html',context)
+        else:
+            tournament_id=request.session.get('id')
+            print(tournament_id)
+            tournament=TournamentModel.objects.filter(id=tournament_id)
+            if len(tournament) == 1:
+                requested_tournament = tournament[0]
+            form=TournamentRequestForm(request.POST,request=request)
+            print(form)
+            if form.is_valid():
+                print("kikikiki")
+                obj=form.save(commit=False)
+                obj.tournament_id=requested_tournament
+                obj.save()
+                return  HttpResponseRedirect(reverse('tournament'))
+            else:
+                messages.error(request	,'Please do not change the fields')
+                context ={'TournamentRequestForm': TournamentRequestForm(request.POST,request=request) ,'is_tournamentrequestform':True ,'tournament':requested_tournament}
+                print(context)
+                return render(request, 'Tournaments/tournaments.html',context)

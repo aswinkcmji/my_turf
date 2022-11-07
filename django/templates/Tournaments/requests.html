@@ -39,7 +39,10 @@
                   Phone No
                 </th>
                 <th>
-                  Date
+                  start_Date
+                </th>
+                <th>
+                 end_Date
                 </th>
                 <th>
                   Start Time
@@ -61,7 +64,9 @@
                   <td>{{data.category}}</td>
                   <td>{{data.username }}</td>
                   <td>{{data.phoneno}}</td>
-                  <td>{{data.date|date:"Y-m-d"}}</td>
+                  <td>{{data.start_date|date:"Y-m-d"}}</td>
+                  <td>{{data.end_date|date:"Y-m-d"}}</td>
+
                   <td>{{data.start_time|time:"h:i:s"}}</td>
                   <td>{{data.end_time|time:"h:i:s"}}</td>
                   <td>
@@ -99,7 +104,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 <script>
-  document.getElementById('requested-tournament-li').classList.add('active')
+  document.getElementById('requests-li').classList.add('active')
   $('.selectall').click(function () {
     if ($(this).is(':checked')) {
       $('input:checkbox').attr('checked', true);
