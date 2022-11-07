@@ -286,7 +286,7 @@
                           <th>
                             Location
                           </th>
-                           
+                           <th></th>
                          </thead>
                          <tbody>
                            {% for data in crum %}
@@ -301,7 +301,7 @@
                             <td>
                                {{data.locality}}
                             </td>
-             
+                            <td><a onclick="return confirm('Are you sure you want to cancel this match?')" href="cancel/{{match.id}}" class="btn btn-primary">Cancel</a></td>
                           </tr>
                             {% endfor %}
                             
@@ -356,7 +356,7 @@
                             <td>
                                {{data.locality}}
                             </td>
-             
+                           
                           </tr>
                             {% endfor %}
                             

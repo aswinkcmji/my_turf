@@ -18,7 +18,10 @@ from django.contrib import messages
 from pytz import timezone
 from django import template
 from django.utils.dateparse import parse_time
-
+from accounts.models import UserModel
+import operator
+from django.db.models import Q
+from functools import reduce
 # import datetime as datetime_
 # from .models import slotModel
 
@@ -38,7 +41,9 @@ class AllMatchesView(View):
                 print(request.user.username)
                 # context={}
                 id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
-                matches=MatchModel.objects.filter(locality__iexact=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
+                user_location=request.user.location
+                location_list=user_location.split(",")
+                matches=MatchModel.objects.filter(reduce(operator.or_, (Q(locality__icontains=x) for x in location_list)),status="Upcoming").exclude(id__in=list(id_list))
                 form=RequestForm(request=request)
                 print("hllo",matches)
                 # context['matches']=matches
@@ -57,7 +62,8 @@ class MyMatchesView(View):
         context={}
         id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
         print(list(id_list))
-        matches=MatchModel.objects.filter(id__in=list(id_list))
+        exclude_status=["Completed","Cancelled"]
+        matches=MatchModel.objects.filter(id__in=list(id_list)).exclude(status__in=exclude_status)
         context['matches']=matches
         context[request]=request
         return render(request, 'Matches/my-matches.html',context)
@@ -75,6 +81,7 @@ class CreateMatchesView(View):
         # print(now)
         # print(CategoriesModel.objects.get(id=1))
         data={
+            'category':CategoriesModel.objects.first(),
             'date':datetime.now().date(),
             'start_time_f':datetime.now().strftime("%H:%M:%S"),
             'end_time_f':end_time.strftime("%H:%M:%S"),
@@ -207,11 +214,6 @@ class MatchHistoryView(View):
         print(context)
         return render(request, 'Matches/match-history.html',context)
 
-############################################################# View for listing all turfs in user locality ####################################################################
-class TurfsView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'turf/main.html',{ })
-
 ############################################################## View for editing matches created by user #####################################################################
 
 
@@ -324,19 +326,23 @@ class RequestsView(View):
 @method_decorator(login_required,name='dispatch')
 class  JoinMatchView(View):
     def get(self, request,id, *args, **kwargs):
-                matches=MatchModel.objects.filter(id=id,locality=request.user.location)
+                user_location=request.user.location
+                location_list=user_location.split(",")
+                matches=MatchModel.objects.filter(reduce(operator.or_, (Q(locality__icontains=x) for x in location_list)),id=id)
                 if len(matches) == 1:
                     match = matches[0]
                 if len(matches) == 0:
                     return render(request,'errors/error404.html',{})
+                print("##################### INSIDE JOIN MATCHES #########################",match)
                 joined=RequestModel.objects.filter(status='Accepted',match_id=match.pk).values()
                 request.session['id']=match.id
-                request.session['category']=match.category
+                # request.session['category']=match.category
                 # request.session['date']=match.date
                 # request.session['start_time']=match.start_time
                 # request.session['end_time']=match.end_time
                 request.session['locality']=match.locality
                 request.session['status']="Pending"
+                print("#### Match.Category #####",match.category,type(match.category))
                 data={
                     'category':match.category,
                     'date':match.date,
@@ -346,8 +352,10 @@ class  JoinMatchView(View):
                     'username':request.user.username,
                     'status':"Pending",
                     'phoneno': request.user.phone,
-                    'match_id':match.id,
+                    'match_id':match.pk,
                 }
+
+                print("##################data before initializing request form###########################",data)
                 form=RequestForm(data,request=request)
                 print(form)
                 context ={'RequestForm': form ,'is_requestform':True ,'match':match,'joined':joined}
@@ -625,3 +633,14 @@ class  JoinTournamentView(View):
                 context ={'TournamentRequestForm': TournamentRequestForm(request.POST,request=request) ,'is_tournamentrequestform':True ,'tournament':requested_tournament}
                 print(context)
                 return render(request, 'Tournaments/tournaments.html',context)
+
+
+############################################################# View for listing all turfs in user locality ####################################################################
+class TurfsView(View):
+    def get(self, request, *args, **kwargs):
+        user_location=request.user.location
+        location_list=user_location.split(",")
+        print(location_list)
+        turfs=UserModel.objects.filter(reduce(operator.or_, (Q(location__contains=x) for x in location_list)),is_turf=1)
+        print(turfs)
+        return render(request, 'turf/main.html',{ })
