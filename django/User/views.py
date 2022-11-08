@@ -39,7 +39,7 @@ class HomeView(View):
 
 
 
-########################################################## View for listing all matches in user locality which user hasn't requested or joined or created ################################################################################ 
+#d######################################################### View for listing all matches in user locality which user hasn't requested or joined or created ################################################################################ 
 @method_decorator(login_required,name='dispatch')
 class AllMatchesView(View):
         def get(self, request, *args, **kwargs):
@@ -64,7 +64,7 @@ class AllMatchesView(View):
                 return render(request, 'Matches/all-matches.html',context)
 
 
-#############################################################    View for matches user has created or joined  ###########################################################
+##d###########################################################    View for matches user has created or joined  ###########################################################
 @method_decorator(login_required,name='dispatch')
 class MyMatchesView(View):
     def get(self, request, *args, **kwargs):
@@ -80,7 +80,7 @@ class MyMatchesView(View):
         return render(request, 'Matches/my-matches.html',context)
 
 
-#############################################################   View for creating matches ###############################################################################
+##d###########################################################   View for creating matches ###############################################################################
 @method_decorator(login_required,name='dispatch')
 class CreateMatchesView(View):
     template = 'Matches/create-matches.html'
@@ -237,6 +237,9 @@ class MatchHistoryView(View):
 class EditMatchesView(View):
     def get(self, request,id, *args, **kwargs):
         editobj=MatchModel.objects.get(id=id)
+
+        print ( "type matvhodel : ", type( editobj.start_time ) )
+
         data={
             'category':editobj.category.id,
             'date':editobj.date,
@@ -345,6 +348,8 @@ class  JoinMatchView(View):
                 user_location=request.user.location
                 location_list=user_location.split(",")
                 matches=MatchModel.objects.filter(id=id)
+
+                
                 if len(matches) == 1:
                     match = matches[0]
                 if len(matches) == 0:
@@ -525,7 +530,7 @@ class EditTournamentView(View):
             'category':editobj1.category,
             'start_date':editobj1.start_date,
             'end_date':editobj1.end_date,
-            'start_time_f':editobj1.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+            'start_time_f':editobj1.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
             'end_time_f':editobj1.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
             'start_time':editobj1.start_time,
             'end_time':editobj1.end_time,
@@ -555,7 +560,7 @@ class EditTournamentView(View):
             end_time= parse_time(request.POST["end_time_f"])
             print(type(start_time))
             start_datetime= datetime.combine(start_date, start_time).astimezone(timezone('UTC'))
-            end_datetime= datetime.combine(start_date, end_time).astimezone(timezone('UTC'))
+            end_datetime= datetime.combine(end_date, end_time).astimezone(timezone('UTC'))
             updatedRecord = TournamentModel.objects.get(id=tournament_id)
             updatedRecord. category = form.cleaned_data['category']
             updatedRecord. start_date = form.cleaned_data['start_date']
@@ -680,6 +685,17 @@ class  JoinTournamentView(View):
                 context ={'TournamentRequestForm': TournamentRequestForm(request.POST,request=request) ,'is_tournamentrequestform':True ,'tournament':requested_tournament}
                 print(context)
                 return render(request, 'Tournaments/tournaments.html',context)
+
+
+
+
+
+
+
+
+
+
+
 
 @method_decorator(login_required,name='dispatch')
 class TurfsListView(View):
