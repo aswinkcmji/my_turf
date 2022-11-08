@@ -22,7 +22,10 @@ from accounts.models import UserModel
 from django.conf import settings  
 from dashboard.models import GalleryImg
 
-
+from accounts.models import UserModel
+import operator
+from django.db.models import Q
+from functools import reduce
 # import datetime as datetime_
 # from .models import slotModel
 
@@ -42,7 +45,15 @@ class AllMatchesView(View):
                 print(request.user.username)
                 # context={}
                 id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
-                matches=MatchModel.objects.filter(locality__iexact=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
+                user_location=request.user.location
+                location_list=user_location.split(",")
+                # print()
+                try:
+                    location_list.remove(' India')
+                except:
+                    pass
+                print(location_list)
+                matches=MatchModel.objects.filter(reduce(operator.or_, (Q(locality__icontains=x) for x in location_list)),status="Upcoming").exclude(id__in=list(id_list)).order_by("-id")
                 form=RequestForm(request=request)
                 print("hllo",matches)
                 # context['matches']=matches
@@ -61,7 +72,8 @@ class MyMatchesView(View):
         context={}
         id_list=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
         print(list(id_list))
-        matches=MatchModel.objects.filter(id__in=list(id_list))
+        exclude_status=["Completed","Cancelled"]
+        matches=MatchModel.objects.filter(id__in=list(id_list)).exclude(status__in=exclude_status).order_by("-id")
         context['matches']=matches
         context[request]=request
         return render(request, 'Matches/my-matches.html',context)
@@ -79,6 +91,7 @@ class CreateMatchesView(View):
         # print(now)
         # print(CategoriesModel.objects.get(id=1))
         data={
+            'category':CategoriesModel.objects.first(),
             'date':datetime.now().date(),
             'start_time_f':datetime.now().strftime("%H:%M:%S"),
             'end_time_f':end_time.strftime("%H:%M:%S"),
@@ -154,9 +167,9 @@ class RequestedMatchesView(View):
     def get(self, request, *args, **kwargs):
         print(request.user.username)
         context={}
-        id_list=RequestModel.objects.filter(username=request.user.username,status="Pending").values_list('match_id',flat=True)
+        id_list=RequestModel.objects.filter(username=request.user.username,status="Pending").values_list('match_id',flat=True).order_by("-id")
         print(list(id_list))
-        matches=MatchModel.objects.filter(id__in=list(id_list))
+        matches=MatchModel.objects.filter(id__in=list(id_list)).order_by("-id")
         context['matches']=matches
         return render(request, 'Matches/requested-matches.html',context)
 
@@ -178,20 +191,20 @@ class CancelRequestView(View):
 @method_decorator(login_required,name='dispatch')
 class MatchHistoryView(View):
     def get(self, request, *args, **kwargs):
-        id_list1=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
-        jum=MatchModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.username).values()#joined upcoming matches
-        id_list2=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
-        jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).values()#joined completed matches
-        id_list3=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True)
-        jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).values()#joined cancelled matches
-        crum=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Upcoming") #created upcoming matches
-        crcom=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Completed") #created completed matches
-        crcam=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Cancelled") #created cancelled matches
-        reqcan=RequestModel.objects.filter(username=request.user.username,status="Cancelled")#requests cancelled
-        reqrej=RequestModel.objects.filter(username=request.user.username,status="Rejected")#requests rejected
-        id_list4=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location).values_list('id',flat=True)
-        reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted").exclude(username=request.user.username)
-        reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected").exclude(username=request.user.username)
+        id_list1=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True).order_by("-id")
+        jum=MatchModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.username).values().order_by("-id")#joined upcoming matches
+        id_list2=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True).order_by("-id")
+        jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).values().order_by("-id")#joined completed matches
+        id_list3=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True).order_by("-id")
+        jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).values().order_by("-id")#joined cancelled matches
+        crum=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Upcoming").order_by("-id") #created upcoming matches
+        crcom=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Completed").order_by("-id") #created completed matches
+        crcam=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Cancelled").order_by("-id") #created cancelled matches
+        reqcan=RequestModel.objects.filter(username=request.user.username,status="Cancelled").order_by("-id")#requests cancelled
+        reqrej=RequestModel.objects.filter(username=request.user.username,status="Rejected").order_by("-id")#requests rejected
+        id_list4=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location).values_list('id',flat=True).order_by("-id")
+        reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted").exclude(username=request.user.username).order_by("-id")
+        reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected").exclude(username=request.user.username).order_by("-id")
         context={}
         context={
             'jum':jum,
@@ -224,7 +237,7 @@ class EditMatchesView(View):
     def get(self, request,id, *args, **kwargs):
         editobj=MatchModel.objects.get(id=id)
         data={
-            'category':editobj.category,
+            'category':editobj.category.id,
             'date':editobj.date,
             'start_time_f':editobj.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
             'end_time_f':editobj.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
@@ -284,9 +297,9 @@ class EditMatchesView(View):
 @method_decorator(login_required,name='dispatch')
 class RequestsView(View):
     def get(self, request,*args, **kwargs):
-        id_list=MatchModel.objects.filter(creator=request.user.username,status="Upcoming").values_list('id',flat=True)
+        id_list=MatchModel.objects.filter(creator=request.user.username,status="Upcoming").values_list('id',flat=True).order_by("-id")
         print(list(id_list))
-        requests=RequestModel.objects.filter(status='Pending',match_id__in=list(id_list)).values()
+        requests=RequestModel.objects.filter(status='Pending',match_id__in=list(id_list)).values().order_by("-id")
         # print(requests)
         context={}
         context['requests']=requests
@@ -328,19 +341,17 @@ class RequestsView(View):
 @method_decorator(login_required,name='dispatch')
 class  JoinMatchView(View):
     def get(self, request,id, *args, **kwargs):
-                matches=MatchModel.objects.filter(id=id,locality=request.user.location)
+                user_location=request.user.location
+                location_list=user_location.split(",")
+                matches=MatchModel.objects.filter(id=id)
                 if len(matches) == 1:
                     match = matches[0]
                 if len(matches) == 0:
                     return render(request,'errors/error404.html',{})
-                joined=RequestModel.objects.filter(status='Accepted',match_id=match.pk).values()
-                request.session['id']=match.id
-                request.session['category']=match.category
-                # request.session['date']=match.date
-                # request.session['start_time']=match.start_time
-                # request.session['end_time']=match.end_time
-                request.session['locality']=match.locality
-                request.session['status']="Pending"
+                print("##################### INSIDE JOIN MATCHES #########################",match)
+                joined=RequestModel.objects.filter(status='Accepted',match_id=match.pk).values().order_by("id")
+                request.session['id']=match.id 
+                print("#### Match.Category #####",match.category,type(match.category))
                 data={
                     'category':match.category,
                     'date':match.date,
@@ -350,35 +361,34 @@ class  JoinMatchView(View):
                     'username':request.user.username,
                     'status':"Pending",
                     'phoneno': request.user.phone,
-                    'match_id':match.id,
+                    'match_id':match.pk,
                 }
-                form=RequestForm(data,request=request)
-                print(form)
-                context ={'RequestForm': form ,'is_requestform':True ,'match':match,'joined':joined}
+                print("##################data before initializing request form###########################",data)
+                # form=RequestForm(data,request=request)
+                # print(form)
+                context ={'is_requestform':True ,'match':match,'joined':joined,'data':data}
                 print(context)
                 return render(request, 'Matches/all-matches.html',context)
         # except:
         #     pass
     def post(self, request, *args, **kwargs):
-
-        try:
-            matchid=int(request.POST['match_id'])
-        except:
-            return  HttpResponseRedirect(reverse('matches'))
-        if matchid!=request.session.get('id'):
-            id=int(request.session.get('id'))
-            matches=MatchModel.objects.filter(id=id)
-            if len(matches) == 1:
-                requested_match = matches[0]
-            context ={'RequestForm': RequestForm(request.POST,request=request) ,'is_requestform':True ,'match':requested_match}
-            return render(request, 'Matches/all-matches.html',context)
-        else:
             match_id=request.session.get('id')
             print(match_id)
             matches=MatchModel.objects.filter(id=match_id)
             if len(matches) == 1:
                 requested_match = matches[0]
-            form=RequestForm(request.POST,request=request)
+            data={
+                    'category':requested_match.category.id,
+                    'date':requested_match.date,
+                    'start_time':requested_match.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                    'end_time':requested_match.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                    'locality':requested_match.locality,
+                    'username':request.user.username,
+                    'status':"Pending",
+                    'phoneno': request.user.phone,
+                    'match_id':requested_match.pk,
+                }
+            form=RequestForm(data,request=request)
             print(form)
             if form.is_valid():
                 print("kikikiki")
@@ -388,7 +398,8 @@ class  JoinMatchView(View):
                 return  HttpResponseRedirect(reverse('matches'))
             else:
                 messages.error(request	,'Please do not change the fields')
-                context ={'RequestForm': RequestForm(request.POST,request=request) ,'is_requestform':True ,'match':requested_match}
+                joined=RequestModel.objects.filter(status='Accepted',match_id=requested_match.pk).values()
+                context ={'is_requestform':True ,'match':requested_match,'joined':joined,'data':data}
                 print(context)
                 return render(request, 'Matches/all-matches.html',context)
 

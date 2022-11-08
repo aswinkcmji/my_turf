@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container-fluid">
-  <div class="row bg-light d-flex justify-content-around container-fluid">
+  <div class="row bg-soft-light d-flex justify-content-around container-fluid">
   {% for match in matches%}
 <div class="column col-md-4">
   <div class="card p-2 m-4">
@@ -35,11 +35,12 @@
           <a href="edit/{{match.id}} "  class="btn btn-primary">
             EDIT
         </a>
-        <a  class="btn btn-primary" href="cancel/{{match.id}}">
+        <!-- <a  class="btn btn-primary" href="cancel/{{match.id}}">
           Cancel
-        </a>
+        </a> -->
+        <a onclick="return confirm('Are you sure you want to cancel this match?')" href="cancel/{{match.id}}" class="btn btn-primary">Cancel</a>
         {%elif match.creator == request.user.username%}
-        <div class="col-4 "><img src="/static/assets/images/avatars/01.png" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-50"></div>
+        <div class="col-4 "><img src="/static/assets/images/avatars/01.png" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-45"></div>
         {%endif%}
       </div>
  </div>
@@ -48,7 +49,7 @@
  <div class="column col-md-4 justify-content-md-around">
    <div class="card text-white bg-soft-info m-5" > 
      <div class="card-body">   
-       <h3 class="mt-3 text-center">There aren't any matches you have created or joined</h3>
+       <h3 class="mt-3 text-center">There aren't any upcoming matches you have created or joined</h3>
        <p class="mt-3 text-center">
          Interested in creating your own matches<a class="nav-link " href="{% url 'create-matches' %}" id="create-matches-li">Click here</a>
         </p>

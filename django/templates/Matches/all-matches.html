@@ -12,29 +12,14 @@ style="display: block ;" {% endif %}>
 {% for match in matches%}
   <div class="column col-md-4">
     <div class="card p-2 m-4">
-      {% if match.category == "Cricket" %}
-        <img src="https://cdn.britannica.com/47/148847-050-C4FB5341/Cricket-bat-ball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Football" %}
-        <img src="https://images.squarespace-cdn.com/content/v1/51e6a2b7e4b038b7a667f1b3/1375240864715-15RNHVOTAV215YF2R60V/PES%2B2014%2BBall%2Bgrass.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Baseball" %}
-        <img src="https://techcrunch.com/wp-content/uploads/2019/03/GettyImages-844016022.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Badminton" %}
-        <img src="https://gumlet.assettype.com/dtnext/import/Articles/2022/Feb/202202200142305523_Ball-Badminton-Nationals-in-Dindigul-from-Feb-22_SECVPF.gif?w=1200&h=675&auto=format%2Ccompress&fit=max" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Tennis" %}
-        <img src="https://thumbs.dreamstime.com/b/tennis-ball-racket-16093106.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Volleyball" %}
-        <img src="https://sportslounge.co.in/file/2020/09/volleyball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        {% elif match.category == "Basketball" %}
-        <img src="https://btcpeers.com/content/images/2022/04/Basketball-Swish.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-        
-        {%endif%}
+        <img src="/media/{{match.category.image}}" class="card-img-top" alt="Product 1" style="height:350px;">
         <div class="card-body p-1 ">
           <h2>{{match.category}}</h2>
-          <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
-          <p class="card-text text-dark">Start Time:{{match.start_time|time:"H:i:s"}}</p>
-          <p class="card-text text-dark">End Time:{{match.end_time|time:"H:i:s"}}</p>
-          <p class="card-text text-dark ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
-          <p class="card-text text-dark">Locality:{{match.locality}}</p>
+          <p class="card-text ">Date of Match:{{match.date|date:"Y-m-d"}}</p>
+          <p class="card-text ">Start Time:{{match.start_time|time:"H:i:s"}}</p>
+          <p class="card-text ">End Time:{{match.end_time|time:"H:i:s"}}</p>
+          <p class="card-text  ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
+          <p class="card-text ">Locality:{{match.locality}}</p>
           {% if match.creator != request.user.username %}
          <a class="btn btn-primary" href="join/{{match.id}}">JOIN NOW</a>
         {%else%}
@@ -43,41 +28,6 @@ style="display: block ;" {% endif %}>
           </div>
         </div>
    </div>
-       <!-- <div class="modal fade" id="exampleModalCenteredScrollable{{match.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-             <div class="card p-2 m-5">
-                  <form role="form" method="POST" action="">
-                    {% csrf_token %} 
-                  <label >Game Category:</label>
-                  <input type="text" value="{{match.category}}" readonly name="id_category"> 
-                  <label>Date of Match:</label> 
-                  <input type="text" value="{{match.date|date:"Y-m-d"}}" readonly name="id_date">
-                  <label>Start Time of Match:</label> 
-                  <input type="text" value="{{match.start_time|time:"h:i:s"}}" readonly name="id_start_time">
-                  <label>End Time of Match:</label> 
-                  <input type="text" value="{{match.end_time|time:"h:i:s"}}" readonly name="id_end_time">
-                  <label>Organized By:</label> 
-                  <input type="text" value="{{match.creator}}" readonly name="id_user"><br>
-                  <label>Location:</label> 
-                  <input type="text" value="{{match.locality}}" readonly name="id_locality">
-                  <input type="number" value="{{match.id}}" hidden name="id">
-                <div class="card text-white bg-secondary" > 
-                  <div class="card-body">   
-                      This is some text within a card body.
-                  </div>
-                  </div>
-                    <button type="button" class="btn btn-secondary" >Close</button>
-                    <button type="submit" class="btn btn-primary">Request to Join</button>
-              </form>
-            </div>
-        </div>
-        </div>
-        </div> -->
 {%empty%}
 <div class="column col-md-4"{% if is_requestform %} style="display: none ;" {% else %}
 style="display: block ;" {% endif %}>
@@ -104,30 +54,25 @@ style="display: none ;" {% endif %}>
                 </div>
                 <div class="modal-body p-4">
                     {% csrf_token %}
-                    {{RequestForm.errors}}
+              
 
 
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
-                                <label for="category" class="form-label">Category</label>
-                                {{RequestForm.category}}
+                                <label for="{{RequestForm.category.id_for_label}}" class="form-label">Category</label>
+                               
+                                <p class="form-control" style="    background-color: #e9ecef;
+                                opacity: 1;">{{data.category}}</p>
                             </div>
                             <span class="text-error text-danger">{{ RequestForm.category.errors }}</span>
                         </div>
-<!-- 
-                        <div class="col-lg-12">
-                            <div class="form-group">
-                                <label for="user" class="form-label">User Identification</label>
-                                {{RequestForm.username}}
-                            </div>
-                            <span class="text-error text-danger">{{ RequestForm.username.errors }}</span>
-                        </div> -->
 
                         <div class="col-lg-12">
                           <div class="form-group">
                               <label for="start" class="form-label">Date</label>
-                              {{RequestForm.date}}
+                                                        <p class="form-control" style="    background-color: #e9ecef;
+                              opacity: 1;">{{data.date|date:"Y-m-d"}}</p>
                           </div>
                           <span class="text-error text-danger">{{ RequestForm.date.errors }}</span>
                       </div>
@@ -135,7 +80,8 @@ style="display: none ;" {% endif %}>
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label for="start" class="form-label">Start Time</label>
-                                {{RequestForm.start_time}}
+                                <p class="form-control" style="    background-color: #e9ecef;
+                                opacity: 1;">{{data.start_time}}</p>
                             </div>
                             <span class="text-error text-danger">{{ RequestForm.start_time.errors }}</span>
                         </div>
@@ -143,23 +89,19 @@ style="display: none ;" {% endif %}>
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label for="end" class="form-label">End Time</label>
-                                {{RequestForm.end_time}}
+                               
+                                <p class="form-control" style="    background-color: #e9ecef;
+                                opacity: 1;">{{data.end_time}}</p>
                             </div>
                             <span class="text-error text-danger">{{ RequestForm.end_time.errors }}</span>
                         </div>
 
                         <div class="col-lg-12">
-                            <div class="form-group">
-                                <label for="color" class="form-label">Colour</label>
-                                {{addScheduleform.color}}
-                            </div>
-                            <span class="text-error text-danger">{{ addScheduleform.color.errors }}</span>
-                        </div>
-
-                        <div class="col-lg-12">
                           <div class="form-group">
                               <label for="end" class="form-label">Location</label>
-                              {{RequestForm.locality}}
+                             
+                              <p class="form-control" style="    background-color: #e9ecef;
+                              opacity: 1;">{{data.locality}}</p>
                           </div>
                           <span class="text-error text-danger">{{ RequestForm.locality.errors }}</span>
                       </div>
@@ -169,14 +111,11 @@ style="display: none ;" {% endif %}>
 
 
 
-                    {{RequestForm.username}}
+                   
 
-                    {{RequestForm.status}}
-
-
-                    {{RequestForm.phoneno}}
-
-                    {{RequestForm.match_id}}
+                   
+                   
+                   
 
                 </div>
                 <div class="modal-footer">
