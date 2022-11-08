@@ -34,7 +34,7 @@ class AddStockView(View):
             if form.is_valid(): 
                 print(request.FILES) 
                 form.save()  
-                
+                messages.success(request,"Stock was successfully added...")
                 return redirect(reverse('addstock'))  
             else:  
                 

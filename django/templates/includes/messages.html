@@ -13,12 +13,14 @@
         let tag=$('#messagetag').html()
         let message = $('#messagecontent').html()
           if( tag == 'error'){
-            toastr.error(message);
-            $('#creatematch').trigger('reset');
+            toastr.error(message).delay(1500).toggle('slide')
+            // $('#creatematch').trigger('reset')
           }
           if( tag == 'success' ){
-            toastr.success(message);
-            $('#creatematch').trigger('reset');
+            toastr.success(message).delay(1500).toggle('slide')
+          }
+          if( tag == 'warning' ){
+            toastr.warning(message).delay(1500).toggle('slide')
           }
       });
     //   $(document).ready(function() {
