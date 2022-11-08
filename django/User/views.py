@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from email import message
 from multiprocessing import context
 from tkinter import FLAT
@@ -22,7 +22,8 @@ from accounts.models import UserModel
 import operator
 from django.db.models import Q
 from functools import reduce
-# import datetime as datetime_
+# from datetime import datetime
+# import datetime as datetime
 # from .models import slotModel
 
 # Create your views here.
@@ -443,7 +444,7 @@ class CreateTournamentView(View):
         }
         form = createtournamentForm(data,request=request)
         # user = request.user
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
+        # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
         context = {'form': form,
                     'data': 'Add tournament',
                     # 'user': 'user',
@@ -481,8 +482,8 @@ class CreateTournamentView(View):
             form_cf.save()
 
 
-            # TournamentRequestModel.objects.create(match_id=form_cf,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
-            messages.success(request	,'Your match has been succesfully created. Visit My Match to see .')
+            TournamentRequestModel.objects.create(tournament_id=form_cf,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",start_date=form.cleaned_data['start_date'],end_date=form.cleaned_data['end_date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
+            messages.success(request	,'Your tournament has been succesfully created. Visit My tournament to see .')
             return HttpResponseRedirect(reverse('create-tournament'))
 
         else:
@@ -508,22 +509,25 @@ class MyTournamentView(View):
         return render(request, 'Tournaments/my-tournament.html',context)
 
 ############################### view for editing created tournaments  ####################################################################
+@method_decorator(login_required,name='dispatch')
 class EditTournamentView(View):
     def get(self, request,id, *args, **kwargs):
-        editobj=TournamentModel.objects.get(id=id)
-        print(id,"44444444444444444444444444444444444444444444444444444444444")
+        editobj1=TournamentModel.objects.get(id=id)
+        # print(id,"44444444444444444444444444444444444444444444444444444444444")
         data={
-            'category':editobj.category,
-            'start_date':editobj.start_date,
-            'end_date':editobj.end_date,
-            'start_time':editobj.start_time,
-            'end_time':editobj.end_time,
-            'locality':editobj.locality,
-            'status':editobj.status,
+            'category':editobj1.category,
+            'start_date':editobj1.start_date,
+            'end_date':editobj1.end_date,
+            'start_time_f':editobj1.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+            'end_time_f':editobj1.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+            'start_time':editobj1.start_time,
+            'end_time':editobj1.end_time,
+            'locality':editobj1.locality,
+            'status':editobj1.status,
             "creator" : request.user.username,
-            "teams": editobj.teams,
-            'team_space_available':editobj.team_space_available,
-            'tour_id':editobj.id,
+            "teams": editobj1.teams,
+            'team_space_available':editobj1.team_space_available,
+            'tournament_id':editobj1.id,
         }
         form=updatetournamentform(data,request=request)
         context={
@@ -533,23 +537,32 @@ class EditTournamentView(View):
         return render(request,'Tournaments/edit-tournaments.html',context)
         
     def post(self, request, *args, **kwargs):
-        tour_id = request.POST['tour_id']
+        tournament_id = request.POST['tournament_id']
         form=updatetournamentform(request.POST,request=request)
   
         if form.is_valid():
             print("kikfjsdhgusdjgusikiki")
-            updatedRecord = TournamentModel.objects.get(id=tour_id)
+            start_date =form.cleaned_data["start_date"]
+            end_date =form.cleaned_data["end_date"]
+            start_time= parse_time(request.POST["start_time_f"])
+            end_time= parse_time(request.POST["end_time_f"])
+            print(type(start_time))
+            start_datetime= datetime.combine(start_date, start_time).astimezone(timezone('UTC'))
+            end_datetime= datetime.combine(start_date, end_time).astimezone(timezone('UTC'))
+            updatedRecord = TournamentModel.objects.get(id=tournament_id)
             updatedRecord. category = form.cleaned_data['category']
             updatedRecord. start_date = form.cleaned_data['start_date']
             updatedRecord. end_date = form.cleaned_data['end_date']
-            updatedRecord. start_time = form.cleaned_data['start_time']
-            updatedRecord. end_time = form.cleaned_data['end_time']
+            updatedRecord. start_time = start_datetime
+            updatedRecord. end_time = end_datetime
             updatedRecord. locality = form.cleaned_data['locality']
             updatedRecord. teams = form.cleaned_data['teams']
             updatedRecord. team_space_available = form.cleaned_data['team_space_available']
             updatedRecord.save()
             messages.success(request	,'Your tournament has been successfully edited.')
-            return render(request,'Tournaments/edit-tournaments.html',{'form':updatetournamentform(request.POST,request=request)})
+            TournamentRequestModel.objects.filter(tournament_id=updatedRecord).update(category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",start_date=form.cleaned_data['start_date'],end_date=form.cleaned_data['end_date'],start_time=form.cleaned_data['start_time_f'],end_time=form.cleaned_data['end_time_f'],locality=form.cleaned_data['locality'])
+            return HttpResponseRedirect(reverse('my-tournament'))
+            
         else:
             print(form.errors.as_data())
             messages.error(request	,'Please do not change the fields')
@@ -563,7 +576,7 @@ class AllTournamentView(View):
         def get(self, request, *args, **kwargs):
                 print(request.user.username)
                 # context={}
-                id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('tournament_idid',flat=True)
+                id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('tournament_id',flat=True)
                 tournament=TournamentModel.objects.filter(locality__iexact=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
                 form=TournamentRequestForm(request=request)
                 # print("hllo",matches)
