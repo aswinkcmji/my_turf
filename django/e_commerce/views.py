@@ -10,9 +10,9 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-import random
+import random   
 
-from django import template
+
 
 class E_commercePage(View):
     def get(self, request ,*args, **kwargs):
@@ -72,22 +72,29 @@ class Checkout(View):
         totalPrice = CartModel.objects.filter(username = request.user.username).values_list('quantity','price')
         totalAmount = 0
         totalItemCount = CartModel.objects.filter(username = request.user.username).count()
-        for i in totalPrice:
+
+        if cartData :
+            for i in totalPrice:
             
-            totalAmount = totalAmount + (i[0]*i[1])
+                totalAmount = totalAmount + (i[0]*i[1])
 
 
-        context = {
-            
-            'totalAmount':totalAmount,
-            'totalItemCount':totalItemCount,
-            'cartData':cartData,
-            'num':num,
-            
-        }
+                context = {
+                    
+                    'totalAmount':totalAmount,
+                    'totalItemCount':totalItemCount,
+                    'cartData':cartData,
+                    'num':num,
+                    
+                }
 
 
-        return render(request,'e_commerce/checkout.html',context)
+                return render(request,'e_commerce/checkout.html',context)
+        else :
+
+            return HttpResponseRedirect(reverse('shop'))
+
+        
 
 class OrderView(View):
     def get(self, request, id ,*args, **kwargs):
@@ -98,21 +105,22 @@ class OrderView(View):
 
         # subtract the quantity from the stock quantity
 
-        for i in cartData :
+        if cartData :
+            for i in cartData :
 
-            productQty = ProductsModel.objects.filter(product_name=i[0]).values_list('quantity')[0][0]
+                productQty = ProductsModel.objects.filter(product_name=i[0]).values_list('quantity')[0][0]
 
-            ProductsModel.objects.filter(product_name = i[0]).update(quantity = productQty - i[1])
+                ProductsModel.objects.filter(product_name = i[0]).update(quantity = productQty - i[1])
         
         # insert the order to ordermodel
         
-        for i in CartModel.objects.filter(username = request.user.username).values_list() :
+            for i in CartModel.objects.filter(username = request.user.username).values_list() :
 
-            CheckoutModel.objects.create(orderno=id,username=i[1],product_id=i[2],product_name=i[3],price=i[4],quantity=i[5],image=i[6])
+                CheckoutModel.objects.create(orderno=id,username=i[1],product_id=i[2],product_name=i[3],price=i[4],quantity=i[5],image=i[6])
 
-        # delete the cartData
+            # delete the cartData
 
-        CartModel.objects.filter(username = request.user.username).delete()
+            CartModel.objects.filter(username = request.user.username).delete()
 
         messages.success(request, 'your order confirmed successfully')
         
