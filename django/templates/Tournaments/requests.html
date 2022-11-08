@@ -1,0 +1,126 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="row justify-content-around mt-5">
+  {% if messages %}
+  {% for message in messages %}
+  <p class="d-none" id="messagetag">{{message.tags}}</p>
+  <p class="d-none " id="messagecontent">{{message}}</p>
+  {% endfor %}
+  {% endif %}
+  <div class="col-8">
+    <div class="card">
+      <div class="card-header d-flex align-items-center justify-content-between pb-4">
+        <div class="header-title">
+          <h2>Pending Requests</h2>
+        </div>
+      </div>
+      <div class="card-body p-0">
+
+        <div class="table-responsive">
+          <form action="" method="POST">
+            <table class="table">
+              <thead class=" text-primary">
+                <th>
+                  <label><input type="checkbox" name="sample" class="selectall" /></label>
+                </th>
+                <th>
+                  #
+                </th>
+                <th>
+                  Category
+                </th>
+                <th>
+                  Username
+                </th>
+                <th>
+                  Phone No
+                </th>
+                <th>
+                  start_Date
+                </th>
+                <th>
+                 end_Date
+                </th>
+                <th>
+                  Start Time
+                </th>
+                <th>
+                  End Time
+                </th>
+                <th>
+                  Location
+                </th>
+              </thead>
+
+              <tbody>
+                {% csrf_token %}
+                {%for data in requests%}
+                <tr>
+                  <td><input type="checkbox" name="selected[]" id="checks[]" value="{{data.id}}"></td>
+                  <td>{{forloop.counter0|add:1}}</td>
+                  <td>{{data.category}}</td>
+                  <td>{{data.username }}</td>
+                  <td>{{data.phoneno}}</td>
+                  <td>{{data.start_date|date:"Y-m-d"}}</td>
+                  <td>{{data.end_date|date:"Y-m-d"}}</td>
+
+                  <td>{{data.start_time|time:"h:i:s"}}</td>
+                  <td>{{data.end_time|time:"h:i:s"}}</td>
+                  <td>
+                    {{data.locality}}
+                  </td>
+
+                </tr>
+                {% endfor %}
+                <div class="d-flex justify-content-end">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-primary">Action</button>
+                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                      data-bs-toggle="dropdown" aria-expanded="false">
+                      <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><button class="btn btn-primary " type="submit" name="Accept">Accept</button></li>
+                      <li><button class="btn btn-primary " type="submit" name="Reject"> Reject </button></li>
+                    </ul>
+                  </div>
+                </div>  
+              </tbody>
+            </table>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+<script>
+  document.getElementById('requests-li').classList.add('active')
+  $('.selectall').click(function () {
+    if ($(this).is(':checked')) {
+      $('input:checkbox').attr('checked', true);
+    } else {
+      $('input:checkbox').attr('checked', false);
+    }
+  });
+  $(document).ready(function () {
+    let tag = $('#messagetag').html()
+    let message = $('#messagecontent').html()
+    if (tag == 'error') {
+      toastr.error(message);
+    }
+    if (tag == 'success') {
+      toastr.success(message);
+    }
+  });
+</script>
+{% endblock content %}

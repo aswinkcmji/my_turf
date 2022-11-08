@@ -201,72 +201,91 @@
                 </li>
                 {%endif%}
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#horizontal-menussss" role="button"
-                        aria-expanded="false" aria-controls="horizontal-menu">
-                        <i class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
-                                preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M5 4h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5m0 4h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5m5-13h4a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-4m5-5h5" />
-                            </svg>
-                        </i>
-                        <span class="item-name">Tournaments</span>
-                        <i class="right-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5l7 7-7 7" />
-                            </svg>
-                        </i>
-                    </a>
-                    <ul class="sub-nav collapse" id="horizontal-menussss" data-bs-parent="#sidebar-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="" id="tournament-li">
-                                <i class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
-                                        fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> X </i>
-                                <span class="item-name">Tournament</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="{% url 'my-tournaments' %}" id="my-tournaments-li">
-                                <i class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
+                    <a class="nav-link" data-bs-toggle="collapse" href="#horizontal-menussss" role="button" aria-expanded="false" aria-controls="horizontal-menu">
+                       <i class="icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5m0 4h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5m5-13h4a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-4m5-5h5"/></svg>
+                       </i>
+                       <span class="item-name">Tournaments</span>
+                       <i class="right-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5l7 7-7 7" />
+                    </svg>
+                       </i>
+                   </a>
+                   <ul class="sub-nav collapse" id="horizontal-menussss" data-bs-parent="#sidebar-menu">
+                       <li class="nav-item">
+                           <a class="nav-link" href="{% url 'all-tournaments' %}" id="all-tournament-li">
+                            <i class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
                                     fill="currentColor">
                                     <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> X </i>
-                                <span class="item-name">My Tournament</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'create-tournament' %}" id="create-tournament-li">
-                                <i class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
-                                        fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> X </i>
-                                <span class="item-name">Create Tournament</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-
+                                        <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                    </g>
+                                </svg>
+                            </i>
+                               <i class="sidenav-mini-icon"> X </i>
+                               <span class="item-name">Tournament</span>
+                           </a>
+                       </li>
+                       <li class="nav-item">
+                        <a class="nav-link " href="{% url 'my-tournaments' %}" id="my-tournaments-li">
+                         <i class="icon">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
+                                 fill="currentColor">
+                                 <g>
+                                     <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                 </g>
+                             </svg>
+                         </i>
+                            <i class="sidenav-mini-icon"> X </i>
+                            <span class="item-name">My Tournament</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'create-tournament' %}" id="create-tournament-li">
+                         <i class="icon">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
+                                 fill="currentColor">
+                                 <g>
+                                     <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                 </g>
+                             </svg>
+                         </i>
+                            <i class="sidenav-mini-icon"> X </i>
+                            <span class="item-name">Create Tournament</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'requested-tournaments' %}" id="requested-tournament-li">
+                         <i class="icon">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
+                                 fill="currentColor">
+                                 <g>
+                                     <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                 </g>
+                             </svg>
+                         </i>
+                            <i class="sidenav-mini-icon"> X </i>
+                            <span class="item-name">Requested Tournaments</span>
+                        </a>
+                    </li>
+                 
+             
+                       </ul>
+                       
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+               </li>
 
                 {% if request.user.is_superuser%}
                 <li class="nav-item">

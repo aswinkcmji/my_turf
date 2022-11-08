@@ -1,0 +1,73 @@
+{% extends 'layouts/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<section class="ecommerce-addstock-section container-fluid my-3" >
+  <!-- ecommerce topbar -->
+  {% if messages %}
+  {% for message in messages %}
+      <p class="d-none" id="messagetag">{{message.tags}}</p>
+      <p class="d-none " id="messagecontent">{{message}}</p>
+  {% endfor %}
+    {% endif %}
+  <div class="ecomerce-top-bar ">
+      <div class="row">
+              <h1 class=" mt-5"style="text-align:center">EDIT YOUR TOURNAMENT</h1>
+      </div>
+  </div>
+  <!-- ecommerce main section -->
+  <div class="ecom-addstock my-3">
+      <div class="bg-white col-md-6 mx-auto mt-5 p-5">
+          <div class="">
+              <form method="POST">
+                  {% csrf_token %}
+                  
+      
+                  {% for addForm in form.visible_fields %}
+                              
+                     
+                      {% if addForm.label != "Category" %}
+                      <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
+                          {% render_field addForm class="form-control" placeholder="Place Holder" %}
+                          {% if addForm.type != "hidden"%}
+                          <label >{{addForm.label}}</label>
+                          {%endif%}
+                          <p>{{addForm.type}}</p>
+                      </div>
+                      {% else %}
+                          {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
+                      {% endif %}
+                      <span class="text-danger">{{addForm.errors}}</span>
+                      
+      
+                  {% endfor %}
+                  {%for dontForm in form.hidden_fields%}
+                  {% render_field dontForm %}
+                  {%endfor%}
+                      <button class="btn btn-primary" type="submit">Submit</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+      
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+  <script type="text/javascript">
+     $(document).ready(function(){
+        let tag=$('#messagetag').html()
+        let message = $('#messagecontent').html()
+          if( tag == 'error'){
+            toastr.error(message);
+          }
+          if( tag == 'success' ){
+            toastr.success(message);
+          }
+      });
+      $(document).ready(function() {
+      var today = new Date().toISOString().split('T')[0];
+      $("#id_date").attr('min', today);
+      });
+
+  </script>
+{%endblock content%}
