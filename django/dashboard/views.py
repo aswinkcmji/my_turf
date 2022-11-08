@@ -9,15 +9,16 @@ from django.urls import reverse
 from django.views.generic import View
 from accounts.models import UserModel
 from e_commerce.forms import addStockForm
-from e_commerce.models import ProductsModel
+from e_commerce.models import ProductsModel,CheckoutModel
 from django.conf import settings  
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm
 from django.utils.dateparse import parse_datetime
-from .models import GalleryImg, TurfScheduleModel , CategoriesModel
-
+from .models import TurfGallery, TurfScheduleModel , CategoriesModel
+from User.models import MatchModel
+from django.db.models import Sum
 
 
 
@@ -238,7 +239,7 @@ class Turf_Gallery(View):
     def get(self,request):
 
 
-        turfGallery = GalleryImg.objects.filter(username = request.user.username).values()
+        turfGallery = TurfGallery.objects.filter(username = request.user.username).values()
         print(" ",turfGallery)
         context = {
             'form': GalleryImgForm(),
@@ -356,3 +357,38 @@ class CategoriesDeleteView(View):
         category = CategoriesModel.objects.filter(id=id).first()
         category.delete()
         return redirect('categories')
+
+
+
+
+@method_decorator(login_required,name='dispatch')
+class AdminDashboardView(View):
+    def get (self, request, *args, **kwargs):
+        total_users=UserModel.objects.all().exclude(is_turf=1).count()
+        print(total_users)
+        total_turfs=UserModel.objects.filter(is_turf=1).count()
+        print(total_turfs)
+        total_matches=MatchModel.objects.all().count()
+        print(total_matches)
+        total_price_as_dict=CheckoutModel.objects.aggregate(Sum('price'))
+        total_price=total_price_as_dict['price__sum']
+        print(total_price)
+        total_products=ProductsModel.objects.all().count()
+        print(total_products)
+        total_orders_placed=CheckoutModel.objects.all().count()
+        print(total_orders_placed)
+        total_completed_matches=MatchModel.objects.filter(status="Completed").count()
+        print(total_completed_matches)
+        total_cancelled_matches=MatchModel.objects.filter(status="Cancelled").count()
+        print(total_cancelled_matches)
+        context={
+            'total_users':total_users,
+            'total_turfs':total_turfs,
+            'total_matches':total_matches,
+            'total_price':total_price,
+            'total_products':total_products,
+            'total_orders_placed':total_orders_placed,
+            'total_completed_matches':total_completed_matches,
+            'total_cancelled_matches':total_cancelled_matches
+        }
+        return render(request,"admin/dashboard.html",context)

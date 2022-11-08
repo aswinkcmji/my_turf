@@ -20,7 +20,7 @@ from django import template
 from django.utils.dateparse import parse_time
 from accounts.models import UserModel
 from django.conf import settings  
-from dashboard.models import GalleryImg
+from dashboard.models import TurfGallery
 
 from accounts.models import UserModel
 import operator
@@ -34,7 +34,7 @@ from functools import reduce
 
 class HomeView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'home.html',{ })
+        return render(request, 'home.html',{})
 
 
 
@@ -339,7 +339,7 @@ class RequestsView(View):
                 return HttpResponseRedirect(reverse('requests'))
         else:
             print("hyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyiiiiiiiiiiiiiiiiiiiiiiiiiiiiihyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-            messages.error(request	,'NO user selected')
+            messages.error(request	,'NO user request selected')
             return HttpResponseRedirect(reverse('requests'))
 ######################################################################### View for joining matches #######################################################
 @method_decorator(login_required,name='dispatch')
@@ -716,7 +716,7 @@ class TurfProfileView(View):
         id = kwargs.pop('id')
 
         turf = UserModel.objects.filter(id=id).first()  
-        images = GalleryImg.objects.filter(username = "tr001").values()
+        images = TurfGallery.objects.filter(username = "tr001").values()
 
         context = {'id': id,
                     'turf':turf,

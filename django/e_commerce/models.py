@@ -34,7 +34,7 @@ class CheckoutModel(models.Model):
     username = models.TextField(max_length=100, blank=False)
     product_id = models.TextField(blank=False )
     product_name = models.TextField(max_length=100, blank=False)
-    price = models.TextField(blank=False)
+    price = models.FloatField(default=0.0,blank=False)
     quantity = models.TextField(blank=False,)
     image = models.TextField(max_length=100, blank=False)
 

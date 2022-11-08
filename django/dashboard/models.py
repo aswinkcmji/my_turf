@@ -26,7 +26,7 @@ class TurfScheduleModel(models.Model):
     color_bg = models.CharField(max_length=255, null=True)
     turf = models.ForeignKey(UserModel, on_delete=models.CASCADE)
     
-class GalleryImg(models.Model):
+class TurfGallery(models.Model):
     username = models.TextField( max_length=55)
     image = models.ImageField( null=True , upload_to='image/image')
     caption = models.TextField( max_length=55,null=True)
