@@ -18,6 +18,10 @@ from django.contrib import messages
 from pytz import timezone
 from django import template
 from django.utils.dateparse import parse_time
+from accounts.models import UserModel
+from django.conf import settings  
+from dashboard.models import GalleryImg
+
 
 # import datetime as datetime_
 # from .models import slotModel
@@ -208,9 +212,9 @@ class MatchHistoryView(View):
         return render(request, 'Matches/match-history.html',context)
 
 ############################################################# View for listing all turfs in user locality ####################################################################
-class TurfsView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'turf/main.html',{ })
+# class TurfsView(View):
+#     def get(self, request, *args, **kwargs):
+#         return render(request, 'turf/main.html',{ })
 
 ############################################################## View for editing matches created by user #####################################################################
 
@@ -473,3 +477,30 @@ class MyTournamentView(View):
         }
         return render(request, 'Tournaments/my-tournament.html',context)
 
+
+@method_decorator(login_required,name='dispatch')
+class TurfsListView(View):
+    def get(self, request, *args, **kwargs):
+        turfs = UserModel.objects.filter(is_turf=True)
+        categories = CategoriesModel.objects.all()
+        categories_dict={}
+        for category in categories:
+            categories_dict[str(category.id)]=category.category
+        context = {'media_url':settings.MEDIA_URL, 'turfs':turfs,
+                    'categories_dict': categories_dict}
+        return render(request, 'turf/turfs_list.html',context)
+
+
+@method_decorator(login_required,name='dispatch')
+class TurfProfileView(View):
+    def get(self, request, *args, **kwargs):
+        id = kwargs.pop('id')
+
+        turf = UserModel.objects.filter(id=id).first()  
+        images = GalleryImg.objects.filter(username = "tr001").values()
+
+        context = {'id': id,
+                    'turf':turf,
+                    'media_url':settings.MEDIA_URL,
+                    'images':images}
+        return render(request, 'turf/turf_profile.html',context)

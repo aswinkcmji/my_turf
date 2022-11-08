@@ -88,6 +88,32 @@ class GalleryImgForm(ModelForm):
 class CategoriesForm(ModelForm):
     category = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control'}))
     image=forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
+
+    def clean_category(self, *args, **kwargs):
+        category = self.cleaned_data.get("category")
+        category_in_db = CategoriesModel.objects.filter(category=category).first()
+
+        if category_in_db :
+            raise forms.ValidationError('This category already exists')
+        return category
+
+    class Meta:
+        model = CategoriesModel 
+        fields = '__all__'
+
+
+class CategoriesEditForm(ModelForm):
+    category = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))
+    image=forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
+
+    # def clean_category(self, *args, **kwargs):
+    #     category = self.cleaned_data.get("category")
+    #     category_in_db = CategoriesModel.objects.filter(category=category).first()
+
+    #     if category_in_db :
+    #         raise forms.ValidationError('This category already exists')
+    #     return category
+
     class Meta:
         model = CategoriesModel 
         fields = '__all__'

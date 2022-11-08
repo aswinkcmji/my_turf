@@ -59,11 +59,11 @@ class SignupTurf(View):
                     messages.success(self.request, "Account Created Successfully")
                     return HttpResponseRedirect(reverse('login'))
                       
-            else:
-                categories= CategoriesModel.objects.all()
-                context ={"categories":categories}
-                context['form'] = form
-                return render(request, 'accounts/turf-sign-up.html',context)
+                else:
+                    categories= CategoriesModel.objects.all()
+                    context ={"categories":categories}
+                    context['form'] = form
+                    return render(request, 'accounts/turf-sign-up.html',context)
 
 
 

@@ -1,0 +1,77 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+{% load static %}
+<script>
+    document.getElementById('turfs_list-li').classList.add('active');
+</script>
+
+
+
+
+<div class="cona my-2tiner-fluid content-inner justify-content-center">
+    <div class=" row gap-1">
+
+        <div class="card">
+
+
+            <h4 class="p-4">Turfs</h4>
+
+
+        </div>
+    </div>
+
+
+    <div class=" row gap-1">
+
+        {% if turfs%}
+        {% for turf in turfs %}
+        <div class="card col-md-5 col-lg-3  mx-auto px-0 overflow-hidden">
+            <div class="img-cover border d-flex justify-content-center align-items-center" style="width:100%;">
+                <img src="{{media_url}}{{turf.avatar}}" alt="turf_image" class="img-fluid"
+                    style="width:100%;">
+            </div>
+
+
+            <div class="card-header mx-auto ">
+                <h5 class="card-title ">
+                    {{turf.turf_name}}
+                </h5>
+            </div>
+            <hr class="mx-3">
+            <div class="card-body">
+
+                <span class="h6">Location : </span> <span>{{turf.landmark}}, {{turf.location}} </span><br>
+                <p class="h6 my-2">Categories of Sports and games available : </p>
+                <div class=" ms-2 d-flex flex-wrap   gap-1">
+                    {% for category in turf.category%}
+                    {% for key, value in categories_dict.items %}
+                    {% ifequal key category %}
+                    <span class=" p-2 d-inline badge bg-light text-dark">{{ value }} </span><br>
+                    {% endifequal %}
+                    {% endfor %}
+                    {% endfor %}
+                    
+                </div>
+
+                <div class="d-flex justify-content-end">
+                <a class="btn btn-primary mt-3 ms-auto" href="{% url 'turf_profile' id=turf.id %}"> See More</a></div>
+
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+
+        
+        <div class="card col-md-5 col-lg-3  mx-auto px-0 overflow-hidden">
+          <div class="card-body"> <p class="text-center">No turfs Available Yet ! </p> 
+           <p class="text-center"> Stay Tuned</p>
+          </div>
+        </div>
+
+       {% endif %}
+
+
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,12 +1,12 @@
 from django.urls import URLPattern, path
 from django.conf.urls import url
-from .views import HomeView,AllMatchesView,MyMatchesView,CreateMatchesView,TurfsView,CancelRequestView,RequestedMatchesView,MatchHistoryView,EditMatchesView,RequestsView,JoinMatchView,CancelMatchView,CreateTournamentView,MyTournamentView
+from .views import *
 
 
 
 urlpatterns = [
     # path('login/', Signin.as_view(), name="sign-in"),
-    path('turfs/', TurfsView.as_view(), name="turfs"),
+    # path('turfs/', TurfsView.as_view(), name="turfs"),
     path('matches/', AllMatchesView.as_view(), name="matches"),
     path('my-matches/', MyMatchesView.as_view(), name="my-matches"),
     path('create-matches/', CreateMatchesView.as_view(), name="create-matches"),
@@ -23,6 +23,8 @@ urlpatterns = [
     path('create-tournament/', CreateTournamentView.as_view(), name="create-tournament"),
     # path('all-tournaments/', MyTournamentsView.as_view(), name="tournaments"),
     path('my-tournaments/', MyTournamentView.as_view(), name="my-tournaments"),
+    path('turfs/', TurfsListView.as_view(), name="turfs_list"),
+    path('turfs/<int:id>', TurfProfileView.as_view(), name="turf_profile"),
 
 
 ]
