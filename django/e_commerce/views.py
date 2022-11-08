@@ -47,15 +47,24 @@ class E_commercePage(View):
     def post(self,request,*args,**kwargs):
         if request.method == 'POST':  
             form = addToCartForm(request.POST)
-            if form.is_valid():  
-                cartCount = CartModel.objects.filter(username = request.user.username).count()
-                if cartCount < 5 :
-                    form.save() 
-
+            product_tot_qty = ProductsModel.objects.filter(product_name = request.POST['product_name']).values_list('quantity')[0][0]
+            print(int(product_tot_qty)+1,"hiiiiiiiiiiiiiiiiiiiiiiiiii")
+            if form.is_valid():
+                if int(request.POST.get("quantity")) <=0 :
+                    messages.error(request,"Quantity must be greater than 0")
                     return HttpResponseRedirect(reverse('shop'))
-                else:  
-                    messages.warning(request, 'Your cart is full Please do purchase...')
-        return HttpResponseRedirect(reverse('shop'))  
+                elif int(request.POST.get("quantity")) <= int(product_tot_qty):
+                    messages.error(request,"Unavilable Stock")
+                    return HttpResponseRedirect(reverse('shop'))
+                else:
+                    cartCount = CartModel.objects.filter(username = request.user.username).count()
+                    if cartCount < 5 :
+                        form.save() 
+
+                        return HttpResponseRedirect(reverse('shop'))
+                    else:  
+                        messages.warning(request, 'Your cart is full Please do purchase...')
+                        return HttpResponseRedirect(reverse('shop'))  
         
 class DeleteCartItem(View):
     def get(self , request, id,*args, **kwargs):
