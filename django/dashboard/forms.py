@@ -9,15 +9,14 @@ from django.utils.dateparse import parse_datetime
 
 
 from django.forms import ModelForm
-from .models import TurfScheduleModel, GalleryImg
+from .models import TurfScheduleModel, GalleryImg, CategoriesModel
 
 
 class TurfScheduleForm(ModelForm):
-    CHOICES_category = [('1', '1'),
-         ('2', '2'),
-         ('3', '3'), ]
-    category = forms.ChoiceField(required=True, choices=CHOICES_category, widget=forms.Select(
-        attrs={'class': 'form-select', 'defualt': "Category"}))
+    # CHOICES_category = [('1', '1'),
+    #      ('2', '2'),
+    #      ('3', '3'), ]
+    category = forms.ModelChoiceField(queryset=CategoriesModel.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     user = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': "Username/phone/email..."}))
     start = forms.CharField(widget=forms.DateTimeInput(attrs={
@@ -77,12 +76,44 @@ class TurfScheduleForm(ModelForm):
         return user
 
 class GalleryImgForm(ModelForm):
-    username=forms.CharField()
-    images1=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
-    images2=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
-    images3=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
-    images4=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    username = forms.CharField()
+    image = forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    caption = forms.CharField(required=False)
 
     class Meta:
         model = GalleryImg
+        fields = '__all__'
+
+
+class CategoriesForm(ModelForm):
+    category = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control'}))
+    image=forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
+
+    def clean_category(self, *args, **kwargs):
+        category = self.cleaned_data.get("category")
+        category_in_db = CategoriesModel.objects.filter(category=category).first()
+
+        if category_in_db :
+            raise forms.ValidationError('This category already exists')
+        return category
+
+    class Meta:
+        model = CategoriesModel 
+        fields = '__all__'
+
+
+class CategoriesEditForm(ModelForm):
+    category = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))
+    image=forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
+
+    # def clean_category(self, *args, **kwargs):
+    #     category = self.cleaned_data.get("category")
+    #     category_in_db = CategoriesModel.objects.filter(category=category).first()
+
+    #     if category_in_db :
+    #         raise forms.ValidationError('This category already exists')
+    #     return category
+
+    class Meta:
+        model = CategoriesModel 
         fields = '__all__'

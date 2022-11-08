@@ -4,7 +4,7 @@
 
 
 
-<section class="ecommerce-addstock-section container-fluid my-3"  >
+<section class="ecommerce-addstock-section container-fluid m-3"  >
     <!-- ecommerce topbar -->
     <!-- {% if messages %}
     {% for message in messages %}
@@ -19,7 +19,7 @@
     </div>
     <!-- ecommerce main section -->
     <div class="ecom-addstock my-3">
-        <div class="bg-white col-md-6 mx-auto mt-5 p-5">
+        <div class="card col-md-6 mx-auto mt-5 p-5">
             <div class="">
                 <form method="POST" id="creatematch">
                     {% csrf_token %}
@@ -32,7 +32,7 @@
                         {% if addForm.label != "Category" %}
                         <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
                             {% render_field addForm class="form-control" placeholder="Place Holder" min="1"%}
-                            {% if addform.type != "hidden"%}
+                            {% if addForm.type != "hidden"%}
                             {% if addForm.label == "Start time f" %}
                             <label >Start Time</label>
                             {% elif addForm.label == "End time f" %}
@@ -86,8 +86,25 @@
       $('#creatematch').trigger('reset');
       });
   </script>
-
-
+<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyAPaN2ndJcLY_fajOnaFwpkBVfIwSEfvgw"></script>
+<script>
+google.maps.event.addDomListener(window, 'load', function () 
+{   
+    
+    var options = {
+        // types: ['(cities)'],
+        componentRestrictions: {country: 'in'}
+    };
+	var places = new google.maps.places.Autocomplete(document.getElementById('id_locality'),options);
+    google.maps.event.addListener(places, 'place_changed', function () 
+	{
+		console.log(places.getPlace());
+		var getaddress 	  = places.getPlace();				//alert(getaddress.address_components[0].long_name);
+		var whole_address = getaddress.address_components;  //alert(whole_address + 'whole_address');   
+		$('#id_locality').val('');
+});
+});
+</script> -->
 <style>
 .bd-example{
       display:flex;
@@ -95,9 +112,6 @@
       align-items:center;
       width: 75rem;
       height: 43rem;
-      
-      
-
 }
 </style>
 

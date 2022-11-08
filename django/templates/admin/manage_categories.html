@@ -1,0 +1,303 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+{% load static%}
+{% load widget_tweaks%}
+
+
+
+<body class="  ">
+
+    <main class="main-content">
+        <div class="position-relative iq-banner">
+            <!-- Nav Header Component Start -->
+            <div class="iq-navbar-header" style="height: 215px;">
+                <div class="container-fluid iq-container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="flex-wrap d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h1>Categories</h1>
+                                    <p>Manage Categories here.</p>
+                                </div>
+                                <div>
+                                    <a href="" class="btn btn-link btn-soft-light">
+                                        <svg width="20" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M11.8251 15.2171H12.1748C14.0987 15.2171 15.731 13.985 16.3054 12.2764C16.3887 12.0276 16.1979 11.7713 15.9334 11.7713H14.8562C14.5133 11.7713 14.2362 11.4977 14.2362 11.16C14.2362 10.8213 14.5133 10.5467 14.8562 10.5467H15.9005C16.2463 10.5467 16.5263 10.2703 16.5263 9.92875C16.5263 9.58722 16.2463 9.31075 15.9005 9.31075H14.8562C14.5133 9.31075 14.2362 9.03619 14.2362 8.69849C14.2362 8.35984 14.5133 8.08528 14.8562 8.08528H15.9005C16.2463 8.08528 16.5263 7.8088 16.5263 7.46728C16.5263 7.12575 16.2463 6.84928 15.9005 6.84928H14.8562C14.5133 6.84928 14.2362 6.57472 14.2362 6.23606C14.2362 5.89837 14.5133 5.62381 14.8562 5.62381H15.9886C16.2483 5.62381 16.4343 5.3789 16.3645 5.13113C15.8501 3.32401 14.1694 2 12.1748 2H11.8251C9.42172 2 7.47363 3.92287 7.47363 6.29729V10.9198C7.47363 13.2933 9.42172 15.2171 11.8251 15.2171Z"
+                                                fill="currentColor"></path>
+                                            <path opacity="0.4"
+                                                d="M19.5313 9.82568C18.9966 9.82568 18.5626 10.2533 18.5626 10.7823C18.5626 14.3554 15.6186 17.2627 12.0005 17.2627C8.38136 17.2627 5.43743 14.3554 5.43743 10.7823C5.43743 10.2533 5.00345 9.82568 4.46872 9.82568C3.93398 9.82568 3.5 10.2533 3.5 10.7823C3.5 15.0873 6.79945 18.6413 11.0318 19.1186V21.0434C11.0318 21.5715 11.4648 22.0001 12.0005 22.0001C12.5352 22.0001 12.9692 21.5715 12.9692 21.0434V19.1186C17.2006 18.6413 20.5 15.0873 20.5 10.7823C20.5 10.2533 20.066 9.82568 19.5313 9.82568Z"
+                                                fill="currentColor"></path>
+                                        </svg>
+
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="iq-header-img">
+                    <img src="/static/assets/images/dashboard/top-header.png" alt="header"
+                        class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
+                    <img src="/static/assets/images/dashboard/top-header1.png" alt="header"
+                        class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
+                    <img src="/static/assets/images/dashboard/top-header2.png" alt="header"
+                        class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
+                    <img src="/static/assets/images/dashboard/top-header3.png" alt="header"
+                        class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
+                    <img src="/static/assets/images/dashboard/top-header4.png" alt="header"
+                        class="theme-color-yellow-img img-fluid w-100 h-100 animated-scaleX">
+                    <img src="/static/assets/images/dashboard/top-header5.png" alt="header"
+                        class="theme-color-pink-img img-fluid w-100 h-100 animated-scaleX">
+                </div>
+            </div> <!-- Nav Header Component End -->
+            <!--Nav End-->
+        </div>
+
+
+        <div class="conatiner-fluid content-inner mt-n5 py-0" >
+
+            <div class="mt-5">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card" style="
+                    background: rgba( 255, 255, 255, 0.7 );
+                    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+                    backdrop-filter: blur( 7.5px );
+                    -webkit-backdrop-filter: blur( 7.5px );
+                    border-radius: 10px;
+                    border: 1px solid rgba( 255, 255, 255, 0.18 );
+                ">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div class="card-title mb-0">
+                                    <h4 class="mb-0">Category Details</h4>
+                                </div>
+                                <div class="card-action">
+                                    {% if not is_addform and not is_editform %}
+                                    <button type="button" class="btn btn-outline-success" id="add-schedule-bt"
+                                        onclick="openAddForm()">
+                                        + Add New Category
+                                    </button>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- form -->
+                <div class="row" id="addScheduleForm" {% if is_addform or is_editform %} style="display: block ;" {% else %} style="display: none ;" {% endif %}>
+                    <div class="col-lg-6 mx-auto">
+                        <div class=" card ">
+                            <div class="card-body">
+
+                                <form method="POST" enctype="multipart/form-data">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title mx-auto"> {% if is_editform %}Edit or Delete Category {% else %} Add New Category {% endif %}
+                                        </h5>
+                                        {% if is_editform %}
+                                        <button data-bs-toggle="modal" data-bs-target="#exampleModalDefault"
+                                            type="button" class="btn btn-outline-danger"> <i class=""><svg width="32"
+                                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.4"
+                                                        d="M19.643 9.48851C19.643 9.5565 19.11 16.2973 18.8056 19.1342C18.615 20.8751 17.4927 21.9311 15.8092 21.9611C14.5157 21.9901 13.2494 22.0001 12.0036 22.0001C10.6809 22.0001 9.38741 21.9901 8.13185 21.9611C6.50477 21.9221 5.38147 20.8451 5.20057 19.1342C4.88741 16.2873 4.36418 9.5565 4.35445 9.48851C4.34473 9.28351 4.41086 9.08852 4.54507 8.93053C4.67734 8.78453 4.86796 8.69653 5.06831 8.69653H18.9388C19.1382 8.69653 19.3191 8.78453 19.4621 8.93053C19.5953 9.08852 19.6624 9.28351 19.643 9.48851Z"
+                                                        fill="currentColor"></path>
+                                                    <path
+                                                        d="M21 5.97686C21 5.56588 20.6761 5.24389 20.2871 5.24389H17.3714C16.7781 5.24389 16.2627 4.8219 16.1304 4.22692L15.967 3.49795C15.7385 2.61698 14.9498 2 14.0647 2H9.93624C9.0415 2 8.26054 2.61698 8.02323 3.54595L7.87054 4.22792C7.7373 4.8219 7.22185 5.24389 6.62957 5.24389H3.71385C3.32386 5.24389 3 5.56588 3 5.97686V6.35685C3 6.75783 3.32386 7.08982 3.71385 7.08982H20.2871C20.6761 7.08982 21 6.75783 21 6.35685V5.97686Z"
+                                                        fill="currentColor"></path>
+                                                </svg></i></button>
+                                        {% else %}
+                                        <button type="button" class="btn-close"
+                                            onclick="closeAddScheduleForm()"></button>
+                                        {% endif %}
+                                    </div>
+                                    <div class="modal-body p-4">
+                                        {% csrf_token %}
+
+                                        
+
+                                        <div class="form-floating custom-form-floating custom-form-floating-sm form-group ">
+                                            {{addCategoryform.category}}
+                                            
+                                            <label>{{addCategoryform.category.label}}</label>
+                                            
+                                            
+                                        </div>
+                                        <span class="text-danger">{{addCategoryform.category.errors}}</span>
+
+
+                                        {% if is_editform %}
+                                        <div id="category_old_img">
+                                        <label >Current Image</label>
+                                       
+                                        <div class="my-2 ">
+
+                                        <img   class="rounded bg-soft-primary img-fluid  me-3" style="max-height: 25vh;" src="{{media_url}}{{image}}" alt="image">
+                                        </div></div>
+                                        
+                                        <a id="category_image_bt"  onclick="toggle_image_edit()" class="btn-icon my-2 bg-soft-primary border-primary btn  text-primary">Select New</a>
+                                        
+
+                                        {% endif %}
+                                        <div id="category_image_input" class=" {% if is_editform %}d-none {% endif %}">
+                                            <div  class="form-floating custom-form-floating custom-form-floating-sm form-group mb-5 mt-3">
+                                            {{addCategoryform.image}}
+                                            <label for="image">{% if is_editform %}Select New {% else %} Select Image {% endif %}</label>
+                                            
+                                            
+                                        </div>
+                                        <span class="text-danger">{{addCategoryform.image.errors}}</span>
+
+
+                                        </div>
+                                      
+                                    </div>
+                                    <div class="modal-footer">
+                                        {% if is_editform %}
+                                        <a href="{% url 'categories' %}" class="btn btn-secondary">Close</a>
+                                        {% else %}
+                                        <button type="button" class="btn btn-secondary"
+                                            onclick="closeAddScheduleForm()">Close</button>
+                                        {% endif %}
+
+                                        <button type="submit" class="btn btn-success">{% if is_editform %} Update{% else %} Add {% endif %}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="conatiner-fluid  py-0" id="category-content"  {% if is_addform or is_editform %} style="display: none ;" {% else %}
+                style="display: block ;" {% endif %}>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div class="header-title">
+                                        <h4 class="card-title"></h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <!-- <p>Images in Bootstrap are made responsive with <code>.img-fluid</code>.
+                                        <code>max-width: 100%;</code> and <code>height: auto;</code> are applied to the image so
+                                        that it scales with the parent element.</p> -->
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        
+                                        <div class="table-responsive">
+                                            <table id="datatable" class="table table-striped" data-toggle="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Category</th>
+                                                        <th>Image</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% csrf_token %}
+                                                    {% for category in categories %}
+                                                    <tr>
+                                                        <td>{{forloop.counter0|add:1}}</td>
+                                                        <td>{{category.category}}</td>
+                                                        <td class="text-end"><img class="rounded bg-soft-primary img-fluid  me-3" style="max-height: 25vh;"
+                                                                src="{{media_url}}{{category.image}}" alt="Image"></td>
+                                                                <td>
+                                                                    <div class="flex align-items-center list-user-action">
+                                                                       
+                                                                       <a class="btn btn-sm btn-icon btn-warning" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" href="{% url 'categories_edit' id=category.id %}">
+                                                                          <span class="btn-inner">
+                                                                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                                <path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                             </svg>
+                                                                          </span>
+                                                                       </a>
+                                                                      
+                                                                    </div>
+                                                                 </td>
+                                                    </tr>
+                                                    {% endfor %}
+        
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Category</th>
+                                                        <th>Image</th>
+                                                        
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% if is_editform%}
+        <!-- confirmation modal -->
+        <div class="modal fade" id="exampleModalDefault" tabindex="-1" aria-labelledby="exampleModalLabel"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Category</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this Category?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a type="button" class="btn btn-primary"
+                           href="{% url 'categories_delete' id=category_id %}">Delete</a> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <script>
+            document.getElementById('categories-li').classList.add('active');
+        
+            function closeAddScheduleForm() {
+        
+                document.getElementById('addScheduleForm').style.display = 'none';
+                document.getElementById('category-content').style.display = 'block';
+                document.getElementById('add-schedule-bt').style.display = 'block';
+            }
+            function openAddForm() {
+        
+                document.getElementById('addScheduleForm').style.display = 'block';
+                document.getElementById('add-schedule-bt').style.display = 'none';
+                document.getElementById('category-content').style.display = 'none';
+            }
+            
+            
+            function toggle_image_edit()
+            {
+                let button = document.getElementById('category_image_bt')
+                if (button.innerHTML == "Select New")
+                {
+                    button.innerHTML="Keep the Current Image"
+                }else{
+                    button.innerHTML="Select New"
+                }
+
+                document.getElementById('category_image_input').classList.toggle("d-none")
+                document.getElementById('category_old_img').classList.toggle("d-none")
+            }
+        
+        </script>
+        
+
+        {% endblock content %}

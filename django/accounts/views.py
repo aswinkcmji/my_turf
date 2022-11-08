@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.contrib.auth.views import LoginView# from wallet.models import Wallet
 from .models import *
 from django.conf import settings
+from dashboard.models import CategoriesModel
 
 
 
@@ -42,7 +43,8 @@ class Signup(View):
 class SignupTurf(View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            context ={}
+            categories= CategoriesModel.objects.all()
+            context ={"categories":categories}
             context['form'] = SignUpTurfForm()
             return render(request, 'accounts/turf-sign-up.html',context)
         else:
@@ -57,10 +59,11 @@ class SignupTurf(View):
                     messages.success(self.request, "Account Created Successfully")
                     return HttpResponseRedirect(reverse('login'))
                       
-            else:
-                context ={}
-                context['form'] = form
-                return render(request, 'accounts/turf-sign-up.html',context)
+                else:
+                    categories= CategoriesModel.objects.all()
+                    context ={"categories":categories}
+                    context['form'] = form
+                    return render(request, 'accounts/turf-sign-up.html',context)
 
 
 

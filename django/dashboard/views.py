@@ -1,6 +1,7 @@
 from contextvars import Context
 from datetime import datetime
 import json
+from unicodedata import category
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
@@ -13,9 +14,9 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import GalleryImgForm, TurfScheduleForm
+from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm
 from django.utils.dateparse import parse_datetime
-from .models import GalleryImg, TurfScheduleModel
+from .models import GalleryImg, TurfScheduleModel , CategoriesModel
 
 
 
@@ -81,6 +82,7 @@ class TurfSchedule(View):
 
             
             if form.is_valid():
+                category = CategoriesModel.objects.get(id=request.POST['category'])
                 form2 =form.save(commit=False)
                 for key,value in enumerate(bg_colors):
                     
@@ -89,7 +91,7 @@ class TurfSchedule(View):
                         form2.color_bg =bg_colors[key]
                 # form2.start= parse_datetime(request.POST['start'])
                 # form2.end= parse_datetime(request.POST['end'])
-                form2.title = request.POST['category']+" - "+request.POST['user']
+                form2.title = category.category +" - "+request.POST['user']
                 form2.turf = request.user
                 form2.save()
                     
@@ -107,8 +109,11 @@ class TurfScheduleEdit(View):
     def get(self, request, *args, **kwargs):
         id = kwargs.pop('id')
         schedule = TurfScheduleModel.objects.filter(id=id).first()
-        title = schedule.title.split(' - ')
-        editTurfForm = TurfScheduleForm(initial={'category':title[0],'user':title[1] ,'start':schedule.start, 'end':schedule.end, 'turf':schedule.turf})
+        title = ""
+        editTurfForm = TurfScheduleForm()
+        if schedule:
+            title = schedule.title.split(' - ')
+            editTurfForm = TurfScheduleForm(initial={'category':schedule.category,'user':title[1] ,'start':schedule.start, 'end':schedule.end, 'turf':schedule.turf})
         context={'addScheduleform':editTurfForm,
                  'is_editform':True,
                  'schedule_id':id}
@@ -195,8 +200,13 @@ class ManageUser(View):
 class ManageTurf(View):
     def get (self, request, *args, **kwargs):
         turfs = UserModel.objects.filter(is_turf=True)
+        categories = CategoriesModel.objects.all()
+        categories_dict={}
+        for category in categories:
+            categories_dict[str(category.id)]=category.category
         context = {'turfs':turfs,
-                'media_url':settings.MEDIA_URL}
+                'media_url':settings.MEDIA_URL,
+                'categories_dict':categories_dict}
         return render(request,'admin/manage_turf.html',context)
     def post (self, request, *args, **kwargs):
         selected=request.POST.getlist('checkbox_turf_table')
@@ -258,4 +268,91 @@ class Turf_Gallery(View):
             #     context['form'] = form
             #     return render(request, 'accounts/turf-sign-up.html',context)
 
+@method_decorator(login_required,name='dispatch')
+class CategoriesView(View):
+    def get(self, request, *args, **kwargs):
+        categories   = CategoriesModel.objects.all()
 
+        addCategoryform = CategoriesForm()
+        context ={'addCategoryform': addCategoryform ,'is_addform':False , 'media_url':settings.MEDIA_URL,'categories':categories}
+        return render(request,"admin/manage_categories.html",context)
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            form = CategoriesForm(request.POST, request.FILES)
+             
+            if form.is_valid():
+                form.save()
+                    
+                    
+                messages.success(self.request, "Category Added successfully")
+                return HttpResponseRedirect(reverse('categories'))
+                      
+            else:
+                categories   = CategoriesModel.objects.all()
+                context ={'addCategoryform': form, 'is_addform':True ,'media_url':settings.MEDIA_URL,'categories':categories}
+                return render(request,"admin/manage_categories.html",context)
+        
+
+@method_decorator(login_required,name='dispatch')
+class CategoriesEditView(View):
+    def get(self, request, *args, **kwargs):
+        id = kwargs.pop('id')
+        category = CategoriesModel.objects.filter(id=id).first()
+        editCategoryForm = CategoriesEditForm(initial={'category':category.category , 'image':category.image})
+        context={'addCategoryform':editCategoryForm,
+                 'is_editform':True,
+                 'category_id':id,
+                 'media_url':settings.MEDIA_URL,
+                 "image":category.image}
+        return render(request,"admin/manage_categories.html",context)
+    def post(self, request, *args, **kwargs):
+        id = kwargs.pop('id')
+
+        if request.method == 'POST':
+            form = CategoriesEditForm(request.POST, request.FILES)
+            
+            category = CategoriesModel.objects.filter(id=id).first()
+            if form.is_valid():
+                
+
+                category_in_db = CategoriesModel.objects.filter(category=request.POST['category']).first()
+                if  category_in_db :
+                    if request.POST['category'] != category.category:
+                        messages.error(request,"Category allready exists")
+                        categories   = CategoriesModel.objects.all()
+                        context =  {'addCategoryform': form, 'is_addform':True ,
+                            'categories':categories,
+                            'is_editform':True,
+                            'category_id':id,
+                            'media_url':settings.MEDIA_URL,
+                            "image":category.image}
+                        return render(request,"admin/manage_categories.html",context)
+
+                else:
+                    category.category = request.POST['category']
+
+                if request.FILES:
+                    if request.FILES['image']:
+                        category.image = request.FILES['image']
+                
+                category.save()
+                    
+                    # messages.success(self.request, "Account Created Successfully")
+                return HttpResponseRedirect(reverse('categories'))
+            else:
+                categories   = CategoriesModel.objects.all()
+                context =  {'addCategoryform': form, 'is_addform':True ,
+                            'categories':categories,
+                            'is_editform':True,
+                            'category_id':id,
+                            'media_url':settings.MEDIA_URL,
+                            "image":category.image}
+                return render(request,"admin/manage_categories.html",context)
+
+@method_decorator(login_required,name='dispatch')
+class CategoriesDeleteView(View):
+    def get (self, request, *args, **kwargs):
+        id = kwargs.pop('id')
+        category = CategoriesModel.objects.filter(id=id).first()
+        category.delete()
+        return redirect('categories')

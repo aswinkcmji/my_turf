@@ -1,12 +1,12 @@
 from django.urls import URLPattern, path
 from django.conf.urls import url
-from .views import HomeView,AllMatchesView,MyMatchesView,CreateMatchesView,TurfsView,CancelRequestView,RequestedMatchesView,MatchHistoryView,EditMatchesView,RequestsView,JoinMatchView,CancelMatchView,CreateTournamentView,MyTournamentView
+from .views import *
 
 
 
 urlpatterns = [
     # path('login/', Signin.as_view(), name="sign-in"),
-    path('turfs/', TurfsView.as_view(), name="turfs"),
+    # path('turfs/', TurfsView.as_view(), name="turfs"),
     path('matches/', AllMatchesView.as_view(), name="matches"),
     path('my-matches/', MyMatchesView.as_view(), name="my-matches"),
     path('create-matches/', CreateMatchesView.as_view(), name="create-matches"),
@@ -20,9 +20,14 @@ urlpatterns = [
     path('matches/join/<int:id>',JoinMatchView.as_view(),name="join"),
     path("matches-history/cancel/<int:id>",CancelMatchView.as_view(),name="cancelmatch"),
     path("my-matches/cancel/<int:id>",CancelMatchView.as_view(),name="cancelmatch"),
+    
     path('create-tournament/', CreateTournamentView.as_view(), name="create-tournament"),
-    # path('all-tournaments/', MyTournamentsView.as_view(), name="tournaments"),
+    path('all-tournaments/', AllTournamentView.as_view(), name="all-tournaments"),
     path('my-tournaments/', MyTournamentView.as_view(), name="my-tournaments"),
+    path('requested-tournaments/',RequestedTournamentView.as_view(), name="requested-tournaments"),
+    path("my-tournaments/edit/<int:id>",EditTournamentView.as_view(),name="edit"),
+
+    path('turfs_list/',TurfsListView.as_view(), name="turfs_list"),
 
 
 ]

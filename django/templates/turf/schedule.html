@@ -8,10 +8,13 @@
 
         document.getElementById('addScheduleForm').style.display = 'none';
         document.getElementById('calendar_view').style.display = 'block';
+        document.getElementById('add-schedule-bt').style.display = 'block';
     }
     function openAddForm() {
 
         document.getElementById('addScheduleForm').style.display = 'block';
+        document.getElementById('add-schedule-bt').style.display = 'none';
+        document.getElementById('calendar_view').style.display = 'none';
     }
 
 </script>
@@ -89,7 +92,7 @@
                             </div>
                             <div class="card-action">
                                 {% if not is_addform and not is_editform %}
-                                <button type="button" class="btn btn-outline-success" onclick="openAddForm()">
+                                <button  type="button" class="btn btn-outline-success" id="add-schedule-bt" onclick="openAddForm()">
                                     + Add to Schedule
                                 </button>
                                 {% endif %}
@@ -108,8 +111,7 @@
                         <div class="card-body">
                             <form method="POST">
                                 <div class="modal-header">
-                                    <h5 class="modal-title mx-auto"> {% if is_editform %}Edit or Delete Schedule {% else
-                                        %}Add New Match To Your Calendar{% endif %}
+                                    <h5 class="modal-title mx-auto"> {% if is_editform %}Edit or Delete Schedule {% else%}Add New Match To Your Calendar{% endif %}
                                     </h5>
                                     {% if is_editform %}
                                     <button data-bs-toggle="modal" data-bs-target="#exampleModalDefault" type="button"
@@ -212,16 +214,14 @@
                                         onclick="closeAddScheduleForm()">Close</button>
                                     {% endif %}
 
-                                    <button type="submit" class="btn btn-success">{% if is_editform %} Update{% else
-                                        %}Add{% endif %}</button>
+                                    <button type="submit" class="btn btn-success">{% if is_editform %} Update{% else %}Add{% endif %}</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row" id="calendar_view" {% if is_addform or is_editform %} style="display: none ;" {% else %}
-                style="display: block ;" {% endif %}>
+            <div class="row" id="calendar_view" {% if is_addform or is_editform %} style="display: none ;" {% else %} style="display: block ;" {% endif %}>
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">

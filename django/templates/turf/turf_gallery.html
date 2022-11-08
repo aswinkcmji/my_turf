@@ -1,7 +1,9 @@
 {% extends 'layouts/base.html' %}
-{% load widget_tweaks %}
 {% block content %}
-<div class="conatiner-fluid py-0">
+{% load widget_tweaks %}
+{% load static%}
+
+<div class="container-fluid py-0">
     <div>
         <div class="row">
             <div class="col-md-12">
@@ -18,7 +20,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabel">Add Images</h5>
+                                            <h5 class="modal-title" id="staticBackdropLabel">Add Images</h5>                                            
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <form action="" method="POST" enctype="multipart/form-data">
@@ -28,43 +30,28 @@
 
                                                     <div class="col-lg-12">
                                                         <div class="form-group">
-                                                           <label for="images" class="form-label">Username</label>
+                                                           <label for="images" class="form-label">Username </label> 
                                                            {% render_field form.username type="text" class='form-control' value=request.user.username readonly='true' %}
                                                         </div>
-                                                        <span class="text-error  text-danger">{{ form.Image1.errors }}</span>
+                                                        <span class="text-error  text-danger">{{ form.username.errors }}</span>
                                                     </div>
                                                     
                                                     <div class="col-lg-12">
                                                         <div class="form-group">
-                                                           <label for="images" class="form-label">Image-1</label>
-                                                           {{form.images1}}
+                                                           <label for="images" class="form-label">Image</label>
+                                                           {{form.image}}
                                                         </div>
-                                                        <span class="text-error  text-danger">{{ form.Image1.errors }}</span>
+                                                        <span class="text-error  text-danger">{{ form.Image.errors }}</span>
                                                     </div>
-    
                                                     <div class="col-lg-12">
                                                         <div class="form-group">
-                                                           <label for="images" class="form-label">Image-2</label>
-                                                           {{form.images2}}
+                                                           <label for="images" class="form-label">Caption</label>
+                                                           {{form.caption}}
                                                         </div>
-                                                        <span class="text-error  text-danger">{{ form.Image2.errors }}</span>
+                                                        <span class="text-error  text-danger">{{ form.caption.errors }}</span>
                                                     </div>
     
-                                                    <div class="col-lg-12">
-                                                        <div class="form-group">
-                                                           <label for="images" class="form-label">Image-3</label>
-                                                           {{form.images3}}
-                                                        </div>
-                                                        <span class="text-error  text-danger">{{ form.Image3.errors }}</span>
-                                                    </div>
-    
-                                                    <div class="col-lg-12">
-                                                        <div class="form-group">
-                                                           <label for="images" class="form-label">Image-4</label>
-                                                           {{form.images4}}
-                                                        </div>
-                                                        <span class="text-error  text-danger">{{ form.Image4.errors }}</span>
-                                                    </div>
+                                
                                                 </div>
     
     
@@ -76,7 +63,7 @@
                                         </form>
                                     </div>
                                 </div>
-                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -84,111 +71,31 @@
         </div> 
     </div>
 </div>
-{% if messages %}
-            <div id="alerts-disimissible-component" class="tab-pane tab-example-result fade active show" role="tabpanel" aria-labelledby="alerts-disimissible-component-tab">
-                <div class="alert alert-warning alert-dismissible fade show messages" role="alert">
-                    <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                
-                        <path opacity="0.4" d="M4.72251 21.1672C4.70951 21.1672 4.69751 21.1672 4.68351 21.1662C4.36851 21.1502 4.05951 
-                            21.0822 3.76551 20.9632C2.31851 20.3752 1.62051 18.7222 2.20751 17.2762L9.52851 4.45025C9.78051 3.99425 10.1625 
-                            3.61225 10.6285 3.35425C11.9935 2.59825 13.7195 3.09525 14.4745 4.45925L21.7475 17.1872C21.9095 17.5682 21.9785 
-                            17.8782 21.9955 18.1942C22.0345 18.9502 21.7765 19.6752 21.2705 20.2362C20.7645 20.7972 20.0695 21.1282 19.3145 
-                            21.1662L4.79451 21.1672H4.72251Z" fill="currentColor">
-                        </path>                                
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.1245 10.0208C11.1245 9.53875 11.5175 9.14575 11.9995 
-                            9.14575C12.4815 9.14575 12.8745 9.53875 12.8745 10.0208V12.8488C12.8745 13.3318 12.4815 13.7238 11.9995 
-                            13.7238C11.5175 13.7238 11.1245 13.3318 11.1245 12.8488V10.0208ZM11.1245 16.2699C11.1245 15.7849 11.5175 
-                            15.3899 11.9995 15.3899C12.4815 15.3899 12.8745 15.7799 12.8745 16.2589C12.8745 16.7519 12.4815 17.1449 
-                            11.9995 17.1449C11.5175 17.1449 11.1245 16.7519 11.1245 16.2699Z" fill="currentColor">
-                        </path>                                
-                    </svg>
-                {% for message in messages %}
-                <strong {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</strong>
-                {% endfor %}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"> </button>
+	
+
+ 
+	
+	<!-- <div id="grid" class="container"> -->
+        <div id="grid_gallery">
+                    
+            <div id="posts_gallery">
+                {% for data in turfGallery %}
+                <div class="post_gallery card">
+                    <img class="p-2"
+                        src={{media_url}}{{data.image}}/>
+                        <strong class="text-primary"> {{data.caption}} </strong>
+                                        
                 </div>
+                {% endfor %}
             </div>
-        {% endif %}
-
-{% for data in turfGallery %}
-
-<div class="bd-example turf-gallery">
-    
-    <div class="row g-4 ">
-        <div class="col-md-6 turf-gallery-img-div">
-            <div class="card">
-                <img class="bd-placeholder-img card-img" src={{media_url}}{{data.images1}} width="100%" height="280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em"></text></img>
-            </div>
-        </div>
-        <div class="col-md-6 turf-gallery-img-div">
-            <div class="card">
-                <img class="bd-placeholder-img card-img" src={{media_url}}{{data.images2}} width="100%" height="280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em"></text></img>
-            </div>
-        </div>
-        <div class="col-md-6 turf-gallery-img-div">
-            <div class="card">
-                <img class="bd-placeholder-img card-img" src={{media_url}}{{data.images3}} width="100%" height="280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em"></text></img>
-            </div>
-        </div>
-        <div class="col-md-6 turf-gallery-img-div">
-            <div class="card">
-                <img class="bd-placeholder-img card-img" src={{media_url}}{{data.images4}} width="100%" height="280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em"></text></img>
-            </div>
+            
         </div>
 
-        <div class="turf-gallery-edit-icon">
-            <button class="btn text-dark border-dark" >
-                <i class="icon">
-                    <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path opacity="0.4" d="M19.9927 18.9534H14.2984C13.7429 18.9534 13.291 19.4124 13.291 19.9767C13.291 20.5422 13.7429 
-                        21.0001 14.2984 21.0001H19.9927C20.5483 21.0001 21.0001 20.5422 21.0001 19.9767C21.0001 19.4124 20.5483 18.9534 
-                        19.9927 18.9534Z" fill="currentColor">
-                    </path>
-                    <path d="M10.309 6.90385L15.7049 11.2639C15.835 11.3682 15.8573 11.5596 15.7557 11.6929L9.35874 20.0282C8.95662 
-                            20.5431 8.36402 20.8344 7.72908 20.8452L4.23696 20.8882C4.05071 20.8903 3.88775 20.7613 3.84542 20.5764L3.05175 
-                            17.1258C2.91419 16.4915 3.05175 15.8358 3.45388 15.3306L9.88256 6.95545C9.98627 6.82108 10.1778 6.79743 10.309 
-                            6.90385Z" fill="currentColor">
-                        </path>
-                    </svg>     
-                </i>
-            </button>
-        </div>    
-    </div>  
-</div>
-
-{% endfor %}
-</section>
-<!-- end -->
-
-<style>
-    .turf-gallery{
-        position: relative;
-    }
-    .turf-gallery-edit-icon{
-        position: absolute;
-    top: 2rem;
-    visibility: hidden;    }
-.turf-gallery-img-div:hover ~ .turf-gallery-edit-icon{
-    visibility: visible;
-    
-}
-
-</style>
-
-<script>
-    document.getElementById('turfgallery-li').classList.add('active');
-</script>
 
 
-  <!-- Including jQuery -->
-  <script src=
-  "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js">
-      </script>
 
-<script type="text/javascript">
-    setTimeout(function () {
-
-        // Closing the alert
-        $('#alerts-disimissible-component').alert('close');
-    }, 1000);
-</script>
-{% endblock content %}
+{% block js%} 
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/masonry/3.1.5/masonry.pkgd.min.js"></script>	
+<script src="/static/script.js"></script>{% endblock%}
+    {% endblock %}

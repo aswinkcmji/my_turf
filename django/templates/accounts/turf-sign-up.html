@@ -40,7 +40,7 @@
                         </p>
                         <form method="post" enctype="multipart/form-data" >
                            {% csrf_token %}
-                           {{ form.errors}}
+                           
                            {{form.is_turf}}
 
                            <div class="row">
@@ -116,20 +116,22 @@
                                     <ul id="ul-taginput"><select type="text" spellcheck="false" id="taginput" class="form-control">
 
                                           <option>Categories</option>
-                                          <option value="op1">op1</option>
-                                          <option value="op2">op2</option>
-                                          <option value="op3sportssssss">op3sportssssss</option>
+                                          {% for category in categories %}
+                                          <option value="{{category.id}}">{{category.category}}</option>
+                                          {% endfor %}
                                        </select>
                                     </ul>
 
                                  </div>
 
 
-
-                                 <div>
-                                 <span id="bt-remove-taginput" style="cursor: pointer;"
+                                 
+                                 <div class="d-flex justify-content-end">
+                                    <span id="bt-remove-taginput" style="cursor: pointer;"
                                     class=" text-danger text-end w-auto">Remove All</span></div>
-                              </div>
+                                    
+                                 </div>
+                                 <span class="text-error text-danger">{{ form.category.errors }}</span>
                               {{form.category}}
                               <!-- #######################################end taginput###################################################### -->
 
@@ -187,9 +189,10 @@
                   // const tagNumb = document.querySelector(".details-taginput span");
 
 
-                  let maxTags = 10,
+                  let maxTags = 1000,
 
                      tags = [];
+                     tags_show=[]
 
 
 
@@ -201,7 +204,7 @@
 
                      ul.querySelectorAll("li").forEach(li => li.remove());
 
-                     tags.slice().reverse().forEach(tag => {
+                     tags_show.slice().reverse().forEach(tag => {
 
                         let liTag = ` <li>${tag} <i class="" onclick="remove(this, '${tag}')"> <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M14.3955 9.59497L9.60352 14.387" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14.3971 14.3898L9.60107 9.59277" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M16.3345 2.75024H7.66549C4.64449 2.75024 2.75049 4.88924 2.75049 7.91624V16.0842C2.75049 19.1112 4.63549 21.2502 7.66549 21.2502H16.3335C19.3645 21.2502 21.2505 19.1112 21.2505 16.0842V7.91624C21.2505 4.88924 19.3645 2.75024 16.3345 2.75024Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></i></li>`;
 
@@ -215,8 +218,10 @@
                   function remove(element, tag) {
 
                      let index = tags.indexOf(tag);
+                     let index_show = tags_show.indexOf(tag);
 
                      tags = [...tags.slice(0, index), ...tags.slice(index + 1)];
+                     tags_show = [...tags_show.slice(0, index_show), ...tags_show.slice(index_show + 1)];
 
                      element.parentElement.remove();
                      category_input.value = JSON.stringify(tags) ;
@@ -227,17 +232,19 @@
                   function addTag(e) {
 
                      let tag = e.target.value;
+                     let tag_show = e.target.selectedOptions[0].text;
 
-                     if (tag.length > 1 && !tags.includes(tag) && tag != "Categories") {
+                     if (tag.length >= 1 && !tags.includes(tag) && tag != "Categories") {
 
-                        tag.split(',').forEach(tag => {
+                        // tag.split(',').forEach(tag => {
 
                            tags.push(tag);
+                           tags_show.push(tag_show);
                            category_input.value = JSON.stringify(tags) ;
 
                            createTag();
 
-                        });
+                        // });
                      }
 
                      // e.target.value = "Select from here to Add Another";
