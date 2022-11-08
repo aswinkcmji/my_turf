@@ -1,6 +1,6 @@
 from django.urls import URLPattern, path
 from django.conf.urls import url
-from .views import HomeView,AllMatchesView,MyMatchesView,CreateMatchesView,TurfsView,CancelRequestView,RequestedMatchesView,MatchHistoryView,EditMatchesView,RequestsView,JoinMatchView,CancelMatchView,CreateTournamentView,MyTournamentView
+from .views import *
 
 
 
@@ -23,6 +23,9 @@ urlpatterns = [
     path('create-tournament/', CreateTournamentView.as_view(), name="create-tournament"),
     path('all-tournaments/', AllTournamentView.as_view(), name="all-tournaments"),
     path('my-tournaments/', MyTournamentView.as_view(), name="my-tournaments"),
+    path('requested-tournaments/',RequestedTournamentView.as_view(), name="requested-tournaments"),
+
+    path('turfs_list/',TurfsListView.as_view(), name="turfs_list"),
 
 
 ]
