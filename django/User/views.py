@@ -326,7 +326,7 @@ class RequestsView(View):
                 return HttpResponseRedirect(reverse('requests'))
         else:
             print("hyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyiiiiiiiiiiiiiiiiiiiiiiiiiiiiihyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-            messages.error(request	,'NO user selected')
+            messages.error(request	,'NO user request selected')
             return HttpResponseRedirect(reverse('requests'))
 ######################################################################### View for joining matches #######################################################
 @method_decorator(login_required,name='dispatch')
