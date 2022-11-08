@@ -14,7 +14,7 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm
+from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm
 from django.utils.dateparse import parse_datetime
 from .models import GalleryImg, TurfScheduleModel , CategoriesModel
 from User.models import MatchModel
@@ -36,7 +36,7 @@ class AddStockView(View):
             if form.is_valid(): 
                 print(request.FILES) 
                 form.save()  
-                
+                messages.success(request,"Stock was successfully added...")
                 return redirect(reverse('addstock'))  
             else:  
                 
@@ -201,8 +201,13 @@ class ManageUser(View):
 class ManageTurf(View):
     def get (self, request, *args, **kwargs):
         turfs = UserModel.objects.filter(is_turf=True)
+        categories = CategoriesModel.objects.all()
+        categories_dict={}
+        for category in categories:
+            categories_dict[str(category.id)]=category.category
         context = {'turfs':turfs,
-                'media_url':settings.MEDIA_URL}
+                'media_url':settings.MEDIA_URL,
+                'categories_dict':categories_dict}
         return render(request,'admin/manage_turf.html',context)
     def post (self, request, *args, **kwargs):
         selected=request.POST.getlist('checkbox_turf_table')
@@ -294,7 +299,7 @@ class CategoriesEditView(View):
     def get(self, request, *args, **kwargs):
         id = kwargs.pop('id')
         category = CategoriesModel.objects.filter(id=id).first()
-        editCategoryForm = CategoriesForm(initial={'category':category.category , 'image':category.image})
+        editCategoryForm = CategoriesEditForm(initial={'category':category.category , 'image':category.image})
         context={'addCategoryform':editCategoryForm,
                  'is_editform':True,
                  'category_id':id,
@@ -305,13 +310,27 @@ class CategoriesEditView(View):
         id = kwargs.pop('id')
 
         if request.method == 'POST':
-            form = CategoriesForm(request.POST, request.FILES)
+            form = CategoriesEditForm(request.POST, request.FILES)
             
             category = CategoriesModel.objects.filter(id=id).first()
             if form.is_valid():
                 
-               
-                category.category = request.POST['category']
+
+                category_in_db = CategoriesModel.objects.filter(category=request.POST['category']).first()
+                if  category_in_db :
+                    if request.POST['category'] != category.category:
+                        messages.error(request,"Category allready exists")
+                        categories   = CategoriesModel.objects.all()
+                        context =  {'addCategoryform': form, 'is_addform':True ,
+                            'categories':categories,
+                            'is_editform':True,
+                            'category_id':id,
+                            'media_url':settings.MEDIA_URL,
+                            "image":category.image}
+                        return render(request,"admin/manage_categories.html",context)
+
+                else:
+                    category.category = request.POST['category']
 
                 if request.FILES:
                     if request.FILES['image']:
@@ -326,7 +345,9 @@ class CategoriesEditView(View):
                 context =  {'addCategoryform': form, 'is_addform':True ,
                             'categories':categories,
                             'is_editform':True,
-                            'category_id':id}
+                            'category_id':id,
+                            'media_url':settings.MEDIA_URL,
+                            "image":category.image}
                 return render(request,"admin/manage_categories.html",context)
 
 @method_decorator(login_required,name='dispatch')

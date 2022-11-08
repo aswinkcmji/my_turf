@@ -1,0 +1,62 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+
+
+<div class="container-fluid">
+  {%if tournaments%}
+<div class="container-fluid">
+  <div class="row  bg-soft-light">
+    {% for r in tournaments%}
+      <div class="column col-md-4">
+          <div class="card p-2 m-5">
+            {% if r.category == "Cricket" %}
+            <img src="https://cdn.britannica.com/47/148847-050-C4FB5341/Cricket-bat-ball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+            {% elif r.category == "Football" %}
+            <img src="https://images.squarespace-cdn.com/content/v1/51e6a2b7e4b038b7a667f1b3/1375240864715-15RNHVOTAV215YF2R60V/PES%2B2014%2BBall%2Bgrass.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+            {% elif r.category == "Baseball" %}
+            <img src="https://techcrunch.com/wp-content/uploads/2019/03/GettyImages-844016022.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+            {% elif r.category == "Badminton" %}
+            <img src="https://gumlet.assettype.com/dtnext/import/Articles/2022/Feb/202202200142305523_Ball-Badminton-Nationals-in-Dindigul-from-Feb-22_SECVPF.gif?w=1200&h=675&auto=format%2Ccompress&fit=max" class="card-img-top" alt="Product 1" style="height:350px;">
+            {% elif r.category == "Tennis" %}
+            <img src="https://thumbs.dreamstime.com/b/tennis-ball-racket-16093106.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+            {% elif r.category == "Volleyball" %}
+            <img src="https://sportslounge.co.in/file/2020/09/volleyball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+            {% elif r.category == "Basketball" %}
+            <img src="https://btcpeers.com/content/images/2022/04/Basketball-Swish.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
+            
+            {%endif%}
+              <div class="card-body">
+            <h2>{{r.category}}</h2>
+                <p class="card-text text-dark">Date of r:{{r.date|date:"Y-m-d"}}</p>
+                <p class="card-text text-dark">Time:{{r.start_time|time:"H:i:s"}}</p>
+                <p class="card-text text-dark">Time:{{r.end_time|time:"H:i:s"}}</p>
+                <p class="card-text text-dark">Available Slots:{{r.slot_available}}/{{r.slots}}</p>
+                <p class="card-text text-dark">Locality:{{r.locality}}</p>
+                <a  class="btn btn-primary" href="cancel/{{r.id}}">
+                  Cancel
+                </a>
+              </div>
+            </div>
+        </div>
+     {%endfor%}
+  </div>
+</div>
+ {%else%}
+ <div class="row bg-light justify-content-center">
+  <div class="column col-md-4 justify-content-md-around">
+      <div class="card text-white bg-soft-info m-5" > 
+        <div class="card-body">   
+          <h3 class="mt-3 text-center">There aren't any tournaments you have requested to join</h3>
+          <p class="mt-3 text-center">
+            Interested in creating your own tournaments<a class="nav-link " href="{% url 'create-tournament' %}" id="create-tournament-li">Click here</a>
+          </p>
+        </div>
+        </div>
+  </div>
+  </div>
+  {%endif%}
+</div>
+<script>
+    document.getElementById('requested-tournament-li').classList.add('active')
+</script>
+{% endblock content %}

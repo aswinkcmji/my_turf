@@ -122,10 +122,18 @@
                                                 <td>{{turf.date_joined}}</td>
                                                 <td>{{turf.location}}</td>
                                                 <td>
-                                                    {% for item in turf.category %}
-                                                    <span
-                                                        class="badge rounded-pill bg-light text-dark p-2">{{item}}</span>
+                                                    
+
+                                                <div class=" ms-2 d-flex flex-wrap   gap-1">
+                                                    {% for category in turf.category %}
+                                                    {% for key, value in categories_dict.items %}
+                                                    {% ifequal key category %}
+                                                    <span class=" p-2 d-inline badge bg-light text-dark">{{ value }} </span><br>
+                                                    {% endifequal %}
                                                     {% endfor %}
+                                                    {% endfor %}
+                                                    
+                                                </div>
 
                                                 </td>
                                                 <td>{{turf.landmark}}</td>

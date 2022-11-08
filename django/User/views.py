@@ -1,11 +1,11 @@
-from datetime import date
+from datetime import datetime
 from email import message
 from multiprocessing import context
 from tkinter import FLAT
 from django.shortcuts import render
 from .models import *
 from django.views.generic import View
-from .forms import RequestForm, updatematchform
+from .forms import *
 from django.http import HttpResponseRedirect
 from django.urls import is_valid_path, reverse
 from django.utils.decorators import method_decorator
@@ -19,10 +19,15 @@ from pytz import timezone
 from django import template
 from django.utils.dateparse import parse_time
 from accounts.models import UserModel
+from django.conf import settings  
+from dashboard.models import GalleryImg
+
+from accounts.models import UserModel
 import operator
 from django.db.models import Q
 from functools import reduce
-# import datetime as datetime_
+# from datetime import datetime
+# import datetime as datetime
 # from .models import slotModel
 
 # Create your views here.
@@ -34,7 +39,7 @@ class HomeView(View):
 
 
 
-########################################################## View for listing all matches in user locality which user hasn't requested or joined or created ################################################################################ 
+#d######################################################### View for listing all matches in user locality which user hasn't requested or joined or created ################################################################################ 
 @method_decorator(login_required,name='dispatch')
 class AllMatchesView(View):
         def get(self, request, *args, **kwargs):
@@ -59,7 +64,7 @@ class AllMatchesView(View):
                 return render(request, 'Matches/all-matches.html',context)
 
 
-#############################################################    View for matches user has created or joined  ###########################################################
+##d###########################################################    View for matches user has created or joined  ###########################################################
 @method_decorator(login_required,name='dispatch')
 class MyMatchesView(View):
     def get(self, request, *args, **kwargs):
@@ -75,7 +80,7 @@ class MyMatchesView(View):
         return render(request, 'Matches/my-matches.html',context)
 
 
-#############################################################   View for creating matches ###############################################################################
+##d###########################################################   View for creating matches ###############################################################################
 @method_decorator(login_required,name='dispatch')
 class CreateMatchesView(View):
     template = 'Matches/create-matches.html'
@@ -220,6 +225,11 @@ class MatchHistoryView(View):
         print(context)
         return render(request, 'Matches/match-history.html',context)
 
+############################################################# View for listing all turfs in user locality ####################################################################
+# class TurfsView(View):
+#     def get(self, request, *args, **kwargs):
+#         return render(request, 'turf/main.html',{ })
+
 ############################################################## View for editing matches created by user #####################################################################
 
 
@@ -227,6 +237,9 @@ class MatchHistoryView(View):
 class EditMatchesView(View):
     def get(self, request,id, *args, **kwargs):
         editobj=MatchModel.objects.get(id=id)
+
+        print ( "type matvhodel : ", type( editobj.start_time ) )
+
         data={
             'category':editobj.category.id,
             'date':editobj.date,
@@ -335,6 +348,8 @@ class  JoinMatchView(View):
                 user_location=request.user.location
                 location_list=user_location.split(",")
                 matches=MatchModel.objects.filter(id=id)
+
+                
                 if len(matches) == 1:
                     match = matches[0]
                 if len(matches) == 0:
@@ -412,6 +427,8 @@ class CancelMatchView(View):
 
 
 
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------
 
 #**********************************create tournament***********************************
 
@@ -420,47 +437,71 @@ class CreateTournamentView(View):
     template = 'Tournaments/create-tournament.html'
     def get(self, request, *args, **kwargs):
         print(datetime.now()+timedelta(hours=1))
-        end_time=(datetime.now()+timedelta(hours=1)).strftime('%H:%M:%S')
+        end_time=(datetime.now()+timedelta(hours=1))
         print(end_time)
-        # # now = timezone.now()
-        # print(now)
+       
         data={
-            'category':'Football',
+            'category':CategoriesModel.objects.first(),
             'start_date':datetime.now().date(),
             'end_date':datetime.now().date(),
-            'start_time':datetime.now().strftime('%H:%M:%S'),
+            'start_time_f':datetime.now().strftime("%H:%M:%S"),
+            'end_time_f':end_time.strftime("%H:%M:%S"),
+            'start_time':datetime.now(),
             'end_time':end_time,
             'locality':request.user.location,
             'creator' : request.user.username,
-            "status": "Upcoming",
-            "team_space_available": 0,
-            "teams": 2,
+            'status' : "Upcoming",
+            'team_space_available': 0,
+            'teams': 2,
         }
         form = createtournamentForm(data,request=request)
-        user = request.user
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
+        # user = request.user
+        # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
         context = {'form': form,
                     'data': 'Add tournament',
-                    'user': user,
+                    # 'user': 'user',
                     }
         
         return render(request,'Tournaments/create-tournament.html',context)
 
+
     def post(self, request, *args, **kwargs):
         form=createtournamentForm(request.POST,request=request)
-        
+      
         teams=int(request.POST['teams'])
-    
+        # print(request.POST['start_date']>datetime.now().date(),"djkASGHDGVDGUIJFSABV")
         if form.is_valid():
+            print("kikikiki")
             print(form.errors.as_data())
-            obj=form.save()
-            # RequestModel.objects.create(match_id=obj,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
-            messages.success(request	,'Your Tournament has been succesfully created. Visit My Tournament to see .')
+        
+            start_date =form.cleaned_data["start_date"]
+            end_date =form.cleaned_data["end_date"]
+            start_time= parse_time(request.POST["start_time_f"])
+            end_time= parse_time(request.POST["end_time_f"])
+
+            
+         
+            print(type(start_time))
+            start_datetime= datetime.combine(start_date, start_time).astimezone(timezone('UTC'))
+            end_datetime= datetime.combine(start_date, end_time).astimezone(timezone('UTC'))
+
+
+
+            form_cf=form.save(commit=False)
+            form_cf.start_time=start_datetime
+            form_cf.end_time=end_datetime
+            print(start_datetime,end_datetime,"ssssssssssssssssssssssssssssssssssss")
+            form_cf.save()
+
+
+            TournamentRequestModel.objects.create(tournament_id=form_cf,category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",start_date=form.cleaned_data['start_date'],end_date=form.cleaned_data['end_date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
+            messages.success(request	,'Your tournament has been succesfully created. Visit My tournament to see .')
             return HttpResponseRedirect(reverse('create-tournament'))
 
         else:
             # print(form.errors['start_time'])
-            messages.error(request	,'Please do not change the fields')
+            if  not form.has_error('start_time_f', code=None) or not form.has_error('end_time_f', code=None):
+                     messages.error(request	,'Please do not change the fields')
             return render(request,self.template,{'form':form})
 
 
@@ -470,35 +511,215 @@ class MyTournamentView(View):
     def get(self, request, *args, **kwargs):
         print(request.user.username)
         print(datetime.now())
-        # id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('id',flat=True)
-        # print(list(id_list))
-        # tournament=TournamentModel.objects.filter(id__in=list(id_list))
+        # tournament=TournamentModel.objects.filter(id__in=list(id))
         tournament=TournamentModel.objects.all()
+        img = CategoriesModel.objects.all()
         context={
-            'tournaments':tournament
+            'tournaments':tournament,
+            'img' : img
         }
         return render(request, 'Tournaments/my-tournament.html',context)
 
-
-
-############################################################# View for listing all turfs in user locality ####################################################################
+############################### view for editing created tournaments  ####################################################################
 @method_decorator(login_required,name='dispatch')
-class TurfsView(View):
+class EditTournamentView(View):
+    def get(self, request,id, *args, **kwargs):
+        editobj1=TournamentModel.objects.get(id=id)
+        # print(id,"44444444444444444444444444444444444444444444444444444444444")
+        data={
+            'category':editobj1.category,
+            'start_date':editobj1.start_date,
+            'end_date':editobj1.end_date,
+            'start_time_f':editobj1.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+            'end_time_f':editobj1.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+            'start_time':editobj1.start_time,
+            'end_time':editobj1.end_time,
+            'locality':editobj1.locality,
+            'status':editobj1.status,
+            "creator" : request.user.username,
+            "teams": editobj1.teams,
+            'team_space_available':editobj1.team_space_available,
+            'tournament_id':editobj1.id,
+        }
+        form=updatetournamentform(data,request=request)
+        context={
+            'form':form
+            
+        }
+        return render(request,'Tournaments/edit-tournaments.html',context)
+        
+    def post(self, request, *args, **kwargs):
+        tournament_id = request.POST['tournament_id']
+        form=updatetournamentform(request.POST,request=request)
+  
+        if form.is_valid():
+            print("kikfjsdhgusdjgusikiki")
+            start_date =form.cleaned_data["start_date"]
+            end_date =form.cleaned_data["end_date"]
+            start_time= parse_time(request.POST["start_time_f"])
+            end_time= parse_time(request.POST["end_time_f"])
+            print(type(start_time))
+            start_datetime= datetime.combine(start_date, start_time).astimezone(timezone('UTC'))
+            end_datetime= datetime.combine(end_date, end_time).astimezone(timezone('UTC'))
+            updatedRecord = TournamentModel.objects.get(id=tournament_id)
+            updatedRecord. category = form.cleaned_data['category']
+            updatedRecord. start_date = form.cleaned_data['start_date']
+            updatedRecord. end_date = form.cleaned_data['end_date']
+            updatedRecord. start_time = start_datetime
+            updatedRecord. end_time = end_datetime
+            updatedRecord. locality = form.cleaned_data['locality']
+            updatedRecord. teams = form.cleaned_data['teams']
+            updatedRecord. team_space_available = form.cleaned_data['team_space_available']
+            updatedRecord.save()
+            messages.success(request	,'Your tournament has been successfully edited.')
+            TournamentRequestModel.objects.filter(tournament_id=updatedRecord).update(category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",start_date=form.cleaned_data['start_date'],end_date=form.cleaned_data['end_date'],start_time=form.cleaned_data['start_time_f'],end_time=form.cleaned_data['end_time_f'],locality=form.cleaned_data['locality'])
+            return HttpResponseRedirect(reverse('my-tournament'))
+            
+        else:
+            print(form.errors.as_data())
+            messages.error(request	,'Please do not change the fields')
+            return render(request,'Tournaments/edit-tournaments.html',{'form':updatetournamentform(request.POST,request=request)})
+
+
+
+########################################################## View for listing all tournament in user locality which user hasn't requested or joined or created ################################################################################ 
+@method_decorator(login_required,name='dispatch')
+class AllTournamentView(View):
+        def get(self, request, *args, **kwargs):
+                print(request.user.username)
+                # context={}
+                id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('tournament_id',flat=True)
+                tournament=TournamentModel.objects.filter(locality__iexact=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
+                form=TournamentRequestForm(request=request)
+                # print("hllo",matches)
+                # context['matches']=matches
+                # context['form']=form
+                context ={'TournamentRequestForm': form ,'is_tournamentrequestform':False , 'tournaments':tournament}
+                print(context)
+                return render(request, 'Tournaments/tournaments.html',context)
+
+
+# @method_decorator(login_required,name='dispatch')
+# class CreateTeamView(View):
+
+############################################################ View for listing requested tournaments ###########################################################################
+@method_decorator(login_required,name='dispatch')
+class RequestedTournamentView(View):
     def get(self, request, *args, **kwargs):
-        user_location=request.user.location
-        location_list=user_location.split(",")
-        j=0
-        for i in location_list:
-            location_list[j]=i.replace(" ", "")
-            j=j+1
-        print(location_list)
-        # try:
-        #     location_list.remove('India')
+        print(request.user.username)
+        context={}
+        id_list=TournamentRequestModel.objects.filter(username=request.user.username,status="Pending").values_list('tournament_id',flat=True)
+        print(list(id_list))
+        tournament=TournamentModel.objects.filter(id__in=list(id_list))
+        context['tournaments']=tournament
+        return render(request, 'Tournaments/requested-tournaments.html',context)
+
+
+###########################################################view for joining tournaments########################################################################
+
+@method_decorator(login_required,name='dispatch')
+class  JoinTournamentView(View):
+    def get(self, request,id, *args, **kwargs):
+                tournament=TournamentModel.objects.filter(id=id,locality=request.user.location)
+                if len(tournament) == 1:
+                    tournament = tournament[0]
+                if len(tournament) == 0:
+                    return render(request,'errors/error404.html',{})
+                joined=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=tournament.pk).values()
+                request.session['tournament_id']=tournament.id
+                request.session['category']=tournament.category
+                request.session['start_date']=tournament.start_date
+                request.session['end_date']=tournament.end_date
+                request.session['start_time']=tournament.start_time
+                request.session['end_time']=tournament.end_time
+                request.session['locality']=tournament.locality
+                request.session['status']="Pending"
+                data={
+                    'category':tournament.category,
+                    'start_date':tournament.start_date,
+                    'end_date':tournament.end_date,
+                    'start_time':tournament.start_time,
+                    'end_time':tournament.end_time,
+                    'locality':tournament.locality,
+                    'username':request.user.username,
+                    'status':"Pending",
+                    'phoneno': request.user.phone,
+                    'tournament_id':tournament.id,
+                }
+                form=TournamentRequestForm(data,request=request)
+                print(form)
+                context ={'TournamentRequestForm': form ,'is_tournamentrequestform':True ,'tournament':tournament,'joined':joined}
+                print(context)
+                return render(request, 'Tournaments/tournaments.html',context)
         # except:
         #     pass
-        location_list.pop()
-        location_list.pop()
-        print(location_list)
-        turfs=UserModel.objects.filter(reduce(operator.or_, (Q(location__contains=x) for x in location_list)),is_turf=1)
-        print(turfs)
-        return render(request, 'turf/main.html',{'turfs':turfs})
+    def post(self, request, *args, **kwargs):
+
+        try:
+            tournament_id=int(request.POST['tournament_id'])
+        except:
+            return  HttpResponseRedirect(reverse('tournament'))
+        if tournament_id!=request.session.get('id'):
+            id=int(request.session.get('id'))
+            tournament=TournamentModel.objects.filter(id=id)
+            if len(tournament) == 1:
+                requested_tournament = tournament[0]
+            context ={'TournamentRequestForm': TournamentRequestForm(request.POST,request=request) ,'is_tournamentrequestform':True ,'tournament':requested_tournament}
+            return render(request, 'Tournaments/tournaments.html',context)
+        else:
+            tournament_id=request.session.get('id')
+            print(tournament_id)
+            tournament=TournamentModel.objects.filter(id=tournament_id)
+            if len(tournament) == 1:
+                requested_tournament = tournament[0]
+            form=TournamentRequestForm(request.POST,request=request)
+            print(form)
+            if form.is_valid():
+                print("kikikiki")
+                obj=form.save(commit=False)
+                obj.tournament_id=requested_tournament
+                obj.save()
+                return  HttpResponseRedirect(reverse('tournament'))
+            else:
+                messages.error(request	,'Please do not change the fields')
+                context ={'TournamentRequestForm': TournamentRequestForm(request.POST,request=request) ,'is_tournamentrequestform':True ,'tournament':requested_tournament}
+                print(context)
+                return render(request, 'Tournaments/tournaments.html',context)
+
+
+
+
+
+
+
+
+
+
+
+
+@method_decorator(login_required,name='dispatch')
+class TurfsListView(View):
+    def get(self, request, *args, **kwargs):
+        turfs = UserModel.objects.filter(is_turf=True)
+        categories = CategoriesModel.objects.all()
+        categories_dict={}
+        for category in categories:
+            categories_dict[str(category.id)]=category.category
+        context = {'media_url':settings.MEDIA_URL, 'turfs':turfs,
+                    'categories_dict': categories_dict}
+        return render(request, 'turf/turfs_list.html',context)
+
+
+@method_decorator(login_required,name='dispatch')
+class TurfProfileView(View):
+    def get(self, request, *args, **kwargs):
+        id = kwargs.pop('id')
+
+        turf = UserModel.objects.filter(id=id).first()  
+        images = GalleryImg.objects.filter(username = "tr001").values()
+
+        context = {'id': id,
+                    'turf':turf,
+                    'media_url':settings.MEDIA_URL,
+                    'images':images}
+        return render(request, 'turf/turf_profile.html',context)
