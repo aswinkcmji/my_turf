@@ -20,7 +20,7 @@ from django import template
 from django.utils.dateparse import parse_time
 from accounts.models import UserModel
 from django.conf import settings  
-from dashboard.models import GalleryImg
+from dashboard.models import TurfGallery
 
 from accounts.models import UserModel
 import operator
@@ -508,7 +508,7 @@ class TurfProfileView(View):
         id = kwargs.pop('id')
 
         turf = UserModel.objects.filter(id=id).first()  
-        images = GalleryImg.objects.filter(username = "tr001").values()
+        images = TurfGallery.objects.filter(username = "tr001").values()
 
         context = {'id': id,
                     'turf':turf,

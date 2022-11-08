@@ -16,7 +16,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm
 from django.utils.dateparse import parse_datetime
-from .models import GalleryImg, TurfScheduleModel , CategoriesModel
+from .models import TurfGallery, TurfScheduleModel , CategoriesModel
 
 
 
@@ -238,7 +238,7 @@ class Turf_Gallery(View):
     def get(self,request):
 
 
-        turfGallery = GalleryImg.objects.filter(username = request.user.username).values()
+        turfGallery = TurfGallery.objects.filter(username = request.user.username).values()
         print(" ",turfGallery)
         context = {
             'form': GalleryImgForm(),
