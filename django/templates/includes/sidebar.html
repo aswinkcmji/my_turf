@@ -71,39 +71,15 @@
                         <span class="item-name">Shop</span>
                     </a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link " aria-current="page" href="{% url 'stocktable' %}" id="stocktable-li">
-                        <i class="icon">
-                            <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M20.9133 16.3147L20.1444 10.1201C19.676 7.90964 18.3503 7 17.0865 7H6.93171C5.65022 
-                                    7 4.28034 7.84597 3.88264 10.1201L3.1049 16.3147C2.46858 20.8629 4.81062 22 7.86853 
-                                    22H16.1585C19.2075 22 21.4789 20.3535 20.9133 16.3147ZM9.097 12.1486C8.60889 12.1486 8.21321 
-                                    11.7413 8.21321 11.2389C8.21321 10.7366 8.60889 10.3293 9.097 10.3293C9.5851 10.3293 9.98079 
-                                    10.7366 9.98079 11.2389C9.98079 11.7413 9.5851 12.1486 9.097 12.1486ZM14.002 11.2389C14.002 
-                                    11.7413 14.3977 12.1486 14.8858 12.1486C15.3739 12.1486 15.7696 11.7413 15.7696 11.2389C15.7696 
-                                    10.7366 15.3739 10.3293 14.8858 10.3293C14.3977 10.3293 14.002 10.7366 14.002 11.2389Z" fill="currentColor">
-                                </path>
-                                <path opacity="0.4" d="M16.9739 6.77432C16.977 6.85189 16.9621 6.92913 16.9303 7H15.4932C15.4654 6.92794 15.4506 
-                                    6.85153 15.4497 6.77432C15.4497 4.85682 13.8899 3.30238 11.9657 3.30238C10.0416 3.30238 8.48184 4.85682 8.48184 6.77432C8.49502 
-                                    6.84898 8.49502 6.92535 8.48184 7H7.00989C6.9967 6.92535 6.9967 6.84898 7.00989 6.77432C7.12172 4.10591 9.32499 
-                                    2 12.0049 2C14.6849 2 16.8882 4.10591 17 6.77432H16.9739Z" fill="currentColor">
-                                </path>
-                            </svg>
-                        </i>
-                        <span class="item-name">StockDetails</span>
-                    </a>
-                </li>
-
+                {% if not request.user.is_turf%}
                 <li class="nav-item" onclick="HideMatchSubUl()">
                     <a class="nav-link" data-bs-toggle="collapse" href="#horizontal-menu" role="button"
-                        aria-expanded="false" aria-controls="horizontal-menu">
-                        <i class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" preserveAspectRatio="xMidYMid meet"
-                                viewBox="0 0 512 512">
-                                <path fill="currentColor" d="M231.39 243.48a285.56 285.56 0 0 0-22.7-105.7c-90.8 42.4-157.5 122.4-180.3 
-                                216.8a249 249 0 0 0 56.9 81.1a333.87 333.87 0 0 1 146.1-192.2zm-36.9-134.4a284.23 284.23 0 0 0-57.4-70.7c-91 
+                    aria-expanded="false" aria-controls="horizontal-menu">
+                    <i class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" preserveAspectRatio="xMidYMid meet"
+                        viewBox="0 0 512 512">
+                        <path fill="currentColor" d="M231.39 243.48a285.56 285.56 0 0 0-22.7-105.7c-90.8 42.4-157.5 122.4-180.3 
+                        216.8a249 249 0 0 0 56.9 81.1a333.87 333.87 0 0 1 146.1-192.2zm-36.9-134.4a284.23 284.23 0 0 0-57.4-70.7c-91 
                                 49.8-144.8 152.9-125 262.2c33.4-83.1 98.4-152 182.4-191.5zm187.6 165.1c8.6-99.8-27.3-197.5-97.5-264.4c-14.7-1.7-51.6-5.5-98.9 8.5A333.87 
                                 333.87 0 0 1 279.19 241a285 285 0 0 0 102.9 33.18zm-124.7 9.5a286.33 286.33 0 0 0-80.2 72.6c82 57.3 184.5 75.1 277.5 47.8a247.15 247.15 
                                 0 0 0 42.2-89.9a336.1 336.1 0 0 1-80.9 10.4c-54.6-.1-108.9-14.1-158.6-40.9zm-98.3 99.7c-15.2 26-25.7 54.4-32.1 84.2a247.07 247.07 0 0 0 
@@ -116,7 +92,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 5l7 7-7 7" />
+                                d="M9 5l7 7-7 7" />
                             </svg>
                         </i>
                     </a>
@@ -139,20 +115,20 @@
                             <a class="nav-link " href="{% url 'my-matches' %}" id="my-matches-li">
                                 <i class="icon svg-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
-                                        fill="currentColor">
-                                        <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                        </g>
-                                    </svg>
-                                </i>
-                                <i class="sidenav-mini-icon"> D </i>
-                                <span class="item-name">My Match</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="{% url 'create-matches' %}" id="create-matches-li">
-                                <i class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
+                                    fill="currentColor">
+                                    <g>
+                                        <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                    </g>
+                                </svg>
+                            </i>
+                            <i class="sidenav-mini-icon"> D </i>
+                            <span class="item-name">My Match</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="{% url 'create-matches' %}" id="create-matches-li">
+                            <i class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24"
                                         fill="currentColor">
                                         <g>
                                             <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
@@ -208,7 +184,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " aria-current="page" href="{% url 'turfs' %}" id="turfs-li">
+                    <a class="nav-link " aria-current="page" href="{% url 'turfs_list' %}" id="turfs_list-li">
                         <i class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" preserveAspectRatio="xMidYMid meet"
                                 viewBox="0 0 512 512">
@@ -223,10 +199,7 @@
                         <span class="item-name">Turf</span>
                     </a>
                 </li>
-
-
-
-
+                {%endif%}
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#horizontal-menussss" role="button" aria-expanded="false" aria-controls="horizontal-menu">
                        <i class="icon">
@@ -314,11 +287,7 @@
                    
                </li>
 
-
-
-
-
-                </li>
+                {% if request.user.is_superuser%}
                 <li class="nav-item">
                     <a class="nav-link " aria-current="page" href="{% url 'addstock' %}" id="addproduct-li">
                         <i class="icon">
@@ -344,18 +313,41 @@
                         <span class="item-name">Add Stock</span>
                     </a>
                 </li>
-
-
+                <li class="nav-item">
+                    <a class="nav-link " aria-current="page" href="{% url 'stocktable' %}" id="stocktable-li">
+                        <i class="icon">
+                            <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M20.9133 16.3147L20.1444 10.1201C19.676 7.90964 18.3503 7 17.0865 7H6.93171C5.65022 
+                                    7 4.28034 7.84597 3.88264 10.1201L3.1049 16.3147C2.46858 20.8629 4.81062 22 7.86853 
+                                    22H16.1585C19.2075 22 21.4789 20.3535 20.9133 16.3147ZM9.097 12.1486C8.60889 12.1486 8.21321 
+                                    11.7413 8.21321 11.2389C8.21321 10.7366 8.60889 10.3293 9.097 10.3293C9.5851 10.3293 9.98079 
+                                    10.7366 9.98079 11.2389C9.98079 11.7413 9.5851 12.1486 9.097 12.1486ZM14.002 11.2389C14.002 
+                                    11.7413 14.3977 12.1486 14.8858 12.1486C15.3739 12.1486 15.7696 11.7413 15.7696 11.2389C15.7696 
+                                    10.7366 15.3739 10.3293 14.8858 10.3293C14.3977 10.3293 14.002 10.7366 14.002 11.2389Z" fill="currentColor">
+                                </path>
+                                <path opacity="0.4" d="M16.9739 6.77432C16.977 6.85189 16.9621 6.92913 16.9303 7H15.4932C15.4654 6.92794 15.4506 
+                                    6.85153 15.4497 6.77432C15.4497 4.85682 13.8899 3.30238 11.9657 3.30238C10.0416 3.30238 8.48184 4.85682 8.48184 6.77432C8.49502 
+                                    6.84898 8.49502 6.92535 8.48184 7H7.00989C6.9967 6.92535 6.9967 6.84898 7.00989 6.77432C7.12172 4.10591 9.32499 
+                                    2 12.0049 2C14.6849 2 16.8882 4.10591 17 6.77432H16.9739Z" fill="currentColor">
+                                </path>
+                            </svg>
+                        </i>
+                        <span class="item-name">StockDetails</span>
+                    </a>
+                </li>
+                {%endif%}
+                {% if request.user.is_turf%}
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="{% url 'turf_dash' %}" id="turfdash-li">
                         <i class="icon">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.4" d="M16.0756 2H19.4616C20.8639 2 22.0001 3.14585 22.0001 4.55996V7.97452C22.0001 9.38864 
-                                    20.8639 10.5345 19.4616 10.5345H16.0756C14.6734 10.5345 13.5371 9.38864 13.5371 7.97452V4.55996C13.5371 3.14585 
-                                    14.6734 2 16.0756 2Z" fill="currentColor">
-                                </path>
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.53852 2H7.92449C9.32676 2 10.463 3.14585 10.463 4.55996V7.97452C10.463 
-                                    9.38864 9.32676 10.5345 7.92449 10.5345H4.53852C3.13626 10.5345 2 9.38864 2 7.97452V4.55996C2 3.14585 3.13626 2 4.53852 
+                                20.8639 10.5345 19.4616 10.5345H16.0756C14.6734 10.5345 13.5371 9.38864 13.5371 7.97452V4.55996C13.5371 3.14585 
+                                14.6734 2 16.0756 2Z" fill="currentColor">
+                            </path>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.53852 2H7.92449C9.32676 2 10.463 3.14585 10.463 4.55996V7.97452C10.463 
+                            9.38864 9.32676 10.5345 7.92449 10.5345H4.53852C3.13626 10.5345 2 9.38864 2 7.97452V4.55996C2 3.14585 3.13626 2 4.53852 
                                     2ZM4.53852 13.4655H7.92449C9.32676 13.4655 10.463 14.6114 10.463 16.0255V19.44C10.463 20.8532 9.32676 22 7.92449 
                                     22H4.53852C3.13626 22 2 20.8532 2 19.44V16.0255C2 14.6114 3.13626 13.4655 4.53852 13.4655ZM19.4615 13.4655H16.0755C14.6732 
                                     13.4655 13.537 14.6114 13.537 16.0255V19.44C13.537 20.8532 14.6732 22 16.0755 22H19.4615C20.8637 22 22 20.8532 22 
@@ -412,6 +404,8 @@
                         <span class="item-name">Schedule</span>
                     </a>
                 </li>
+                {%endif%}
+                {% if request.user.is_superuser%}
                 <li class="nav-item static-item">
                     <a class="na-link static-item disabled" href="#" tabindex="-1">
                         <span class="default-icon">Administration</span>
@@ -487,6 +481,7 @@
                         <span class="item-name">Manage Categories</span>
                     </a>
                 </li>
+                {%endif%}
             </ul>
             <!-- Sidebar Menu End -->
         </div>

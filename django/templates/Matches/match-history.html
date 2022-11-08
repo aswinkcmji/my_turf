@@ -486,116 +486,62 @@
                       </div>                           
                    </div>
                 </div>
-              </div>
-              <div  id="created-completed-matches" class="card tab-pane fade ">
-                <div class="card-header d-flex align-items-center justify-content-between pb-4">
-                  <div class="header-title">
-                      <h2>Completed Matches</h2>
-                  </div>                        
-                </div>
-                <div class="card-body p-0">
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead class=" text-primary">
-                        <th>
-                          #
-                        </th>
-                        <th>
-                          Category
-                        </th>
-                        <th>
-                          Organized By
-                        </th>
-                        <th>
-                          Date
-                        </th>
-                        <th>
-                            Start Time
-                        </th>
-                        <th>
-                          End Time
-                        </th>
-                        <th>
-                          Location
-                        </th>
-                        
-                      </thead>
-                      <tbody>
-                        {% for data in crcom %}
-                        <tr >
-                          
-                          <td>{{forloop.counter0|add:1}}</td>
-                          <td>{{data.category}}</td>
-                          <td>{{data.creator }}</td>
-                          <td>{{data.date|date:"Y-m-d"}}</td>
-                          <td>{{data.start_time|time:"H:i:s"}}</td>
-                          <td>{{data.end_time|time:"H:i:s"}}</td>
-                          <td>
-                            {{data.locality}}
-                          </td>
-          
-                        </tr>
-                          {% endfor %}
-                          
-                        </tbody>
-                    </table>
-                  </div>                           
-                </div>
-            </div>
-              <div  id="created-cancelled-matches" class="card tab-pane fade">             
-                <div class="card-header d-flex align-items-center justify-content-between pb-4">
-                  <div class="header-title">
-                      <h2>Cancelled Matches</h2>
-                  </div>                        
-                </div>
-                <div class="card-body p-0">
-                  <div class="table-responsive">
-                      <table class="table">
-                        <thead class=" text-primary">
-                          <th>
-                            #
-                          </th>
-                          <th>
-                            Category
-                          </th>
-                          <th>
-                            Organized By
-                          </th>
-                          <th>
-                            Date
-                          </th>
-                          <th>
-                              Start Time
-                          </th>
-                          <th>
-                            End Time
-                          </th>
-                          <th>
-                            Location
-                          </th>
+                <div  id="rejected-requests" class="card tab-pane fade ">
+                  <div class="card-header d-flex align-items-center justify-content-between pb-4">
+                     <div class="header-title">
+                        <h2>Rejected Requests</h2>
+                     </div>                        
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="table-responsive">
+                       <table class="table">
+                         <thead class=" text-primary">
+                           <th>
+                             #
+                           </th>
+                           <th>
+                             Category
+                           </th>
+                           <!-- <th>
+                             Organized By
+                           </th> -->
+                           <th>
+                             Date
+                           </th>
+                           <th>
+                               Start Time
+                           </th>
+                           <th>
+                             End Time
+                           </th>
+                           <th>
+                             Location
+                           </th>
                          </thead>
                          <tbody>
-                           {% for data in reqrej %}
-                           <tr >
-                             
-                            <td>{{forloop.counter0|add:1}}</td>
-                            <td>{{data.category}}</td>
-                            <td>{{data.creator }}</td>
-                            <td>{{data.date|date:"Y-m-d"}}</td>
-                            <td>{{data.start_time|time:"H:i:s"}}</td>
-                            <td>{{data.end_time|time:"H:i:s"}}</td>
-                            <td>
-                               {{data.locality}}
-                            </td>
-             
-                          </tr>
-                            {% endfor %}
+                          {% for data in reqrej %}
+                          <tr >
                             
-                          </tbody>
+                           <td>{{forloop.counter0|add:1}}</td>
+                           <td>{{data.category}}</td>
+                           <!-- <td>{{data.creator}}</td> -->
+                           <td>{{data.date|date:"Y-m-d"}}</td>
+                           <td>{{data.start_time|time:"H:i:s"}}</td>
+                           <td>{{data.end_time|time:"H:i:s"}}</td>
+                           <td>
+                              {{data.locality}}
+                           </td>
+            
+                         </tr>
+                           {% endfor %}
+                           
+                         </tbody>
                        </table>
                      </div>                           
                   </div>
                </div>
+              </div>
+          
              </div>
              <div id="profile-requests" class="tab-pane fade">
               <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">

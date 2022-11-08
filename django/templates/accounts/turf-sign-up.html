@@ -40,7 +40,7 @@
                         </p>
                         <form method="post" enctype="multipart/form-data" >
                            {% csrf_token %}
-                           {{ form.errors}}
+                           
                            {{form.is_turf}}
 
                            <div class="row">
@@ -125,11 +125,13 @@
                                  </div>
 
 
-
-                                 <div>
-                                 <span id="bt-remove-taginput" style="cursor: pointer;"
+                                 
+                                 <div class="d-flex justify-content-end">
+                                    <span id="bt-remove-taginput" style="cursor: pointer;"
                                     class=" text-danger text-end w-auto">Remove All</span></div>
-                              </div>
+                                    
+                                 </div>
+                                 <span class="text-error text-danger">{{ form.category.errors }}</span>
                               {{form.category}}
                               <!-- #######################################end taginput###################################################### -->
 

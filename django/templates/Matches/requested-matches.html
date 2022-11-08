@@ -9,22 +9,7 @@
     {% for match in matches%}
       <div class="column col-md-4">
           <div class="card p-2 m-5">
-            {% if match.category == "Cricket" %}
-            <img src="https://cdn.britannica.com/47/148847-050-C4FB5341/Cricket-bat-ball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-            {% elif match.category == "Football" %}
-            <img src="https://images.squarespace-cdn.com/content/v1/51e6a2b7e4b038b7a667f1b3/1375240864715-15RNHVOTAV215YF2R60V/PES%2B2014%2BBall%2Bgrass.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-            {% elif match.category == "Baseball" %}
-            <img src="https://techcrunch.com/wp-content/uploads/2019/03/GettyImages-844016022.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-            {% elif match.category == "Badminton" %}
-            <img src="https://gumlet.assettype.com/dtnext/import/Articles/2022/Feb/202202200142305523_Ball-Badminton-Nationals-in-Dindigul-from-Feb-22_SECVPF.gif?w=1200&h=675&auto=format%2Ccompress&fit=max" class="card-img-top" alt="Product 1" style="height:350px;">
-            {% elif match.category == "Tennis" %}
-            <img src="https://thumbs.dreamstime.com/b/tennis-ball-racket-16093106.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-            {% elif match.category == "Volleyball" %}
-            <img src="https://sportslounge.co.in/file/2020/09/volleyball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-            {% elif match.category == "Basketball" %}
-            <img src="https://btcpeers.com/content/images/2022/04/Basketball-Swish.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
-            
-            {%endif%}
+            <img src="/media/{{match.category.image}}" class="card-img-top" alt="Product 1" style="height:350px;">
               <div class="card-body">
             <h2>{{match.category}}</h2>
                 <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
