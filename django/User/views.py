@@ -513,10 +513,24 @@ class MyTournamentView(View):
         print(datetime.now())
         # tournament=TournamentModel.objects.filter(id__in=list(id))
         tournament=TournamentModel.objects.all()
-        img = CategoriesModel.objects.all()
+        img1 = CategoriesModel.objects.values_list('image')[0][0]
+        img2 = CategoriesModel.objects.values_list('image')[1][0]
+        img3 = CategoriesModel.objects.values_list('image')[2][0]
+        img4 = CategoriesModel.objects.values_list('image')[3][0]
+        img5 = CategoriesModel.objects.values_list('image')[4][0]
+
+        
+        
         context={
             'tournaments':tournament,
-            'img' : img
+            'img1' : img1,
+            "img2" : img2,
+            "img3" : img3,
+            "img4" : img4,
+            "img5" : img5,
+
+            'media_url':settings.MEDIA_URL,
+            
         }
         return render(request, 'Tournaments/my-tournament.html',context)
 
@@ -608,9 +622,9 @@ class RequestedTournamentView(View):
     def get(self, request, *args, **kwargs):
         print(request.user.username)
         context={}
-        id_list=TournamentRequestModel.objects.filter(username=request.user.username,status="Pending").values_list('tournament_id',flat=True)
+        id_list=TournamentRequestModel.objects.filter(username=request.user.username,status="Pending").values_list('tournament_id',flat=True).order_by("-id")
         print(list(id_list))
-        tournament=TournamentModel.objects.filter(id__in=list(id_list))
+        tournament=TournamentModel.objects.filter(id__in=list(id_list)).order_by("-id")
         context['tournaments']=tournament
         return render(request, 'Tournaments/requested-tournaments.html',context)
 
@@ -685,6 +699,53 @@ class  JoinTournamentView(View):
                 context ={'TournamentRequestForm': TournamentRequestForm(request.POST,request=request) ,'is_tournamentrequestform':True ,'tournament':requested_tournament}
                 print(context)
                 return render(request, 'Tournaments/tournaments.html',context)
+
+##################################################################### View for Requests viewing #######################################################################
+@method_decorator(login_required,name='dispatch')
+class TournamentRequestsView(View):
+    def get(self, request,*args, **kwargs):
+        id_list=TournamentModel.objects.filter(creator=request.user.username,status="Upcoming").values_list('id',flat=True).order_by("-id")
+        print(list(id_list))
+        tournament_requests=TournamentRequestModel.objects.filter(status='Pending',tournament_id__in=list(id_list)).values().order_by("-id")
+        # print(requests)
+        context={}
+        context['requests']=tournament_requests
+        return render(request,'Tournaments/requests.html',context)
+    def  post(self, request, *args, **kwargs):
+        selected=request.POST.getlist('selected[]')
+        print(selected)
+        if selected != []: 
+            print("hiiiiiiiiiiiiiiiiiiiiiiiiiiiyyyyyyyyyyyyyyyyyyyyyyyhiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+            if 'Accept' in request.POST:
+                print("Accepted requests")
+                requests=TournamentRequestModel.objects.filter(id__in=selected)
+                for requesti in requests:
+                    requesti.status="Accepted"
+                    requesti.save()
+
+                    tournament_id=requesti.tournament_id.pk
+                    print(tournament_id,type(tournament_id))
+                    obj=TournamentModel.objects.get(id=id)
+                    obj.team_space_available=obj.team_space_available-1
+                    if obj.team_space_available<=0:
+                             messages.error(request	,'Slots are full. User cant be selected')
+                             return HttpResponseRedirect(reverse('tournament-requests'))
+                    obj.save()
+                messages.success(request,'The requests were accepted')
+                return HttpResponseRedirect(reverse('tournament-requests'))
+            elif 'Reject' in request.POST:
+                print("Rejected requests")
+                requests=TournamentRequestModel.objects.filter(id__in=selected)
+                for requestj in requests:
+                    requestj.status="Rejected"
+                    requestj.save()
+                messages.success(request,'The requests were rejected')
+                return HttpResponseRedirect(reverse('tournament-requests'))
+        else:
+            print("hyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyiiiiiiiiiiiiiiiiiiiiiiiiiiiiihyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+            messages.error(request	,'NO user selected')
+            return HttpResponseRedirect(reverse('tournament-requests'))
+
 
 
 

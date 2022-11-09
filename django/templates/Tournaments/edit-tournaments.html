@@ -66,7 +66,9 @@
       });
       $(document).ready(function() {
       var today = new Date().toISOString().split('T')[0];
-      $("#id_date").attr('min', today);
+      $("#id_start_date").attr('min', today);
+      $("#id_end_date").attr('min', today);
+
       });
 
   </script>

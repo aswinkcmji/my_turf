@@ -359,7 +359,9 @@ class TournamentRequestForm(ModelForm):
         if self.cleaned_data.get('category') != tournament.category:
             self._errors['category']=self.error_class(['Do not change the category'])
             print(" category  er0rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-        if self.cleaned_data.get('date')!=tournament.date:
+        if self.cleaned_data.get('start_date')!=tournament.start_date:
+            self._errors['date']=self.error_class(['Do not change the date'])
+        if self.cleaned_data.get('end_date')!=tournament.end_date:
             self._errors['date']=self.error_class(['Do not change the date'])
             print("date  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         if self.cleaned_data.get('start_time')!=tournament.start_time:
