@@ -43,6 +43,7 @@ class HomeView(View):
 @method_decorator(login_required,name='dispatch')
 class AllMatchesView(View):
         def get(self, request, *args, **kwargs):
+            if not request.user.is_superuser and not request.user.is_superuser:
                 print(request.user.username)
                 # context={}
                 id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
@@ -62,6 +63,8 @@ class AllMatchesView(View):
                 context ={'RequestForm': form ,'is_requestform':False , 'matches':matches}
                 print(context)
                 return render(request, 'Matches/all-matches.html',context)
+            else:
+                return render(request, 'errors/error403.html',{})
 
 
 ##d###########################################################    View for matches user has created or joined  ###########################################################

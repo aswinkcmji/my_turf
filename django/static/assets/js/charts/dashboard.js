@@ -1,32 +1,36 @@
 (function (jQuery) {
   "use strict";
-if (document.querySelectorAll('#myChart').length) {
-  const options = {
-    series: [55, 75],
+if (document.querySelectorAll('#matchChart').length) {
+  var options = {
+    series: [total_completed_matches,total_cancelled_matches],
+    labels: [`Completed Matches-${total_completed_matches}`,`Cancelled Matches-${total_cancelled_matches}`],
     chart: {
-    height: 230,
-    type: 'radialBar',
+    type: 'donut',
+    height:'250px',
+   
+    plotOptions: {
+      pie: {
+        // customScale: 10 ,
+        donut: {
+          // size: '10%'
+        }
+      }
+    },
   },
-  colors: ["#4bc7d2", "#3a57e8"],
-  plotOptions: {
-    radialBar: {
-      hollow: {
-          margin: 10,
-          size: "50%",
-      },
-      track: {
-          margin: 10,
-          strokeWidth: '50%',
-      },
-      dataLabels: {
-          show: false,
+  responsive: [{
+    breakpoint: 100,
+    options: {
+      legend: {
+        position: 'bottom'
       }
     }
-  },
-  labels: ['Apples', 'Oranges'],
+  }]
   };
+
+  // var chart = new ApexCharts(document.querySelector("#chart"), options);
+  // chart.render();
   if(ApexCharts !== undefined) {
-    const chart = new ApexCharts(document.querySelector("#myChart"), options);
+    const chart = new ApexCharts(document.querySelector("#matchChart"), options);
     chart.render();
     document.addEventListener('ColorChange', (e) => {
         const newOpt = {colors: [e.detail.detail2, e.detail.detail1],}
@@ -38,11 +42,11 @@ if (document.querySelectorAll('#myChart').length) {
 if (document.querySelectorAll('#d-activity').length) {
     const options = {
       series: [{
-        name: 'Successful deals',
-        data: [30, 50, 35, 60, 40, 60, 60, 30, 50, 35,]
+        name: '',
+        data: categories_in_matches
       }, {
-        name: 'Failed deals',
-        data: [40, 50, 55, 50, 30, 80, 30, 40, 50, 55]
+        // name: 'Failed deals',
+        // data: [40, 50, 55, 50, 30, 80, 30, 40, 50, 55]
       }],
       chart: {
         type: 'bar',
@@ -57,8 +61,8 @@ if (document.querySelectorAll('#d-activity').length) {
         bar: {
           horizontal: false,
           columnWidth: '28%',
-          endingShape: 'rounded',
-          borderRadius: 5,
+          // endingShape: 'rounded',
+          //  
         },
       },
       legend: {
@@ -73,7 +77,7 @@ if (document.querySelectorAll('#d-activity').length) {
         colors: ['transparent']
       },
       xaxis: {
-        categories: ['S', 'M', 'T', 'W', 'T', 'F', 'S', 'M', 'T', 'W'],
+        categories:categories_list_in_js,
         labels: {
           minHeight:20,
           maxHeight:20,
@@ -82,9 +86,9 @@ if (document.querySelectorAll('#d-activity').length) {
           },
         }
       },
-      yaxis: {
+        yaxis: {
         title: {
-          text: ''
+          text: 'Number of matches created'
         },
         labels: {
             minWidth: 19,
@@ -100,7 +104,7 @@ if (document.querySelectorAll('#d-activity').length) {
       tooltip: {
         y: {
           formatter: function (val) {
-            return "$ " + val + " thousands"
+            return val + " Matches"
           }
         }
       }
