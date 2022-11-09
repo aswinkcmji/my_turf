@@ -9,7 +9,7 @@ from django.utils.dateparse import parse_datetime
 
 
 from django.forms import ModelForm
-from .models import TurfScheduleModel, GalleryImg, CategoriesModel
+from .models import TurfScheduleModel, TurfGallery, CategoriesModel
 
 
 class TurfScheduleForm(ModelForm):
@@ -81,7 +81,7 @@ class GalleryImgForm(ModelForm):
     caption = forms.CharField(required=False)
 
     class Meta:
-        model = GalleryImg
+        model = TurfGallery
         fields = '__all__'
 
 

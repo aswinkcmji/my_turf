@@ -16,5 +16,6 @@ urlpatterns = [
     path('categories/', CategoriesView.as_view(), name="categories"),
     path('categories/<slug:id>/', CategoriesEditView.as_view(), name="categories_edit"),
     path('categoriesdel/<slug:id>/', CategoriesDeleteView.as_view(), name="categories_delete"),
+    path('admin/dashboard',AdminDashboardView.as_view(),name="admin_dash")
 
 ]
