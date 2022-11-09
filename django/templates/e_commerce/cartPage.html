@@ -1,0 +1,163 @@
+{% extends 'layouts/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<section class="ecommerce container-fluid ">
+
+    <!-- ecommerce top bar ,filter -->
+    <div class="ecomerce-top-bar card p-3">
+        <div class="row">
+            <div class="col-4">
+                <span class="item-name" style="font-size: 1.4rem;">My Cart</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ecommerce main section -->
+    <div class="ecom-main-section my-3">
+        <div class="container-fluid p-3">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-responsive mb-0">
+                                    <tbody>
+                                        {% for i in cart %}
+                                        <tr data-item="list">
+                                            <td scope="row">
+                                                <div class="d-flex align-items-center gap-4">
+                                                    <img src="{{media_url}}{{i.image}}" alt="image" class="img-fluid object-contain avatar-100 iq-product-bg p-3" loading="lazy">
+                                                    <div>
+                                                        <h5 class="mb-3">{{i.product_name}}</h5>
+                                                        <p class="mb-1">Quantity:&nbsp;{{i.quantity}}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group iq-qty-btn product-quantity-cart" data-qty="btn" role="group">
+                                                    <a class="sub-item-btn-cart btn border text-center p-1 " href="increase" style="width: 1.5rem;">-</a>                              
+                                                        <input type="number" class="product-quantity-field-cart text-center p-1 border" style="width: 2rem;"  min=1 max=i.quantity value="1">
+                                                    <a class="add-item-btn-cart btn border text-center p-1 " style="width: 1.5rem;">+</a>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex gap-3">
+                                                    <a href="#" class="text-decoration-none">
+                                                        ${{i.price}}
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'deletecart' i.id%}" class="btn btn-icon btn-danger btn-sm delete-btn">
+                                                    <span class="btn-inner">
+                                                        <svg class="icon-32" width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path opacity="0.4" d="M19.643 9.48851C19.643 9.5565 19.11 16.2973 18.8056 19.1342C18.615 20.8751 17.4927 21.9311 15.8092 21.9611C14.5157 21.9901 13.2494 22.0001 12.0036 22.0001C10.6809 22.0001 9.38741 21.9901 8.13185 21.9611C6.50477 21.9221 5.38147 20.8451 5.20057 19.1342C4.88741 16.2873 4.36418 9.5565 4.35445 9.48851C4.34473 9.28351 4.41086 9.08852 4.54507 8.93053C4.67734 8.78453 4.86796 8.69653 5.06831 8.69653H18.9388C19.1382 8.69653 19.3191 8.78453 19.4621 8.93053C19.5953 9.08852 19.6624 9.28351 19.643 9.48851Z" fill="currentColor"></path>
+                                                            <path d="M21 5.97686C21 5.56588 20.6761 5.24389 20.2871 5.24389H17.3714C16.7781 5.24389 16.2627 4.8219 16.1304 4.22692L15.967 3.49795C15.7385 2.61698 14.9498 2 14.0647 2H9.93624C9.0415 2 8.26054 2.61698 8.02323 3.54595L7.87054 4.22792C7.7373 4.8219 7.22185 5.24389 6.62957 5.24389H3.71385C3.32386 5.24389 3 5.56588 3 5.97686V6.35685C3 6.75783 3.32386 7.08982 3.71385 7.08982H20.2871C20.6761 7.08982 21 6.75783 21 6.35685V5.97686Z" fill="currentColor"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="mb-0">Order Summary</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="border-bottom">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder="Coupon Code" aria-label="Coupon Code" aria-describedby="CouponCode">
+                                    <button class="btn btn-primary" type="button" id="CouponCode">Apply</button>
+                                </div>
+                            </div>
+                            <div class="border-bottom mt-4">
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Subtotal</h6>
+                                    <h6 class="text-primary">${{totalAmount}}</h6>
+                                </div>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6>Total Items</h6>
+                                    <h6 class="text-success">{{totalItemCount}}</h6>
+                                </div>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6>Shipping</h6>
+                                    <h6 class="text-success">FREE</h6>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="mb-0">Order Total</h6>
+                                    <h5 class="text-primary mb-0">{{totalAmount}}</h5>
+                                </div>
+                                <div class="d-flex">
+                                    <a id="place-order" href="{% url 'checkout' %}"  class="btn btn-primary d-block mt-3 w-100">Checkout</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+<style>
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+<script>
+    
+
+    let buttonPlus  = $(".add-item-btn-cart");
+    let buttonMinus = $(".sub-item-btn-cart");
+
+    let incrementPlus = buttonPlus.click(function() {
+
+        let $n = $(this)
+		.parent(".product-quantity-cart")
+		.find(".product-quantity-field-cart");
+        let amount = Number($n.val());
+        $n.val(amount+1);
+    });
+
+    let incrementMinus = buttonMinus.click(function() {
+
+        let $n = $(this)
+		.parent(".product-quantity-cart")
+		.find(".product-quantity-field-cart");
+        let amount = Number($n.val());
+        if (amount > 0) {
+            $n.val(amount-1);
+        }
+    });
+
+</script>
+<script>
+    document.getElementById('shop-li').classList.add('active')
+</script>
+{% endblock content %}

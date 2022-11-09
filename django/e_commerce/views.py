@@ -17,7 +17,12 @@ import random
 class E_commercePage(View):
     def get(self, request ,*args, **kwargs):
         cartForm = addToCartForm()
-        ecom_data = ProductsModel.objects.all()
+        default = ProductsModel.objects.all()
+        highPrice = ProductsModel.objects.order_by('-price').all()
+        lowPrice = ProductsModel.objects.order_by('price').all()
+        AtoZ = ProductsModel.objects.order_by('product_name').all()
+        latest = ProductsModel.objects.order_by('-id').all()
+
         cartData = CartModel.objects.filter(username = request.user.username)
         # cartorbuy = CartModel.objects.filter(username = request.user.username).values_list('product_id')
         # cartorbuylist = []
@@ -30,7 +35,11 @@ class E_commercePage(View):
         for i in totalPrice:
             totalAmount = totalAmount + (i[0]*i[1])
         context = {
-            'ecom_data':ecom_data, 
+            'default': default,
+            'hTol' : highPrice,
+            'lToh' : lowPrice,
+            'aToz' : AtoZ,
+            'latest' : latest,
             'media_url':settings.MEDIA_URL,
             'cartForm':cartForm,
             'cartData':cartData,
@@ -38,7 +47,7 @@ class E_commercePage(View):
             'totalAmount':totalAmount,
             'totalItemCount':totalItemCount
         }
-        helo="hello"
+        print(totalItemCount,"hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
 
         return render(request,'e_commerce/shop.html',context)
     
@@ -48,12 +57,11 @@ class E_commercePage(View):
         if request.method == 'POST':  
             form = addToCartForm(request.POST)
             product_tot_qty = ProductsModel.objects.filter(product_name = request.POST['product_name']).values_list('quantity')[0][0]
-            print(int(product_tot_qty)+1,"hiiiiiiiiiiiiiiiiiiiiiiiiii")
             if form.is_valid():
                 if int(request.POST.get("quantity")) <=0 :
                     messages.error(request,"Quantity must be greater than 0")
                     return HttpResponseRedirect(reverse('shop'))
-                elif int(request.POST.get("quantity")) <= int(product_tot_qty):
+                elif int(request.POST.get("quantity")) > int(product_tot_qty):
                     messages.error(request,"Unavilable Stock")
                     return HttpResponseRedirect(reverse('shop'))
                 else:
@@ -70,7 +78,7 @@ class DeleteCartItem(View):
     def get(self , request, id,*args, **kwargs):
         item = CartModel.objects.get(id=id)
         item.delete()
-        return HttpResponseRedirect(reverse('shop'))
+        return HttpResponseRedirect(reverse('cartdetails'))
 
 class Checkout(View):
     def get(self , request, *args, **kwargs):
@@ -138,7 +146,7 @@ class OrderView(View):
 class OutOfStock(View):
     def get(self, request, *args, **kwargs):
 
-        messages.success(request, 'OutOfStock')
+        messages.warning(request, 'OutOfStock')
 
         return HttpResponseRedirect(reverse('shop'))
 
@@ -164,21 +172,29 @@ class StockTable(View):
         if request.method == 'POST':  
             form = addStockForm(request.POST, request.FILES)
             if form.is_valid(): 
-                print(request.POST)
 
-                updatedRecord = ProductsModel.objects.get(id=request.POST['product_id'])
+                if int(request.POST.get('quantity')) >= 1 :
 
-                updatedRecord.product_name = request.POST['product_name']
+                    updatedRecord = ProductsModel.objects.get(id=request.POST['product_id'])
 
-                updatedRecord. price = request.POST['price']
+                    updatedRecord.product_name = request.POST['product_name']
+
+                    updatedRecord. price = request.POST['price']
+                    
+                    updatedRecord.quantity = request.POST['quantity']
+                    
+                    updatedRecord.image = request.FILES['image']
+
+                    updatedRecord.save()
+
+                    messages.success(request, 'Stock Updated Successfully')
+                    
+                    return HttpResponseRedirect(reverse('stocktable'))  
                 
-                updatedRecord.quantity = request.POST['quantity']
-                
-                updatedRecord.image = request.FILES['image']
+                else :
 
-                updatedRecord.save()
-                
-                return HttpResponseRedirect(reverse('stocktable'))  
+                    messages.error(request,"Quantity must be greater than 1 !")
+
             else:  
                 
                 form = addStockForm()    
@@ -190,3 +206,27 @@ class DeleteStock(View):
         item = ProductsModel.objects.get(id=id)
         item.delete()
         return HttpResponseRedirect(reverse('stocktable'))
+
+
+class CartDetailsView(View):
+    def get(self, request,*args, **kwargs):
+        cartData = CartModel.objects.filter(username = request.user.username)
+        totalPrice = CartModel.objects.filter(username = request.user.username).values_list('quantity','price')
+        totalAmount = 0
+        totalItemCount = CartModel.objects.filter(username = request.user.username).count()
+        for i in totalPrice:
+            totalAmount = totalAmount + (i[0]*i[1])
+        context={
+            'cart': cartData,
+            'media_url':settings.MEDIA_URL,
+            'totalItemCount':totalItemCount,
+            'totalAmount':totalAmount,
+
+
+        }
+        return render(request,'e_commerce/cartPage.html',context)
+
+def increaseBtn(request,id):
+    item = CartModel.objects.get(id=id)
+    item.update()
+    return HttpResponseRedirect(reverse('stocktable'))

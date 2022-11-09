@@ -34,10 +34,13 @@ class AddStockView(View):
         if request.method == 'POST':  
             form = addStockForm(request.POST, request.FILES)
             if form.is_valid(): 
-                print(request.FILES) 
-                form.save()  
-                messages.success(request,"Stock was successfully added...")
-                return redirect(reverse('addstock'))  
+                if int(request.POST.get('quantity')) > 1 :
+                    form.save()  
+                    messages.success(request,"Stock was successfully added...")
+                    return redirect(reverse('addstock')) 
+                else:
+                    messages.error(request,"Quantity must be greater than 1 !")
+
             else:  
                 
                 form = addStockForm()  
