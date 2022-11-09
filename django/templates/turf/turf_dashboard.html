@@ -1,117 +1,110 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 
-
-<body class="">
-    <main class="main-content">
-        <div class="position-relative iq-banner">
-            <!-- Nav Header Component Start -->
-            <div class="iq-navbar-header" style="height: 215px;">
-                <div class="container-fluid iq-container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="flex-wrap d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h1>Let's Play....!</h1>
-                                </div>
-                                <div>
-                                    <a href="" class="btn btn-link btn-soft-light">
-                                        <svg width="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path opacity="0.4" d="M19.9927 18.9534H14.2984C13.7429 18.9534 13.291 19.4124 13.291 19.9767C13.291 
-                                                20.5422 13.7429 21.0001 14.2984 21.0001H19.9927C20.5483 21.0001 21.0001 20.5422 21.0001 19.9767C21.0001 
-                                                19.4124 20.5483 18.9534 19.9927 18.9534Z" fill="currentColor">
-                                            </path>
-                                            <path d="M10.309 6.90385L15.7049 11.2639C15.835 11.3682 15.8573 11.5596 15.7557 11.6929L9.35874 20.0282C8.95662 
-                                                20.5431 8.36402 20.8344 7.72908 20.8452L4.23696 20.8882C4.05071 20.8903 3.88775 20.7613 3.84542 20.5764L3.05175 
-                                                17.1258C2.91419 16.4915 3.05175 15.8358 3.45388 15.3306L9.88256 6.95545C9.98627 6.82108 10.1778 6.79743 10.309 
-                                                6.90385Z" fill="currentColor">
-                                            </path>
-                                            <path opacity="0.4" d="M18.1208 8.66544L17.0806 9.96401C16.9758 10.0962 16.7874 10.1177 16.6573 10.0124C15.3927 8.98901 
-                                                12.1545 6.36285 11.2561 5.63509C11.1249 5.52759 11.1069 5.33625 11.2127 5.20295L12.2159 3.95706C13.126 2.78534 14.7133 
-                                                2.67784 15.9938 3.69906L17.4647 4.87078C18.0679 5.34377 18.47 5.96726 18.6076 6.62299C18.7663 7.3443 18.597 8.0527 
-                                                18.1208 8.66544Z" fill="currentColor">
-                                            </path>
-                                        </svg>                            
-                                        Edit
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+<!-- Nav Header Component Start -->
+<div class="iq-navbar-header" style="height: 215px;">
+    <div class="container-fluid iq-container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="flex-wrap d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1>Let's Play....!</h1>
                     </div>
-              </div>
-                <div class="iq-header-img">
-                    <img src="/static/assets/images/dashboard/top-header.png" alt="header"
-                        class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
-                    <img src="/static/assets/images/dashboard/top-header1.png" alt="header"
-                        class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
-                    <img src="/static/assets/images/dashboard/top-header2.png" alt="header"
-                        class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
-                    <img src="/static/assets/images/dashboard/top-header3.png" alt="header"
-                        class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
-                    <img src="/static/assets/images/dashboard/top-header4.png" alt="header"
-                        class="theme-color-yellow-img img-fluid w-100 h-100 animated-scaleX">
-                    <img src="/static/assets/images/dashboard/top-header5.png" alt="header"
-                        class="theme-color-pink-img img-fluid w-100 h-100 animated-scaleX">
+                    <div>
+                        <a href="" class="btn btn-link btn-soft-light">
+                            <svg width="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.4" d="M19.9927 18.9534H14.2984C13.7429 18.9534 13.291 19.4124 13.291 19.9767C13.291 
+                                    20.5422 13.7429 21.0001 14.2984 21.0001H19.9927C20.5483 21.0001 21.0001 20.5422 21.0001 19.9767C21.0001 
+                                    19.4124 20.5483 18.9534 19.9927 18.9534Z" fill="currentColor">
+                                </path>
+                                <path d="M10.309 6.90385L15.7049 11.2639C15.835 11.3682 15.8573 11.5596 15.7557 11.6929L9.35874 20.0282C8.95662 
+                                    20.5431 8.36402 20.8344 7.72908 20.8452L4.23696 20.8882C4.05071 20.8903 3.88775 20.7613 3.84542 20.5764L3.05175 
+                                    17.1258C2.91419 16.4915 3.05175 15.8358 3.45388 15.3306L9.88256 6.95545C9.98627 6.82108 10.1778 6.79743 10.309 
+                                    6.90385Z" fill="currentColor">
+                                </path>
+                                <path opacity="0.4" d="M18.1208 8.66544L17.0806 9.96401C16.9758 10.0962 16.7874 10.1177 16.6573 10.0124C15.3927 8.98901 
+                                    12.1545 6.36285 11.2561 5.63509C11.1249 5.52759 11.1069 5.33625 11.2127 5.20295L12.2159 3.95706C13.126 2.78534 14.7133 
+                                    2.67784 15.9938 3.69906L17.4647 4.87078C18.0679 5.34377 18.47 5.96726 18.6076 6.62299C18.7663 7.3443 18.597 8.0527 
+                                    18.1208 8.66544Z" fill="currentColor">
+                                </path>
+                            </svg>                            
+                            Edit
+                        </a>
+                    </div>
                 </div>
-            </div> 
+            </div>
         </div>
+    </div>
+    <div class="iq-header-img">
+        <img src="/static/assets/images/dashboard/top-header.png" alt="header"
+            class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
+        <img src="/static/assets/images/dashboard/top-header1.png" alt="header"
+            class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
+        <img src="/static/assets/images/dashboard/top-header2.png" alt="header"
+            class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
+        <img src="/static/assets/images/dashboard/top-header3.png" alt="header"
+            class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
+        <img src="/static/assets/images/dashboard/top-header4.png" alt="header"
+            class="theme-color-yellow-img img-fluid w-100 h-100 animated-scaleX">
+        <img src="/static/assets/images/dashboard/top-header5.png" alt="header"
+            class="theme-color-pink-img img-fluid w-100 h-100 animated-scaleX">
+    </div>
+</div> 
         <!-- Nav Header Component End -->
         <!--Nav End-->
 
-                        {% for data in turfDetails %}
+        {% for data in turfDetails %}
 
 
-        <div class="conatiner-fluid content-inner mt-n5 py-0" >
+<div class="conatiner-fluid content-inner mt-n5 py-0" >
 
-            <div class="mt-5">
+    <div class="mt-5">
 
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex flex-wrap align-items-center justify-content-between">
-                                  <div class="d-flex flex-wrap align-items-center">
-                                      <div class="profile-img position-relative me-3 mb-3 mb-lg-0 profile-logo profile-logo1">
-                                            <img src="{{media_url}}{{data.avatar}}" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-100">
-                                      </div>
-                                      <div class="d-flex flex-wrap align-items-center mb-3 mb-sm-0">
-                                            <h2 class="me-2 h2">{{ data.turf_name}}</h2>
-                                      </div>
-                                  </div>
-                              </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between">
+                            <div class="d-flex flex-wrap align-items-center">
+                                <div class="profile-img position-relative me-3 mb-3 mb-lg-0 profile-logo profile-logo1">
+                                    <img src="{{media_url}}{{data.avatar}}" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-100">
+                                </div>
+                                <div class="d-flex flex-wrap align-items-center mb-3 mb-sm-0">
+                                    <h2 class="me-2 h2">{{ data.turf_name}}</h2>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="header-title">
-                                <h4 class="card-title">{{data.turf_name}}</h4>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                          <p>{{data.location}}</p>
-                          <p>Near:{{data.landmark}}</p>
-                          <div class="mb-1">Email: <a href="#" class="ms-3">{{data.email}}</a></div>
-                          <div class="mb-1">Phone: <a href="#" class="ms-3">{{data.phone}}</a></div>
-          
-                            {% endfor %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
-</body>
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="header-title">
+                        <h4 class="card-title">{{data.turf_name}}</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p>{{data.location}}</p>
+                    <p>Near:{{data.landmark}}</p>
+                    <div class="mb-1">Email: <a href="#" class="ms-3">{{data.email}}</a></div>
+                    <div class="mb-1">Phone: <a href="#" class="ms-3">{{data.phone}}</a></div>
+    
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
         
 
 
 
-    <script>
-        document.getElementById('turfdash-li').classList.add('active');
-    </script>
+<script>
+    document.getElementById('turfdash-li').classList.add('active');
+</script>
 
 {% endblock content %}
