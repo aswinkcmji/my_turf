@@ -508,7 +508,7 @@ class TurfProfileView(View):
         id = kwargs.pop('id')
 
         turf = UserModel.objects.filter(id=id).first()  
-        images = GalleryImg.objects.filter(username = "tr001").values()
+        images = GalleryImg.objects.filter(username = "tr0011").values()
 
         context = {'id': id,
                     'turf':turf,

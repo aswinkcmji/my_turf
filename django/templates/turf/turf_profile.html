@@ -6,6 +6,10 @@
 </script>
 
 
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+    integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
+    async></script>
+
 
 <main class="main-content">
     <div class="position-relative iq-banner">
@@ -59,10 +63,10 @@
                                     class="profile-img position-relative me-3 mb-3 mb-lg-0 profile-logo profile-logo1 ">
                                     {% if turf.avatar %}
                                     <img src="{{media_url}}{{turf.avatar}}" alt="User-Profile"
-                                        class=" bg-     theme-color-default-img img-fluid rounded-pill avatar-100">
+                                        class=" bg-light     theme-color-default-img img-fluid rounded-pill avatar-100">
                                     {% else %}
                                     <img src="{% static 'assets/images/avatars/01.png' %}" alt="User-Profile"
-                                        class="theme-color-default-img img-fluid rounded-pill avatar-100">
+                                        class="bg-light theme-color-default-img img-fluid rounded-pill avatar-100">
 
                                     {% endif %}
                                 </div>
@@ -116,36 +120,40 @@
                                 </div>
 
                                 <div id="profile-gallery" class="tab-pane fade ">
+
+
                                     <!-- gallery -->
 
-                                    <div id="grid_gallery">
-
-                                        <div id="posts_gallery">
-                                            {% if images %}
-                                            {% for image in images %}
-                                            <div class="post_gallery card">
-                                                <img class="p-2" src={{media_url}}{{image.image}} />
-                                                <strong class="text-primary"> {{image.caption}} </strong>
+                                    <div class="container_gallery">
+                                        {% if images %}
+                                        {% for image in images %}
+                                        <div id="figure_gallery" class="position-relative  grid-cols-1  m-0"
+                                            style="break-inside: avoid;">
+                                            <div class=" ">
+                                                <img src="{{media_url}}{{image.image}}" alt="{{image.caption}}"
+                                                    class="rounded-2 w-100 /*d-block*/" />
 
                                             </div>
-                                            {% endfor %}
 
+                                            <div id="figcaption_gallery"
+                                                class="mb-4 mt-n4 position-relative px-3 py-1 w-100">
+                                                <div href="#" class="px-2 py-1 rounded-1 text-center text-dark w-100"
+                                                    style="background: rgba( 255, 255, 255, 0.55 );box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );backdrop-filter: blur( 7.5px );-webkit-backdrop-filter: blur( 7.5px );border-radius: 10px;border: 1px solid rgba( 255, 255, 255, 0.18 );font-weight: 500;">
+                                                    {{image.caption}}</div>
+                                            </div>
                                         </div>
+                                        {% endfor %}
+                                        {% else %}
 
+                                        <div class="col-md-4 card  bg-light mx-auto">
+                                            <div class="mx-auto card-body">
+                                                Don't have any uploads
+                                            </div>
+                                        </div>
+                                        {% endif %}
 
                                     </div>
 
-                                    {% else %}
-                                </div>
-
-
-                            </div>
-                                    <div class="col-md-4 card  bg-light mx-auto">
-                                        <div class="mx-auto card-body">
-                                            Don't have any uploads
-                                        </div>
-                                    </div>
-                                    {% endif %}
 
 
 
@@ -153,6 +161,8 @@
                                 </div>
 
                                 <div id="profile-categories" class="tab-pane fade ">
+
+
                                     category
                                 </div>
                             </div>
@@ -164,6 +174,60 @@
 
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+    <style>
+        #figure_gallery {
+            margin: 0;
+            break-inside: avoid;
+        }
+
+        #figure_gallery>img {
+            grid-row: 1 / -1;
+            grid-column: 1;
+        }
+
+        /* #figcaption_gallery {
+  grid-row: 2;
+  grid-column: 1;
+  background-color: rgba(255,255,255,.5);
+  padding: .2em .5em;
+  justify-self: start;
+} */
+
+        .container_gallery {
+            column-count: 1;
+            column-gap: 10px;
+        }
+
+
+        /* // Medium devices (tablets, 768px and up) */
+        @media screen and (min-width: 40em) and (max-width: 63.9375em) {
+            .container_gallery {
+                column-count: 2;
+                column-gap: 10px;
+            }
+        }
+
+        /* // Small devices (landscape phones, 576px and up) */
+        @media screen and (min-width: 64em) {
+            .container_gallery {
+                column-count: 3;
+                column-gap: 10px;
+            }
+        }
+    </style>
+
+
+
 
 
 
