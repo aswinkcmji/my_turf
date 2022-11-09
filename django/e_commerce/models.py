@@ -11,6 +11,9 @@ class ProductsModel(models.Model):
     
     def __str__(self):
         return str(self.id)
+    class Meta:
+        ordering = ['product_name']
+
 
 
 class CartModel(models.Model):
