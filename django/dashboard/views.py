@@ -366,22 +366,21 @@ class AdminDashboardView(View):
     def get (self, request, *args, **kwargs):
         if request.user.is_superuser:
             total_users=UserModel.objects.all().exclude(is_turf=1).count()
-            print(total_users)
             total_turfs=UserModel.objects.filter(is_turf=1).count()
-            print(total_turfs)
             total_matches=MatchModel.objects.all().count()
-            print(total_matches)
             total_price_as_dict=CheckoutModel.objects.aggregate(Sum('price'))
             total_price=total_price_as_dict['price__sum']
-            print(total_price)
             total_products=ProductsModel.objects.all().count()
-            print(total_products)
             total_orders_placed=CheckoutModel.objects.all().count()
-            print(total_orders_placed)
             total_completed_matches=MatchModel.objects.filter(status="Completed").count()
-            print(total_completed_matches)
             total_cancelled_matches=MatchModel.objects.filter(status="Cancelled").count()
-            print(total_cancelled_matches)
+            categories_list=CategoriesModel.objects.all()
+            categories_count=CategoriesModel.objects.all().count()
+            categories_in_matches=[]
+            print(type(categories_count))
+            for i in range(int(categories_count)):
+                 categories_in_matches.append(MatchModel.objects.filter(category=categories_list[i]).count())
+            print(categories_in_matches)
             context={
                 'total_users':total_users,
                 'total_turfs':total_turfs,
@@ -390,7 +389,9 @@ class AdminDashboardView(View):
                 'total_products':total_products,
                 'total_orders_placed':total_orders_placed,
                 'total_completed_matches':total_completed_matches,
-                'total_cancelled_matches':total_cancelled_matches
+                'total_cancelled_matches':total_cancelled_matches,
+                'categories_list':categories_list,
+                'categories_in_matches':categories_in_matches
             }
             return render(request,"admin/dashboard.html",context)
         else:

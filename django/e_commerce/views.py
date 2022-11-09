@@ -36,7 +36,8 @@ class E_commercePage(View):
             'cartData':cartData,
             # 'cartorbuylist':cartorbuylist,
             'totalAmount':totalAmount,
-            'totalItemCount':totalItemCount
+            'totalItemCount':totalItemCount,
+            # 'date':datetime.date()
         }
         helo="hello"
 
@@ -125,7 +126,7 @@ class OrderView(View):
         
             for i in CartModel.objects.filter(username = request.user.username).values_list() :
 
-                CheckoutModel.objects.create(orderno=id,username=i[1],product_id=i[2],product_name=i[3],price=i[4],quantity=i[5],image=i[6])
+                CheckoutModel.objects.create(orderno=id,username=i[1],product_id=i[2],product_name=i[3],price=i[4],quantity=i[5],image=i[6],date=i[7])
 
             # delete the cartData
 
