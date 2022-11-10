@@ -14,7 +14,7 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm
+from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm, DashboardHeader
 from django.utils.dateparse import parse_datetime
 from .models import TurfGallery, TurfScheduleModel , CategoriesModel
 from User.models import MatchModel,TournamentModel
@@ -50,23 +50,46 @@ class Turf_Dashboard(View):
     def get(self,request):
 
 
-        turfDetails = UserModel.objects.filter(username = request.user.username).values()
+        turfDetails = UserModel.objects.filter(username = request.user.username  ).values()
+        gallery = TurfGallery.objects.filter( username = request.user.username )
+    
+        for a in gallery:
+            header = None if a.isheader == None else a
+ 
+
+        print("===========",header)
         
         context = {
-
+            'form': DashboardHeader(),
             'turfDetails': turfDetails,
             'media_url':settings.MEDIA_URL,
+            'header' : header,
+           
 
         }
-        print("==============",context)
+        print("==============")
 
 
         return render(request,'turf/turf_dashboard.html',context)
+    def post(self,request,*args,**kwargs):
+
+        if request.method == 'POST':
+                form = DashboardHeader(request.POST,request.FILES)
+                # form1= DashboardHeader(request.POST,request.FILES)
+                
+
+                print("====form11111111111===",form)
+                if form.is_valid():
+                    form.save(request)
+                
+                    messages.success(self.request, "Images added Successfully")
+                    return HttpResponseRedirect(reverse('turf_dash')) 
+                else:  
+                    messages.error(self.request, "Images failed")
+                    
+                    return HttpResponseRedirect(reverse('turf_dash')) 
 
 
-# class TurfGalleryView(View):
-#     def get(self, request, *args, **kwargs):
-#         form = 
 
 @method_decorator(login_required,name='dispatch')
 class TurfSchedule(View):
