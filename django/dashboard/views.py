@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm
 from django.utils.dateparse import parse_datetime
 from .models import TurfGallery, TurfScheduleModel , CategoriesModel
-from User.models import MatchModel
+from User.models import MatchModel,TournamentModel
 from django.db.models import Sum
 
 
@@ -371,19 +371,49 @@ class AdminDashboardView(View):
             total_users=UserModel.objects.all().exclude(is_turf=1).count()
             total_turfs=UserModel.objects.filter(is_turf=1).count()
             total_matches=MatchModel.objects.all().count()
-            total_price_as_dict=CheckoutModel.objects.aggregate(Sum('price'))
-            total_price=total_price_as_dict['price__sum']
+            total_tournaments=TournamentModel.objects.all().count()
+            totalprice=CheckoutModel.objects.all().values_list('quantity','price')
+            print(totalprice)
+            totalAmount = 0
+            for i in totalprice:
+                totalAmount =totalAmount+(i[0]*i[1])
+            total_price=totalAmount
             total_products=ProductsModel.objects.all().count()
             total_orders_placed=CheckoutModel.objects.all().count()
             total_completed_matches=MatchModel.objects.filter(status="Completed").count()
             total_cancelled_matches=MatchModel.objects.filter(status="Cancelled").count()
+            total_completed_tournaments=TournamentModel.objects.filter(status="Completed").count()
+            total_cancelled_tournaments=TournamentModel.objects.filter(status="Cancelled").count()
             categories_list=CategoriesModel.objects.all()
             categories_count=CategoriesModel.objects.all().count()
             categories_in_matches=[]
+            categories_in_tournaments=[]
             print(type(categories_count))
             for i in range(int(categories_count)):
                  categories_in_matches.append(MatchModel.objects.filter(category=categories_list[i]).count())
+            for i in range(int(categories_count)):
+                 categories_in_tournaments.append(TournamentModel.objects.filter(category=categories_list[i]).count())
             print(categories_in_matches)
+            distinct_dates=CheckoutModel.objects.all().values_list('date',flat=True).distinct().exclude(date=None).order_by('date')
+            print(distinct_dates)
+            date_list=[]
+            price_list=[]
+            print(distinct_dates,distinct_dates[0],int(distinct_dates.count()))
+            for i in range(int(distinct_dates.count())):
+                totalAmount = 0
+                print(i)
+                date_list.append(distinct_dates[i].strftime("%d/%m/%Y"))
+                totalprice=CheckoutModel.objects.filter(date=distinct_dates[i]).values_list('quantity','price')
+                print(totalprice)
+                for i in totalprice:
+                     totalAmount =totalAmount+(i[0]*i[1])
+                price_list.append(totalAmount)
+            print(date_list)
+            print(price_list)
+            now = datetime.now()
+
+            timestamp = datetime.timestamp(now)
+            print("timestamp =", timestamp)
             context={
                 'total_users':total_users,
                 'total_turfs':total_turfs,
@@ -394,7 +424,13 @@ class AdminDashboardView(View):
                 'total_completed_matches':total_completed_matches,
                 'total_cancelled_matches':total_cancelled_matches,
                 'categories_list':categories_list,
-                'categories_in_matches':categories_in_matches
+                'categories_in_matches':categories_in_matches,
+                'date_list':date_list,
+                'price_list':price_list,
+                'total_tournaments':total_tournaments,
+                'total_completed_tournaments':total_completed_tournaments,
+                'total_cancelled_tournaments':total_cancelled_tournaments,
+                'categories_in_tournaments':categories_in_tournaments
             }
             return render(request,"admin/dashboard.html",context)
         else:
