@@ -30,5 +30,6 @@ class TurfGallery(models.Model):
     username = models.TextField( max_length=55)
     image = models.ImageField( null=True , upload_to='image/image')
     caption = models.TextField( max_length=55,null=True)
+    isheader = models.ImageField(null=True , upload_to='isheader/isheader')
    
 
