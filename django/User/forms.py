@@ -361,15 +361,15 @@ class TournamentRequestForm(ModelForm):
             self._errors['category']=self.error_class(['Do not change the category'])
             print(" category  er0rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         if self.cleaned_data.get('start_date')!=tournament.start_date:
-            self._errors['date']=self.error_class(['Do not change the date'])
+            self._errors['start_date']=self.error_class(['Do not change the date'])
         if self.cleaned_data.get('end_date')!=tournament.end_date:
-            self._errors['date']=self.error_class(['Do not change the date'])
-            print("date  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-        if self.cleaned_data.get('start_time')!=tournament.start_time:
-            self._errors['date']=self.error_class(['Do not change the start_time'])
+            self._errors['end_date']=self.error_class(['Do not change the date'])
+            print("end_date  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        if self.cleaned_data.get('start_time')!=tournament.start_time.astimezone(timezone('Asia/Kolkata')).time():
+            self._errors['start_time']=self.error_class(['Do not change the start_time'])
             print("start_time   erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-        if self.cleaned_data.get('end_time')!=tournament.end_time:
-            self._errors['date']=self.error_class(['Do not change the end_time'])
+        if self.cleaned_data.get('end_time')!=tournament.end_time.astimezone(timezone('Asia/Kolkata')).time():
+            self._errors['end_time']=self.error_class(['Do not change the end_time'])
             print("end_time  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         if self.cleaned_data.get('locality')!=tournament.locality:
             self._errors['date']=self.error_class(['Do not change the locality'])
@@ -377,8 +377,6 @@ class TournamentRequestForm(ModelForm):
         if self.cleaned_data.get('username')!=self.request.user.username:
             self._errors['username']=self.error_class(['Do not change the username'])
             print("username  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")  
-        # print("phone number in form",self.cleaned_data.get('phoneno'),"its type is",type(self.cleaned_data.get('phoneno')))
-        # print("phone number in session",self.request.user.phone,"its type is",type(self.request.user.phone))
         if self.cleaned_data.get('phoneno')!=int(self.request.user.phone):
             self._errors['phoneno']=self.error_class(['Do not change the phone number'])
             print("phone number  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr") 
@@ -388,3 +386,8 @@ class TournamentRequestForm(ModelForm):
         else:
             print("no erorrrrrrrrrrrrrrrrrrrrrrr")
         return self.cleaned_data
+
+        # print("phone number in form",self.cleaned_data.get('phoneno'),"its type is",type(self.cleaned_data.get('phoneno')))
+        # print("phone number in session",self.request.user.phone,"its type is",type(self.request.user.phone))
+
+        

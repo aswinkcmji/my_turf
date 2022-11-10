@@ -636,13 +636,15 @@ class  JoinTournamentView(View):
     def get(self, request,id, *args, **kwargs):
                 user_location=request.user.location
                 location_list=user_location.split(",")
-                tournament=TournamentModel.objects.filter(id=id)
+                tournaments=TournamentModel.objects.filter(id=id)
 
                 # tournament=TournamentModel.objects.filter(id=id,locality=request.user.location)
-                # if len(tournament) == 1:
-                #     tournament = tournament[0]
-                # if len(tournament) == 0:
-                #     return render(request,'errors/error404.html',{})
+                if len(tournaments) == 1:
+                    tournament = tournaments[0]
+                    # return render(request,'errors/error404.html',{})
+
+                if len(tournaments) == 0:
+                    return render(request,'errors/error404.html',{})
                 print("##################### INSIDE JOIN MATCHES #########################",tournament)
                 a=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=tournament.pk).values().order_by("id")
                 request.session['id']=tournament.id 
@@ -664,15 +666,15 @@ class  JoinTournamentView(View):
                 # print(form)
                 context ={'is_tournamentrequestform':True ,'tournament':tournament,'a':a,'data':data}
                 print(context)
-                return render(request, 'Tournaments/all-tournaments.html',context)
+                return render(request, 'Tournaments/tournaments.html',context)
         # except:
         #     pass
     def post(self, request, *args, **kwargs):
             tournament_id=request.session.get('id')
             print(tournament_id)
-            tournament=TournamentModel.objects.filter(id=tournament_id)
-            if len(tournament) == 1:
-                requested_tournament = tournament[0]
+            tournaments=TournamentModel.objects.filter(id=tournament_id)
+            if len(tournaments) == 1:
+                requested_tournament = tournaments[0]
             data={
                     'category':requested_tournament.category.id,
                     'start_date':requested_tournament.start_date,
@@ -685,6 +687,7 @@ class  JoinTournamentView(View):
                     'phoneno': request.user.phone,
                     'tournament_id':requested_tournament.pk,
                 }
+            # print("========================================",data)
             form=TournamentRequestForm(data,request=request)
             print(form)
             if form.is_valid():
@@ -692,13 +695,16 @@ class  JoinTournamentView(View):
                 obj=form.save(commit=False)
                 obj.tournament_id=requested_tournament
                 obj.save()
+                print("========================================================================")
                 return  HttpResponseRedirect(reverse('all-tournaments'))
             else:
                 messages.error(request	,'Please do not change the fields')
-                joined=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=requested_tournament.pk).values()
-                context ={'is_tournamentrequestform':True ,'tournament':requested_tournament,'joined':joined,'data':data}
+                a=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=requested_tournament.pk).values()
+                context ={'is_tournamentrequestform':True ,'tournament':requested_tournament,'a':a,'data':data}
                 print(context)
-                return render(request, 'Tournaments/all-tournaments.html',context)
+                # return render(request, 'Tournaments/tournaments.html',context)
+                return render(request, 'Tournaments/tournaments.html',context)
+                
 
 ##################################################################### View for Requests viewing #######################################################################
 @method_decorator(login_required,name='dispatch')
@@ -745,6 +751,81 @@ class TournamentRequestsView(View):
             print("hyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyiiiiiiiiiiiiiiiiiiiiiiiiiiiiihyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
             messages.error(request	,'NO user selected')
             return HttpResponseRedirect(reverse('tournament-requests'))
+
+
+
+################################################################  View for cancel tournament requested by user ###################################################################################
+@method_decorator(login_required,name='dispatch')
+class CancelTournamentsRequestView(View):
+    def get(self, request,id, *args, **kwargs):
+        try:
+            reqdatat=TournamentRequestModel.objects.get(tournament_id=id,username=request.user.username,status="Pending")
+            messages.success(request,'You successfully canceled this Tournament')
+
+        except:
+            return render(request, 'errors/error404.html')
+        print("hiiiiiiiiiiiiiiiiiiiiiii",reqdatat)
+        reqdatat.status="Cancelled"
+        reqdatat.save()
+        return HttpResponseRedirect(reverse('all-tournaments'))
+
+################################################################## View for cancelling Tournaments #####################################################################
+
+@method_decorator(login_required,name='dispatch')
+class CancelTournamentView(View):
+    def get(self, request,id, *args, **kwargs):
+        try:
+            reqdata1=TournamentModel.objects.get(id=id,creator=request.user.username,status="Upcoming")
+        except:
+            
+             messages.error(request,'You cannot cancel this Tournament')
+             return HttpResponseRedirect(reverse('all-tournaments'))
+        print("hiiiiiiiiiiiiiiiiiiiiiii",reqdata1)
+        reqdata1.status="Cancelled"
+        reqdata1.save()
+        return HttpResponseRedirect(reverse('tournament-history'))
+
+
+############################################################ View for match history #########################################################################################
+@method_decorator(login_required,name='dispatch')
+class TournamentHistoryView(View):
+    def get(self, request, *args, **kwargs):
+        id_list1=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
+        jum=TournamentModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.username).values().order_by("-id")#joined upcoming matches
+        id_list2=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
+        jcom=TournamentModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).values().order_by("-id")#joined completed matches
+        id_list3=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
+        jcam=TournamentModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).values().order_by("-id")#joined cancelled matches
+        crum=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Upcoming").order_by("-id") #created upcoming matches
+        crcom=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Completed").order_by("-id") #created completed matches
+        crcam=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Cancelled").order_by("-id") #created cancelled matches
+        reqcan=TournamentRequestModel.objects.filter(username=request.user.username,status="Cancelled").order_by("-id")#requests cancelled
+        reqrej=TournamentRequestModel.objects.filter(username=request.user.username,status="Rejected").order_by("-id")#requests rejected
+        id_list4=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location).values_list('id',flat=True).order_by("-id")
+        reqaccep=TournamentRequestModel.objects.filter(tournament_id__in=list(id_list4),status="Accepted").exclude(username=request.user.username).order_by("-id")
+        reqrejec=TournamentRequestModel.objects.filter(tournament_id__in=list(id_list4),status="Rejected").exclude(username=request.user.username).order_by("-id")
+        context={}
+        context={
+            'jum':jum,
+            'jcom':jcom,
+            'jcam':jcam,
+            'crum':crum,
+            'crcom':crcom,
+            'crcam':crcam,
+            'reqcan':reqcan,
+            'reqrej':reqrej,
+            'reqaccep':reqaccep,
+            'reqrejec':reqrejec,
+
+        }
+        # context['data']=jum
+        print(jum)
+        print(context)
+        return render(request, 'Matches/match-history.html',context)
+
+
+
+
 
 
 

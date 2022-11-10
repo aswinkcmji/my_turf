@@ -15,7 +15,7 @@
         <p class="card-text text-dark">Available Slots:{{t.team_space_available}}/{{t.team_space_available}}</p>
         <p class="card-text text-dark">Locality:{{t.locality}}</p>
           {% if t.creator != request.user.username %}
-          <a class="btn btn-primary" href="join/{{t.id}}">JOIN NOW</a>
+          <a class="btn btn-primary" href="a/{{t.id}}">JOIN NOW</a>
         {%else%}
          <p>You are the organizer.<br>Visit <a class="" href="{% url 'my-tournaments' %}" id="my-tournaments-li">My Tournaments</a> to edit</p>
          {%endif%}
@@ -57,30 +57,35 @@ style="display: none ;" {% endif %}>
                               <label for="{{TournamentRequestForm.category.id_for_label}}" class="form-label">Category</label>
                              
                               <p class="form-control" style="    background-color: #e9ecef;
-                              opacity: 1;">{{r.category}}</p>
+                              opacity: 1;">{{data.category}}</p>
                           </div>
-                          <span class="text-error text-danger">{{TournamentRequestForm.category.errors}}</span>
+                          <!-- <span class="text-error text-danger">{{TournamentRequestForm.category.errors}}</span> -->
                       </div>
 
                       <div class="col-lg-12">
                         <div class="form-group">
                             <label for="start" class="form-label">Start-Date</label>
-                            <p class="form-control" style="background-color: #e9ecef;  opacity: 1;">{{r.start_date|date:"Y-m-d"}}</p>
+                            <p class="form-control" style="background-color: #e9ecef;  opacity: 1;">{{data.start_date|date:"Y-m-d"}}</p>
                         </div>
+                        <!-- <span class="text-error text-danger">{{TournamentRequestForm.start_date.errors}}</span> -->
+                      </div>
+                      
+                      <div class="col-lg-12">
                         <div class="form-group">
                           <label for="end" class="form-label">End-Date</label>
-                          <p class="form-control" style="background-color: #e9ecef; opacity: 1;">{{r.end_date|date:"Y-m-d"}}</p>
+                          <p class="form-control" style="background-color: #e9ecef; opacity: 1;">{{data.end_date|date:"Y-m-d"}}</p>
                       </div>
-                        <span class="text-error text-danger">{{TournamentRequestForm.date.errors}}</span>
+                        <!-- <span class="text-error text-danger">{{TournamentRequestForm.end_date.errors}}</span> -->
+
                     </div>
 
                       <div class="col-lg-12">
                           <div class="form-group">
                               <label for="start" class="form-label">Start Time</label>
                               <p class="form-control" style="    background-color: #e9ecef;
-                              opacity: 1;">{{r.start_time}}</p>
+                              opacity: 1;">{{data.start_time}}</p>
                           </div>
-                          <span class="text-error text-danger">{{TournamentRequestForm.start_time.errors}}</span>
+                          <!-- <span class="text-error text-danger">{{TournamentRequestForm.start_time.errors}}</span> -->
                       </div>
 
                       <div class="col-lg-12">
@@ -88,9 +93,9 @@ style="display: none ;" {% endif %}>
                               <label for="end" class="form-label">End Time</label>
                              
                               <p class="form-control" style="    background-color: #e9ecef;
-                              opacity: 1;">{{r.end_time}}</p>
+                              opacity: 1;">{{data.end_time}}</p>
                           </div>
-                          <span class="text-error text-danger">{{TournamentRequestForm.end_time.errors}}</span>
+                          <!-- <span class="text-error text-danger">{{TournamentRequestForm.end_time.errors}}</span> -->
                       </div>
 
                       <div class="col-lg-12">
@@ -98,9 +103,9 @@ style="display: none ;" {% endif %}>
                             <label for="end" class="form-label">Location</label>
                            
                             <p class="form-control" style="    background-color: #e9ecef;
-                            opacity: 1;">{{r.locality}}</p>
+                            opacity: 1;">{{data.locality}}</p>
                         </div>
-                        <span class="text-error text-danger">{{TournamentRequestForm.locality.errors}}</span>
+                        <!-- <span class="text-error text-danger">{{TournamentRequestForm.locality.errors}}</span> -->
                     </div>
                   </div>
               </div>
@@ -118,7 +123,7 @@ style="display: none ;" {% endif %}>
       </div>
       <div class="card-body bg-light">
           {% for a in a%}
-          {% if r.creator == a.username%}
+          {% if tournament.creator == a.username%}
           <div class="card row d-flex flex-row bg-danger text-white">
           <div class="col-4"><img src="/static/assets/images/avatars/01.png" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-50"></div>
           <div class="col-8 my-auto">{{a.username}}</div>
