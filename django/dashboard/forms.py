@@ -76,13 +76,35 @@ class TurfScheduleForm(ModelForm):
         return user
 
 class GalleryImgForm(ModelForm):
-    username = forms.CharField()
+    username = forms.CharField(required=True)
     image = forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
-    caption = forms.CharField(required=False)
+    caption = forms.CharField(required=False,widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Caption'}), help_text='Caption') 
+
 
     class Meta:
         model = TurfGallery
-        fields = '__all__'
+        fields = ('username','image','caption')
+
+
+class DashboardHeader(ModelForm):
+    username = forms.CharField(required=True)
+    isheader = forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+
+    class Meta:
+        model = TurfGallery
+        fields = ('username','isheader')
+    
+    # def save(self,request):
+    #     updategallery = TurfGallery.objects.filter( username = request.user.username ).exclude(isheader="").exists()
+    #     print("updategallery---",updategallery)
+    #     print("self---",self.cleaned_data)
+        # # table = TurfGallery(self.cleaned_data)
+
+        # if updategallery:
+        #     table.save()
+        # else:
+        #     table.update()
+
 
 
 class CategoriesForm(ModelForm):
