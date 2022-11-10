@@ -32,7 +32,7 @@ urlpatterns = [
     
 
     path('turfs_list/',TurfsListView.as_view(), name="turfs_list"),
-
+    path('turf_profile/<slug:id>',TurfProfileView.as_view(), name="turf_profile"),
 
 ]
 
