@@ -291,8 +291,8 @@ class updatetournamentform(ModelForm):
     team_space_available=forms.IntegerField(widget=forms.HiddenInput())
     # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
-        model = MatchModel
-        fields = 'category','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','creator','locality','team_space_available'
+        model = TournamentModel
+        fields = 'category','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','creator','locality','creator'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -313,8 +313,9 @@ class updatetournamentform(ModelForm):
             self._errors['teams']=self.error_class(['No of teams can not be less than 2'])
         if creator !=  self.request.user.username:
             self._errors['creator']=self.error_class([''])
-        if status != "Upcoming":
-            self._errors['status']=self.error_class([''])
+        # if status != "Upcoming":
+        #     self._errors['status']=self.error_class([''])
+        self.cleaned_data['status']="Upcoming"
         if   start_time_f != None and end_time_f !=None :
                 if start_time_f >= end_time_f:
                     self._errors['start_time_f']=self.error_class(['Start time can not be more than end time'])
@@ -328,13 +329,13 @@ class updatetournamentform(ModelForm):
 
 
 class TournamentRequestForm(ModelForm):
-    category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'true'}))
-    start_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','readonly':'true','type': 'date'}))
-    end_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','readonly':'true','type': 'date'}))
-    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
-    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
-    username= forms.CharField(widget=forms.HiddenInput(attrs={'class': 'form-control','readonly':'true'}))
-    locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
+    category = forms.ModelChoiceField(queryset=CategoriesModel.objects.all(),widget=forms.HiddenInput())
+    start_date =forms.DateField(widget=forms.HiddenInput())
+    end_date = forms.DateField(widget=forms.HiddenInput())
+    start_time = forms.TimeField(widget=forms.HiddenInput())
+    end_time = forms.TimeField(widget=forms.HiddenInput())
+    username= forms.CharField(widget=forms.HiddenInput())
+    locality=forms.CharField(widget=forms.TextInput())
     status=forms.CharField(widget=forms.HiddenInput())
     # match_id= forms.ModelMultipleChoiceField(queryset=RequestModel.objects.all())
     tournament_id=forms.IntegerField(widget=forms.HiddenInput())

@@ -513,23 +513,23 @@ class MyTournamentView(View):
         print(datetime.now())
         # tournament=TournamentModel.objects.filter(id__in=list(id))
         tournament=TournamentModel.objects.all()
-        img1 = CategoriesModel.objects.values_list('image')[0][0]
-        img2 = CategoriesModel.objects.values_list('image')[1][0]
-        img3 = CategoriesModel.objects.values_list('image')[2][0]
-        img4 = CategoriesModel.objects.values_list('image')[3][0]
-        img5 = CategoriesModel.objects.values_list('image')[4][0]
+        # img1 = CategoriesModel.objects.values_list('image')[0][0]
+        # img2 = CategoriesModel.objects.values_list('image')[1][0]
+        # img3 = CategoriesModel.objects.values_list('image')[2][0]
+        # img4 = CategoriesModel.objects.values_list('image')[3][0]
+        # img5 = CategoriesModel.objects.values_list('image')[4][0]
 
         
         
         context={
             'tournaments':tournament,
-            'img1' : img1,
-            "img2" : img2,
-            "img3" : img3,
-            "img4" : img4,
-            "img5" : img5,
+            # 'img1' : img1,
+            # "img2" : img2,
+            # "img3" : img3,
+            # "img4" : img4,
+            # "img5" : img5,
 
-            'media_url':settings.MEDIA_URL,
+            # 'media_url':settings.MEDIA_URL,
             
         }
         return render(request, 'Tournaments/my-tournament.html',context)
@@ -541,7 +541,7 @@ class EditTournamentView(View):
         editobj1=TournamentModel.objects.get(id=id)
         # print(id,"44444444444444444444444444444444444444444444444444444444444")
         data={
-            'category':editobj1.category,
+            'category':editobj1.category.id,
             'start_date':editobj1.start_date,
             'end_date':editobj1.end_date,
             'start_time_f':editobj1.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
@@ -587,13 +587,13 @@ class EditTournamentView(View):
             updatedRecord.save()
             messages.success(request	,'Your tournament has been successfully edited.')
             TournamentRequestModel.objects.filter(tournament_id=updatedRecord).update(category=form.cleaned_data['category'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",start_date=form.cleaned_data['start_date'],end_date=form.cleaned_data['end_date'],start_time=form.cleaned_data['start_time_f'],end_time=form.cleaned_data['end_time_f'],locality=form.cleaned_data['locality'])
-            return HttpResponseRedirect(reverse('my-tournament'))
-            
+            return HttpResponseRedirect(reverse('my-tournaments'))
         else:
+            print("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
             print(form.errors.as_data())
             messages.error(request	,'Please do not change the fields')
             return render(request,'Tournaments/edit-tournaments.html',{'form':updatetournamentform(request.POST,request=request)})
-
+            
 
 
 ########################################################## View for listing all tournament in user locality which user hasn't requested or joined or created ################################################################################ 
@@ -605,9 +605,6 @@ class AllTournamentView(View):
                 id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('tournament_id',flat=True)
                 tournament=TournamentModel.objects.filter(locality__iexact=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
                 form=TournamentRequestForm(request=request)
-                # print("hllo",matches)
-                # context['matches']=matches
-                # context['form']=form
                 context ={'TournamentRequestForm': form ,'is_tournamentrequestform':False , 'tournaments':tournament}
                 print(context)
                 return render(request, 'Tournaments/tournaments.html',context)
@@ -634,71 +631,71 @@ class RequestedTournamentView(View):
 @method_decorator(login_required,name='dispatch')
 class  JoinTournamentView(View):
     def get(self, request,id, *args, **kwargs):
-                tournament=TournamentModel.objects.filter(id=id,locality=request.user.location)
-                if len(tournament) == 1:
-                    tournament = tournament[0]
-                if len(tournament) == 0:
-                    return render(request,'errors/error404.html',{})
-                joined=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=tournament.pk).values()
-                request.session['tournament_id']=tournament.id
-                request.session['category']=tournament.category
-                request.session['start_date']=tournament.start_date
-                request.session['end_date']=tournament.end_date
-                request.session['start_time']=tournament.start_time
-                request.session['end_time']=tournament.end_time
-                request.session['locality']=tournament.locality
-                request.session['status']="Pending"
+                user_location=request.user.location
+                location_list=user_location.split(",")
+                tournament=TournamentModel.objects.filter(id=id)
+
+                # tournament=TournamentModel.objects.filter(id=id,locality=request.user.location)
+                # if len(tournament) == 1:
+                #     tournament = tournament[0]
+                # if len(tournament) == 0:
+                #     return render(request,'errors/error404.html',{})
+                print("##################### INSIDE JOIN MATCHES #########################",tournament)
+                a=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=tournament.pk).values().order_by("id")
+                request.session['id']=tournament.id 
+                print("#### Match.Category #####",tournament.category,type(tournament.category))
                 data={
                     'category':tournament.category,
                     'start_date':tournament.start_date,
                     'end_date':tournament.end_date,
-                    'start_time':tournament.start_time,
-                    'end_time':tournament.end_time,
+                    'start_time':tournament.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                    'end_time':tournament.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
                     'locality':tournament.locality,
                     'username':request.user.username,
                     'status':"Pending",
                     'phoneno': request.user.phone,
-                    'tournament_id':tournament.id,
+                    'tournament_id':tournament.pk,
                 }
-                form=TournamentRequestForm(data,request=request)
-                print(form)
-                context ={'TournamentRequestForm': form ,'is_tournamentrequestform':True ,'tournament':tournament,'joined':joined}
+                print("##################data before initializing request form###########################",data)
+                # form=RequestForm(data,request=request)
+                # print(form)
+                context ={'is_tournamentrequestform':True ,'tournament':tournament,'a':a,'data':data}
                 print(context)
-                return render(request, 'Tournaments/tournaments.html',context)
+                return render(request, 'Tournaments/all-tournaments.html',context)
         # except:
         #     pass
     def post(self, request, *args, **kwargs):
-
-        try:
-            tournament_id=int(request.POST['tournament_id'])
-        except:
-            return  HttpResponseRedirect(reverse('tournament'))
-        if tournament_id!=request.session.get('id'):
-            id=int(request.session.get('id'))
-            tournament=TournamentModel.objects.filter(id=id)
-            if len(tournament) == 1:
-                requested_tournament = tournament[0]
-            context ={'TournamentRequestForm': TournamentRequestForm(request.POST,request=request) ,'is_tournamentrequestform':True ,'tournament':requested_tournament}
-            return render(request, 'Tournaments/tournaments.html',context)
-        else:
             tournament_id=request.session.get('id')
             print(tournament_id)
             tournament=TournamentModel.objects.filter(id=tournament_id)
             if len(tournament) == 1:
                 requested_tournament = tournament[0]
-            form=TournamentRequestForm(request.POST,request=request)
+            data={
+                    'category':requested_tournament.category.id,
+                    'start_date':requested_tournament.start_date,
+                    'end_date':requested_tournament.end_date,
+                    'start_time':requested_tournament.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                    'end_time':requested_tournament.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                    'locality':requested_tournament.locality,
+                    'username':request.user.username,
+                    'status':"Pending",
+                    'phoneno': request.user.phone,
+                    'tournament_id':requested_tournament.pk,
+                }
+            form=TournamentRequestForm(data,request=request)
             print(form)
             if form.is_valid():
                 print("kikikiki")
                 obj=form.save(commit=False)
                 obj.tournament_id=requested_tournament
                 obj.save()
-                return  HttpResponseRedirect(reverse('tournament'))
+                return  HttpResponseRedirect(reverse('all-tournaments'))
             else:
                 messages.error(request	,'Please do not change the fields')
-                context ={'TournamentRequestForm': TournamentRequestForm(request.POST,request=request) ,'is_tournamentrequestform':True ,'tournament':requested_tournament}
+                joined=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=requested_tournament.pk).values()
+                context ={'is_tournamentrequestform':True ,'tournament':requested_tournament,'joined':joined,'data':data}
                 print(context)
-                return render(request, 'Tournaments/tournaments.html',context)
+                return render(request, 'Tournaments/all-tournaments.html',context)
 
 ##################################################################### View for Requests viewing #######################################################################
 @method_decorator(login_required,name='dispatch')

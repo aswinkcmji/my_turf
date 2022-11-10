@@ -5,33 +5,13 @@
     {% if tournaments%}
     <div class="row bg-light justify-content-around">
         {% if tournaments %}
-        <!-- <h1>feagrthdth</h1> -->
 <div class="row bg-light justify-content-around container-fluid">
         {% for r in tournaments %}
        
     <div class="column col-md-4">
         <div class="card p-2 m-4">
-            {% if r.category == "Cricket" %}
-            <img src="{{media_url}}{{img1}}" class="card-img-top flex" alt="Product 1" style="height:14rem;">
-            {% elif r.category == "Football" %}
-            <img src="{{media_url}}{{img2}}"class="card-img-top flex" alt="Product 1" style="height:14rem;">
-            {% elif r.category == "Baseball" %}
-            <img src="{{media_url}}{{img3}}" class="card-img-top flex" alt="Product 1" style="height:14rem;">
-            {% elif r.category == "Badminton" %}
-            <img src="{{media_url}}{{img4}}" class="card-img-top flex" alt="Product 1" style="height:14rem;">
-            {% elif r.category == "Tennis" %}
-            <img src="{{media_url}}{{img5}}" class="card-img-top flex" alt="Product 1" style="height:14rem;"> 
-            {% elif r.category == "Volleyball" %}
-            <img src="{{media_url}}{{img1}}" class="card-img-top flex" alt="Product 1" style="height:14rem;">
-            {% elif r.category == "Basketball" %}
-            <img src="https://btcpeers.com/content/images/2022/04/Basketball-Swish.jpg" class="card-img-top" alt="Product 1" style="height:14rem;">
-            
-            {%endif%}
+            <img src="/media/{{r.category.image}}" class="card-img-top flex" alt="Product 1" style="height:14rem;">
             <div class="card-body p-1 ">
-              
-            <!-- <img src="{{i.img}}" class="card-img-top"  style="height:350px;"> -->
-             
-            
             <h2 class="card-text p-1 text-dark ">{{r.category}}</h2>
             <p class="card-text text-dark">Tournament Day : <span class="text-secondary">{{r.start_date|date:"Y-m-d"}}</span></p>
             <p class="card-text text-dark">Time : <span class="text-secondary">{{r.start_time|time:"H:i:s"}}</span> to  <span class="text-secondary">{{r.end_time|time:"H:i:s"}}</span></p>
@@ -52,7 +32,6 @@
     </div>
  {% else %}
 
- <p>effffffffffffffffffffffffffffffffffffffffffffff</p>
  <div class="row bg-light justify-content-center">
     <div class="column col-md-4 justify-content-md-around">
         <div class="card text-white bg-soft-info m-5" > 

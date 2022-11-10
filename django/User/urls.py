@@ -27,7 +27,7 @@ urlpatterns = [
     path('requested-tournaments/',RequestedTournamentView.as_view(), name="requested-tournaments"),
     path("my-tournaments/edit/<int:id>",EditTournamentView.as_view(),name="edit"),
     path('tournament-requests/',TournamentRequestsView.as_view(), name="tournament-requests"),
-    path('all-tournaments/tournament-join<int:id>',JoinTournamentView.as_view(),name="tournament-join"),
+    path('all-tournaments/join/<int:id>',JoinTournamentView.as_view(),name="join"),
 
     
 
