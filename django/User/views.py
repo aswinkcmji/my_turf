@@ -776,6 +776,8 @@ class CancelTournamentView(View):
     def get(self, request,id, *args, **kwargs):
         try:
             reqdata1=TournamentModel.objects.get(id=id,creator=request.user.username,status="Upcoming")
+            messages.success(self.request, "Tournament Cancelled TSuccessfully")
+
         except:
             
              messages.error(request,'You cannot cancel this Tournament')
@@ -821,7 +823,7 @@ class TournamentHistoryView(View):
         # context['data']=jum
         print(jum)
         print(context)
-        return render(request, 'Matches/match-history.html',context)
+        return render(request, 'Tournaments/tournament-history.html',context)
 
 
 

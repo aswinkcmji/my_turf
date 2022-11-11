@@ -36,13 +36,13 @@
                   
                         <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
                           <li class="nav-item">
-                             <a class="nav-link active show" data-bs-toggle="tab" href="#profile-feed" role="tab" aria-selected="false">Joined Matches</a>
+                             <a class="nav-link active show" data-bs-toggle="tab" href="#profile-feed" role="tab" aria-selected="false">Joined Tournaments</a>
                           </li>
                           <li class="nav-item">
-                             <a class="nav-link" data-bs-toggle="tab" href="#profile-activity" role="tab" aria-selected="false">Created Matches</a>
+                             <a class="nav-link" data-bs-toggle="tab" href="#profile-activity" role="tab" aria-selected="false">Created Tournaments</a>
                           </li>
                           <li class="nav-item">
-                             <a class="nav-link" data-bs-toggle="tab" href="#profile-friends" role="tab" aria-selected="false">Requested Matches</a>
+                             <a class="nav-link" data-bs-toggle="tab" href="#profile-friends" role="tab" aria-selected="false">Requested Tournaments</a>
                           </li>
                           <li class="nav-item">
                            <a class="nav-link" data-bs-toggle="tab" href="#profile-requests" role="tab" aria-selected="false">Requests Recieved</a>
@@ -58,20 +58,20 @@
              <div id="profile-feed" class="tab-pane fade active show">
                <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
                   <li class="nav-item">
-                     <a class="nav-link active show" data-bs-toggle="tab" href="#joined-upcoming-matches" role="tab" aria-selected="false">Upcoming Matches</a>
+                     <a class="nav-link active show" data-bs-toggle="tab" href="#joined-upcoming-tournaments" role="tab" aria-selected="false">Upcoming Tournaments</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link" data-bs-toggle="tab" href="#joined-completed-matches" role="tab" aria-selected="false">Completed Matches</a>
+                     <a class="nav-link" data-bs-toggle="tab" href="#joined-completed-tournaments" role="tab" aria-selected="false">Completed Tournaments</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link" data-bs-toggle="tab" href="#joined-cancelled-matches" role="tab" aria-selected="false">Cancelled Matches</a>
+                     <a class="nav-link" data-bs-toggle="tab" href="#joined-cancelled-tournaments" role="tab" aria-selected="false">Cancelled Tournaments</a>
                   </li>
                </ul>
                <div class="profile-content tab-content">
-                <div  id="joined-upcoming-matches" class="card tab-pane fade active show">
+                <div  id="joined-upcoming-tournaments" class="card tab-pane fade active show">
                    <div class="card-header d-flex align-items-center justify-content-between pb-4">
                       <div class="header-title">
-                         <h2>Upcoming Matches</h2>
+                         <h2>Upcoming Tournaments</h2>
                       </div>                        
                    </div>
                    <div class="card-body p-0">
@@ -125,10 +125,10 @@
                       </div>                           
                    </div>
                 </div>
-                <div  id="joined-completed-matches" class="card tab-pane fade ">
+                <div  id="joined-completed-tournaments" class="card tab-pane fade ">
                   <div class="card-header d-flex align-items-center justify-content-between pb-4">
                      <div class="header-title">
-                        <h2>Completed Matches</h2>
+                        <h2>Completed Tournaments</h2>
                      </div>                        
                   </div>
                 <div class="card-body p-0">
@@ -182,10 +182,10 @@
                      </div>                           
                   </div>
                </div>
-                <div  id="joined-cancelled-matches" class="card tab-pane fade">             
+                <div  id="joined-cancelled-tournaments" class="card tab-pane fade">             
                   <div class="card-header d-flex align-items-center justify-content-between pb-4">
                      <div class="header-title">
-                        <h2>Cancelled Matches</h2>
+                        <h2>Cancelled Tournaments</h2>
                      </div>                        
                   </div>
                   <div class="card-body p-0">
@@ -245,20 +245,20 @@
           <div id="profile-activity" class="tab-pane fade">
             <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab" id="profile-pills-tab" role="tablist">
                 <li class="nav-item">
-                  <a class="nav-link active show" data-bs-toggle="tab" href="#created-upcoming-matches" role="tab" aria-selected="false">Upcoming Matches</a>
+                  <a class="nav-link active show" data-bs-toggle="tab" href="#created-upcoming-tournaments" role="tab" aria-selected="false">Upcoming Tournaments</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" data-bs-toggle="tab" href="#created-completed-matches" role="tab" aria-selected="false">Completed Matches</a>
+                  <a class="nav-link" data-bs-toggle="tab" href="#created-completed-tournaments" role="tab" aria-selected="false">Completed Tournaments</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" data-bs-toggle="tab" href="#created-cancelled-matches" role="tab" aria-selected="false">Cancelled Matches</a>
+                  <a class="nav-link" data-bs-toggle="tab" href="#created-cancelled-tournaments" role="tab" aria-selected="false">Cancelled Tournaments</a>
                 </li>
             </ul>
             <div class="profile-content tab-content">
-              <div  id="created-upcoming-matches" class="card tab-pane fade active show">
+              <div  id="created-upcoming-tournaments" class="card tab-pane fade active show">
                 <div class="card-header d-flex align-items-center justify-content-between pb-4">
                     <div class="header-title">
-                      <h2>Upcoming Matches</h2>
+                      <h2>Upcoming Tournaments</h2>
                     </div>                        
                 </div>
                 <div class="card-body p-0">
@@ -301,7 +301,7 @@
                             <td>
                                {{data.locality}}
                             </td>
-                            <td><a onclick="return confirm('Are you sure you want to cancel this match?')" href="cancel/{{match.id}}" class="btn btn-primary">Cancel</a></td>
+                            <td><a onclick="return confirm('Are you sure you want to cancel this match?')" href="cancel/{{data.id}}" class="btn btn-primary">Cancel</a></td>
                           </tr>
                             {% endfor %}
                             
@@ -310,10 +310,10 @@
                      </div>                           
                   </div>
                </div>
-               <div  id="created-completed-matches" class="card tab-pane fade ">
+               <div  id="created-completed-tournaments" class="card tab-pane fade ">
                 <div class="card-header d-flex align-items-center justify-content-between pb-4">
                     <div class="header-title">
-                      <h2>Completed Matches</h2>
+                      <h2>Completed tournaments</h2>
                     </div>                        
                 </div>
                 <div class="card-body p-0">
@@ -365,10 +365,10 @@
                      </div>                           
                   </div>
                </div>
-                <div  id="created-cancelled-matches" class="card tab-pane fade">             
+                <div  id="created-cancelled-tournaments" class="card tab-pane fade">             
                   <div class="card-header d-flex align-items-center justify-content-between pb-4">
                      <div class="header-title">
-                        <h2>Cancelled Matches</h2>
+                        <h2>Cancelled Tournaments</h2>
                      </div>                        
                   </div>
                   <div class="card-body p-0">
@@ -685,6 +685,6 @@
 
 </div>
 <script>
-    document.getElementById('Match-History-li').classList.add('active')
+    document.getElementById('tournament-history-li').classList.add('active')
 </script>
 {% endblock content %}
