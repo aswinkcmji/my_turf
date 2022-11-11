@@ -396,7 +396,7 @@ class AdminDashboardView(View):
             total_matches=MatchModel.objects.all().count()
             total_tournaments=TournamentModel.objects.all().count()
             totalprice=CheckoutModel.objects.all().values_list('quantity','price')
-            print(totalprice)
+            # print(totalprice)
             totalAmount = 0
             for i in totalprice:
                 totalAmount =totalAmount+(i[0]*i[1])
@@ -414,8 +414,10 @@ class AdminDashboardView(View):
             print(type(categories_count))
             for i in range(int(categories_count)):
                  categories_in_matches.append(MatchModel.objects.filter(category=categories_list[i]).count())
+                 print(categories_list[i]   )
             for i in range(int(categories_count)):
                  categories_in_tournaments.append(TournamentModel.objects.filter(category=categories_list[i]).count())
+                 print(categories_list[i])
             print(categories_in_matches)
             distinct_dates=CheckoutModel.objects.all().values_list('date',flat=True).distinct().exclude(date=None).order_by('date')
             print(distinct_dates)
