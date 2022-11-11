@@ -27,7 +27,7 @@
                      
                       {% if addForm.label != "Category" %}
                       <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
-                          {% render_field addForm class="form-control" placeholder="Place Holder" %}
+                          {% render_field addForm class="form-control" placeholder="Place Holder" min="2" %}
                           {% if addform.type != "hidden"%}
                             {% if addForm.label == "Start time f" %}
                             <label >Start Time</label>

@@ -11,8 +11,8 @@ from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 import random   
-
-
+from datetime import datetime,timedelta, date, time
+# from pytz import timezone
 
 class E_commercePage(View):
     def get(self, request ,*args, **kwargs):
@@ -134,7 +134,7 @@ class OrderView(View):
         
             for i in CartModel.objects.filter(username = request.user.username).values_list() :
 
-                CheckoutModel.objects.create(orderno=id,username=i[1],product_id=i[2],product_name=i[3],price=i[4],quantity=i[5],image=i[6],date=i[7])
+                CheckoutModel.objects.create(orderno=id,username=i[1],product_id=i[2],product_name=i[3],price=i[4],quantity=i[5],image=i[6],date=datetime.now().date())
 
             # delete the cartData
 
