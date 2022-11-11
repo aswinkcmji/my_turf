@@ -9,14 +9,13 @@
     {% for match in matches%}
       <div class="column col-md-4">
           <div class="card p-2 m-5">
-            <img src="/media/{{match.category.image}}" class="card-img-top" alt="Product 1" style="height:350px;">
-              <div class="card-body">
-            <h2>{{match.category}}</h2>
-                <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
-                <p class="card-text text-dark">Time:{{match.start_time|time:"H:i:s"}}</p>
-                <p class="card-text text-dark">Time:{{match.end_time|time:"H:i:s"}}</p>
-                <p class="card-text text-dark">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
-                <p class="card-text text-dark">Locality:{{match.locality}}</p>
+                <img src="/media/{{match.category.image}}" class="card-img-top" alt="Product 1" style="height:15rem;">
+                <div class="card-body p-1 ">
+                  <h2>{{match.category}}</h2>
+                  <p class="card-text text-dark ">Date of Match:<span class="text-secondary">{{match.date|date:"Y-m-d"}}</span></p>
+                  <p class="card-text text-dark">Time:<span class="text-secondary">{{match.start_time|time:"H:i:s"}}</span> to  <span class="text-secondary">{{match.end_time|time:"H:i:s"}}</span></p>
+                  <p class="card-text  text-dark">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
+                  <p class="card-text text-dark">Locality:{{match.locality}}</p>
                 <a  class="btn btn-primary" href="cancel/{{match.id}}">
                   Cancel
                 </a>
