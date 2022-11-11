@@ -32,7 +32,7 @@
     <main class="main-content">
         <div class="position-relative iq-banner">
 
-          <div style="position: relative;top: 4.5rem;margin-bottom: 6rem;">
+          <div style="position: relative;top: 4.5rem;margin-bottom: 4.5rem;">
     {% include 'includes/navbar.html' %}
   </div>
     {% include 'includes/messages.html'%}
@@ -45,7 +45,9 @@
             {% endblock content %}
           </div>
           <div > 
-          {% include 'includes/footer.html' %}    
+          <div style="position: relative;">
+            {% include 'includes/footer.html' %}   
+          </div> 
         </div>
         </main>
         

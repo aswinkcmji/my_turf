@@ -14,10 +14,10 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm
+from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm, DashboardHeader
 from django.utils.dateparse import parse_datetime
 from .models import TurfGallery, TurfScheduleModel , CategoriesModel
-from User.models import MatchModel
+from User.models import MatchModel,TournamentModel
 from django.db.models import Sum
 
 
@@ -34,10 +34,13 @@ class AddStockView(View):
         if request.method == 'POST':  
             form = addStockForm(request.POST, request.FILES)
             if form.is_valid(): 
-                print(request.FILES) 
-                form.save()  
-                messages.success(request,"Stock was successfully added...")
-                return redirect(reverse('addstock'))  
+                if int(request.POST.get('quantity')) > 1 :
+                    form.save()  
+                    messages.success(request,"Stock was successfully added...")
+                    return redirect(reverse('addstock')) 
+                else:
+                    messages.error(request,"Quantity must be greater than 1 !")
+
             else:  
                 
                 form = addStockForm()  
@@ -47,23 +50,46 @@ class Turf_Dashboard(View):
     def get(self,request):
 
 
-        turfDetails = UserModel.objects.filter(username = request.user.username).values()
+        turfDetails = UserModel.objects.filter(username = request.user.username  ).values()
+        gallery = TurfGallery.objects.filter( username = request.user.username )
+    
+        for a in gallery:
+            header = None if a.isheader == None else a
+ 
+
+        print("===========",header)
         
         context = {
-
+            'form': DashboardHeader(),
             'turfDetails': turfDetails,
             'media_url':settings.MEDIA_URL,
+            'header' : header,
+           
 
         }
-        print("==============",context)
+        print("==============")
 
 
         return render(request,'turf/turf_dashboard.html',context)
+    def post(self,request,*args,**kwargs):
+
+        if request.method == 'POST':
+                form = DashboardHeader(request.POST,request.FILES)
+                # form1= DashboardHeader(request.POST,request.FILES)
+                
+
+                print("====form11111111111===",form)
+                if form.is_valid():
+                    form.save(request)
+                
+                    messages.success(self.request, "Images added Successfully")
+                    return HttpResponseRedirect(reverse('turf_dash')) 
+                else:  
+                    messages.error(self.request, "Images failed")
+                    
+                    return HttpResponseRedirect(reverse('turf_dash')) 
 
 
-# class TurfGalleryView(View):
-#     def get(self, request, *args, **kwargs):
-#         form = 
 
 @method_decorator(login_required,name='dispatch')
 class TurfSchedule(View):
@@ -364,31 +390,118 @@ class CategoriesDeleteView(View):
 @method_decorator(login_required,name='dispatch')
 class AdminDashboardView(View):
     def get (self, request, *args, **kwargs):
-        total_users=UserModel.objects.all().exclude(is_turf=1).count()
-        print(total_users)
-        total_turfs=UserModel.objects.filter(is_turf=1).count()
-        print(total_turfs)
-        total_matches=MatchModel.objects.all().count()
-        print(total_matches)
-        total_price_as_dict=CheckoutModel.objects.aggregate(Sum('price'))
-        total_price=total_price_as_dict['price__sum']
-        print(total_price)
-        total_products=ProductsModel.objects.all().count()
-        print(total_products)
-        total_orders_placed=CheckoutModel.objects.all().count()
-        print(total_orders_placed)
-        total_completed_matches=MatchModel.objects.filter(status="Completed").count()
-        print(total_completed_matches)
-        total_cancelled_matches=MatchModel.objects.filter(status="Cancelled").count()
-        print(total_cancelled_matches)
-        context={
-            'total_users':total_users,
-            'total_turfs':total_turfs,
-            'total_matches':total_matches,
-            'total_price':total_price,
-            'total_products':total_products,
-            'total_orders_placed':total_orders_placed,
-            'total_completed_matches':total_completed_matches,
-            'total_cancelled_matches':total_cancelled_matches
-        }
-        return render(request,"admin/dashboard.html",context)
+        if request.user.is_superuser:
+            total_users=UserModel.objects.all().exclude(is_turf=1).count()
+            total_turfs=UserModel.objects.filter(is_turf=1).count()
+            total_matches=MatchModel.objects.all().count()
+            total_tournaments=TournamentModel.objects.all().count()
+            totalprice=CheckoutModel.objects.all().values_list('quantity','price')
+            print(totalprice)
+            totalAmount = 0
+            for i in totalprice:
+                totalAmount =totalAmount+(i[0]*i[1])
+            total_price=totalAmount
+            total_products=ProductsModel.objects.all().count()
+            total_orders_placed=CheckoutModel.objects.all().count()
+            total_completed_matches=MatchModel.objects.filter(status="Completed").count()
+            total_cancelled_matches=MatchModel.objects.filter(status="Cancelled").count()
+            total_completed_tournaments=TournamentModel.objects.filter(status="Completed").count()
+            total_cancelled_tournaments=TournamentModel.objects.filter(status="Cancelled").count()
+            categories_list=CategoriesModel.objects.all()
+            categories_count=CategoriesModel.objects.all().count()
+            categories_in_matches=[]
+            categories_in_tournaments=[]
+            print(type(categories_count))
+            for i in range(int(categories_count)):
+                 categories_in_matches.append(MatchModel.objects.filter(category=categories_list[i]).count())
+            for i in range(int(categories_count)):
+                 categories_in_tournaments.append(TournamentModel.objects.filter(category=categories_list[i]).count())
+            print(categories_in_matches)
+            distinct_dates=CheckoutModel.objects.all().values_list('date',flat=True).distinct().exclude(date=None).order_by('date')
+            print(distinct_dates)
+            date_list=[]
+            price_list=[]
+            print(distinct_dates,distinct_dates[0],int(distinct_dates.count()))
+            for i in range(int(distinct_dates.count())):
+                totalAmount = 0
+                print(i)
+                date_list.append(distinct_dates[i].strftime("%d/%m/%Y"))
+                totalprice=CheckoutModel.objects.filter(date=distinct_dates[i]).values_list('quantity','price')
+                print(totalprice)
+                for i in totalprice:
+                     totalAmount =totalAmount+(i[0]*i[1])
+                price_list.append(totalAmount)
+            print(date_list)
+            print(price_list)
+            now = datetime.now()
+
+            timestamp = datetime.timestamp(now)
+            print("timestamp =", timestamp)
+            context={
+                'total_users':total_users,
+                'total_turfs':total_turfs,
+                'total_matches':total_matches,
+                'total_price':total_price,
+                'total_products':total_products,
+                'total_orders_placed':total_orders_placed,
+                'total_completed_matches':total_completed_matches,
+                'total_cancelled_matches':total_cancelled_matches,
+                'categories_list':categories_list,
+                'categories_in_matches':categories_in_matches,
+                'date_list':date_list,
+                'price_list':price_list,
+                'total_tournaments':total_tournaments,
+                'total_completed_tournaments':total_completed_tournaments,
+                'total_cancelled_tournaments':total_cancelled_tournaments,
+                'categories_in_tournaments':categories_in_tournaments
+            }
+            return render(request,"admin/dashboard.html",context)
+        else:
+            return render(request,"errors/error403.html",{})
+
+
+
+class DeleteGalleryImage(View):
+    def get(self, request,id, *args,**kwargs):
+        item = TurfGallery.objects.get(id=id)
+        item.delete()
+        return HttpResponseRedirect(reverse('turf_gallery'))
+
+class GalleryUpdate(View):
+ 
+
+    def post(self, request, *args, **kwargs):
+
+        if request.method == 'POST':  
+            form = GalleryImgForm(request.POST, request.FILES)
+            if form.is_valid(): 
+                if request.FILES :
+                    updatedRecord = TurfGallery.objects.get(id=request.POST['image_id'])
+
+                    updatedRecord.image = request.FILES['image']
+
+                    updatedRecord.caption = request.POST['caption']
+
+                    updatedRecord.save()
+
+                    messages.success(request, 'Image updated Successfully')
+                    
+                    return HttpResponseRedirect(reverse('turf_gallery')) 
+                else:
+                    updatedRecord = TurfGallery.objects.get(id=request.POST['image_id'])
+
+                    updatedRecord.caption = request.POST['caption']
+
+                    updatedRecord.save()
+
+                    messages.success(request, 'Image updated Successfully')
+                    
+                    return HttpResponseRedirect(reverse('turf_gallery'))
+
+            else:  
+                print(form.errors)
+
+                messages.error(request, 'failed')
+                
+                
+            return HttpResponseRedirect(reverse('turf_gallery'))

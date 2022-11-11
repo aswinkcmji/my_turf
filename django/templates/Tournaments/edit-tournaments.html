@@ -21,28 +21,32 @@
               <form method="POST">
                   {% csrf_token %}
                   
-      
                   {% for addForm in form.visible_fields %}
                               
                      
-                      {% if addForm.label != "Category" %}
-                      <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
-                          {% render_field addForm class="form-control" placeholder="Place Holder" %}
-                          {% if addForm.type != "hidden"%}
-                          <label >{{addForm.label}}</label>
-                          {%endif%}
-                          <p>{{addForm.type}}</p>
-                      </div>
-                      {% else %}
-                          {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
-                      {% endif %}
-                      <span class="text-danger">{{addForm.errors}}</span>
-                      
-      
-                  {% endfor %}
-                  {%for dontForm in form.hidden_fields%}
-                  {% render_field dontForm %}
-                  {%endfor%}
+                  {% if addForm.label != "Category" %}
+                  <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
+                      {% render_field addForm class="form-control" placeholder="Place Holder" min="2" %}
+                      {% if addform.type != "hidden"%}
+                        {% if addForm.label == "Start time f" %}
+                        <label >Start Time</label>
+                        {% elif addForm.label == "End time f" %}
+                        <label >End Time</label>
+                        {% else %}
+                        <label >{{addForm.label}}</label>
+                        {% endif %}
+                        {%endif%}
+                  </div>
+                  {% else %}
+                      {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
+                  {% endif %}
+                  <span class="text-danger">{{addForm.errors}}</span>
+                  
+  
+              {% endfor %}
+              {%for dontForm in form.hidden_fields%}
+              {% render_field dontForm %}
+              {%endfor%}
                       <button class="btn btn-primary" type="submit">Submit</button>
               </form>
           </div>
@@ -66,7 +70,9 @@
       });
       $(document).ready(function() {
       var today = new Date().toISOString().split('T')[0];
-      $("#id_date").attr('min', today);
+      $("#id_start_date").attr('min', today);
+      $("#id_end_date").attr('min', today);
+
       });
 
   </script>

@@ -1,35 +1,39 @@
 (function (jQuery) {
   "use strict";
-if (document.querySelectorAll('#myChart').length) {
-  const options = {
-    series: [55, 75],
+if (document.querySelectorAll('#matchChart').length) {
+  var options = {
+    series: [total_completed_matches,total_cancelled_matches],
+    labels: [`Completed Matches-${total_completed_matches}`,`Cancelled Matches-${total_cancelled_matches}`],
     chart: {
-    height: 230,
-    type: 'radialBar',
+    type: 'donut',
+    height:'250px',
+   
+    plotOptions: {
+      pie: {
+        // customScale: 10 ,
+        donut: {
+          // size: '10%'
+        }
+      }
+    },
   },
-  colors: ["#4bc7d2", "#3a57e8"],
-  plotOptions: {
-    radialBar: {
-      hollow: {
-          margin: 10,
-          size: "50%",
-      },
-      track: {
-          margin: 10,
-          strokeWidth: '50%',
-      },
-      dataLabels: {
-          show: false,
+  responsive: [{
+    breakpoint: 100,
+    options: {
+      legend: {
+        position: 'bottom'
       }
     }
-  },
-  labels: ['Apples', 'Oranges'],
+  }]
   };
+
+  // var chart = new ApexCharts(document.querySelector("#chart"), options);
+  // chart.render();
   if(ApexCharts !== undefined) {
-    const chart = new ApexCharts(document.querySelector("#myChart"), options);
+    const chart = new ApexCharts(document.querySelector("#matchChart"), options);
     chart.render();
     document.addEventListener('ColorChange', (e) => {
-        const newOpt = {colors: [e.detail.detail2, e.detail.detail1],}
+        const newOpt = {colors: [e.detail.detail1, e.detail.detail2],}
         chart.updateOptions(newOpt)
        
     })
@@ -38,11 +42,11 @@ if (document.querySelectorAll('#myChart').length) {
 if (document.querySelectorAll('#d-activity').length) {
     const options = {
       series: [{
-        name: 'Successful deals',
-        data: [30, 50, 35, 60, 40, 60, 60, 30, 50, 35,]
+        name: '',
+        data: categories_in_matches
       }, {
-        name: 'Failed deals',
-        data: [40, 50, 55, 50, 30, 80, 30, 40, 50, 55]
+        // name: 'Failed deals',
+        // data: [40, 50, 55, 50, 30, 80, 30, 40, 50, 55]
       }],
       chart: {
         type: 'bar',
@@ -57,8 +61,8 @@ if (document.querySelectorAll('#d-activity').length) {
         bar: {
           horizontal: false,
           columnWidth: '28%',
-          endingShape: 'rounded',
-          borderRadius: 5,
+          // endingShape: 'rounded',
+          //  
         },
       },
       legend: {
@@ -73,7 +77,7 @@ if (document.querySelectorAll('#d-activity').length) {
         colors: ['transparent']
       },
       xaxis: {
-        categories: ['S', 'M', 'T', 'W', 'T', 'F', 'S', 'M', 'T', 'W'],
+        categories:categories_list_in_js,
         labels: {
           minHeight:20,
           maxHeight:20,
@@ -82,9 +86,9 @@ if (document.querySelectorAll('#d-activity').length) {
           },
         }
       },
-      yaxis: {
+        yaxis: {
         title: {
-          text: ''
+          text: 'Number of matches created'
         },
         labels: {
             minWidth: 19,
@@ -100,7 +104,7 @@ if (document.querySelectorAll('#d-activity').length) {
       tooltip: {
         y: {
           formatter: function (val) {
-            return "$ " + val + " thousands"
+            return val + " Matches"
           }
         }
       }
@@ -113,108 +117,233 @@ if (document.querySelectorAll('#d-activity').length) {
     chart.updateOptions(newOpt)
     })
   }
-if (document.querySelectorAll('#d-main').length) {
-  const options = {
-      series: [{
-          name: 'total',
-          data: [94, 80, 94, 80, 94, 80, 94]
-      }, {
-          name: 'pipline',
-          data: [72, 60, 84, 60, 74, 60, 78]
-      }],
+  if (document.querySelectorAll('#tournamentChart').length) {
+    var options = {
+      series: [total_completed_tournaments,total_cancelled_tournaments],
+      labels: [`Completed Tournaments-${total_completed_tournaments}`,`Cancelled Tournaments-${total_cancelled_tournaments}`],
       chart: {
-          fontFamily: '"Inter", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-          height: 245,
-          type: 'area',
+      type: 'donut',
+      height:'250px',
+     
+      plotOptions: {
+        pie: {
+          // customScale: 10 ,
+          donut: {
+            // size: '10%'
+          }
+        }
+      },
+    },
+    responsive: [{
+      breakpoint: 100,
+      options: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }]
+    };
+  
+    // var chart = new ApexCharts(document.querySelector("#chart"), options);
+    // chart.render();
+    if(ApexCharts !== undefined) {
+      const chart = new ApexCharts(document.querySelector("#tournamentChart"), options);
+      chart.render();
+      document.addEventListener('ColorChange', (e) => {
+          const newOpt = {colors: [e.detail.detail1, e.detail.detail2],}
+          chart.updateOptions(newOpt)
+         
+      })
+    }
+  }
+  if (document.querySelectorAll('#d-activity-tournament').length) {
+      const options = {
+        series: [{
+          name: '',
+          data: categories_in_tournaments
+        }, {
+          // name: 'Failed deals',
+          // data: [40, 50, 55, 50, 30, 80, 30, 40, 50, 55]
+        }],
+        chart: {
+          type: 'bar',
+          height: 230,
+          stacked: true,
           toolbar: {
-              show: false
-          },
-          sparkline: {
-              enabled: false,
-          },
-      },
-      colors: ["#3a57e8", "#4bc7d2"],
-      dataLabels: {
-          enabled: false
-      },
-      stroke: {
-          curve: 'smooth',
-          width: 3,
-      },
-      yaxis: {
-        show: true,
-        labels: {
-          show: true,
-          minWidth: 19,
-          maxWidth: 19,
-          style: {
-            colors: "#8A92A6",
-          },
-          offsetX: -5,
+              show:false
+            }
         },
-      },
-      legend: {
-          show: false,
-      },
-      xaxis: {
+        colors: ["#3a57e8", "#4bc7d2"],
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '28%',
+            // endingShape: 'rounded',
+            //  
+          },
+        },
+        legend: {
+          show: false
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          show: true,
+          width: 2,
+          colors: ['transparent']
+        },
+        xaxis: {
+          categories:categories_list_in_js,
           labels: {
-              minHeight:22,
-              maxHeight:22,
-              show: true,
+            minHeight:20,
+            maxHeight:20,
+            style: {
+              colors: "#8A92A6",
+            },
+          }
+        },
+          yaxis: {
+          title: {
+            text: 'Number of matches created'
+          },
+          labels: {
+              minWidth: 19,
+              maxWidth: 19,
               style: {
                 colors: "#8A92A6",
               },
-          },
-          lines: {
-              show: false  //or just here to disable only x axis grids
-          },
-          categories: ["Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Aug"]
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return val + " Matches"
+            }
+          }
+        }
+      };
+    
+      const chart = new ApexCharts(document.querySelector("#d-activity-tournament"), options);
+      chart.render();
+      document.addEventListener('ColorChange', (e) => {
+      const newOpt = {colors: [e.detail.detail1, e.detail.detail2],}
+      chart.updateOptions(newOpt)
+      })
+    }
+if (document.querySelectorAll('#d-main').length) {
+  const options = {
+      series: [{  
+          name: 'total',
+          data: price_list
+      }
+      // , {
+      //     name: 'pipline',
+      //     data: [72, 60, 84, 60, 74, 60, 78]
+      // }
+    ],
+    chart: {
+      fontFamily: '"Inter", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+      height: 245,
+      type: 'area',
+      toolbar: {
+          show: false
       },
+      sparkline: {
+          enabled: false,
+      },
+      zoom:{
+        enabled: false,
+      },
+  },
+  colors: ["#3a57e8", "#4bc7d2"],
+  dataLabels: {
+      enabled: false
+  },
+  stroke: {
+      curve: 'smooth',
+      width: 3,
+  },
+  yaxis: {
+    show: true,
+    labels: {
+      show: true,
+      minWidth: 19,
+      maxWidth: 19,
+      style: {
+        colors: "#8A92A6",
+      },
+      offsetX: 10,
+    },
+    lines: {
+      show: true  //or just here to disable only x axis grids
+  }
+  },
+  legend: {
+      show: false,
+  },
+  xaxis: {
+      labels: {
+          // minHeight:22,
+          // maxHeight:22,
+          show: false,
+          // style: {
+          //   colors: "#8A92A6",
+          // },
+      },
+      lines: {
+        show: true   //or just here to disable only x axis grids
+      },
+      categories:date_list
+  },
       grid: {
           show: false,
       },
-      fill: {
-          type: 'gradient',
-          gradient: {
-              shade: 'dark',
-              type: "vertical",
-              shadeIntensity: 0,
-              gradientToColors: undefined, // optional, if not defined - uses the shades of same color in series
-              inverseColors: true,
-              opacityFrom: .4,
-              opacityTo: .1,
-              stops: [0, 50, 80],
-              colors: ["#3a57e8", "#4bc7d2"]
-          }
-      },
-      tooltip: {
-        enabled: true,
-      },
+      // fill: {
+      //     type: 'gradient',
+      //     gradient: {
+      //         shade: 'dark',
+      //         type: "vertical",
+      //         shadeIntensity: 0,
+      //         gradientToColors: undefined, // optional, if not defined - uses the shades of same color in series
+      //         inverseColors: true,
+      //         opacityFrom: .4,
+      //         opacityTo: .1,
+      //         stops: [0, 50, 80],
+      //         colors: ["#3a57e8", "#4bc7d2"]
+      //     }
+      // },
+      // tooltip: {
+      //   enabled: true,
+      // },
   };
 
   const chart = new ApexCharts(document.querySelector("#d-main"), options);
   chart.render();
-  document.addEventListener('ColorChange', (e) => {
-    console.log(e)
-    const newOpt = {
-      colors: [e.detail.detail1, e.detail.detail2],
-      fill: {
-        type: 'gradient',
-        gradient: {
-            shade: 'dark',
-            type: "vertical",
-            shadeIntensity: 0,
-            gradientToColors: [e.detail.detail1, e.detail.detail2], // optional, if not defined - uses the shades of same color in series
-            inverseColors: true,
-            opacityFrom: .4,
-            opacityTo: .1,
-            stops: [0, 50, 60],
-            colors: [e.detail.detail1, e.detail.detail2],
-        }
-    },
-   }
-    chart.updateOptions(newOpt)
-  })
+  // document.addEventListener('ColorChange', (e) => {
+  //   console.log(e)
+  //   const newOpt = {
+  //     colors: [e.detail.detail1, e.detail.detail2],
+  //     fill: {
+  //       type: 'gradient',
+  //       gradient: {
+  //           shade: 'dark',
+  //           type: "vertical",
+  //           shadeIntensity: 0,
+  //           gradientToColors: [e.detail.detail1, e.detail.detail2], // optional, if not defined - uses the shades of same color in series
+  //           inverseColors: true,
+  //           opacityFrom: .4,
+  //           opacityTo: .1,
+  //           stops: [0, 50, 60],
+  //           colors: [e.detail.detail1, e.detail.detail2],
+  //       }
+  //   },
+  //  }
+  //   chart.updateOptions(newOpt)
+  // })
 }
 if ($('.d-slider1').length > 0) {
     const options = {
