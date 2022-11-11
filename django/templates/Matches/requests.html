@@ -50,12 +50,6 @@
         <div class="conatiner-fluid content-inner mt-n5 py-0">
 
 <div class="row ">
-  {% if messages %}
-  {% for message in messages %}
-  <p class="d-none" id="messagetag">{{message.tags}}</p>
-  <p class="d-none " id="messagecontent">{{message}}</p>
-  {% endfor %}
-  {% endif %}
   <div class="col-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
@@ -63,8 +57,9 @@
                                 <h4 class="card-title">Pending Request</h4>
                             </div>
                         </div>
-      <div class="card-body">
-          <form action="" method="POST">
+                        <div class="card-body">
+                          <form action="" method="POST">
+                            {% csrf_token %}
         <div class="d-flex justify-content-end">
           <div class="btn-group   mb-5">
             <button type="button" class="btn btn-primary">Action</button>
@@ -117,7 +112,6 @@
               </thead>
 
               <tbody>
-                {% csrf_token %}
                 {%for data in requests%}
                 <tr>
                   <td><input type="checkbox" name="selected[]" id="checks[]" value="{{data.id}}"></td>
@@ -151,22 +145,12 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 <script>
-  document.getElementById('requests-li').classList.add('active')
+  document.getElementById('requested-tournament-li').classList.add('active')
   $('.selectall').click(function () {
     if ($(this).is(':checked')) {
       $('input:checkbox').attr('checked', true);
     } else {
       $('input:checkbox').attr('checked', false);
-    }
-  });
-  $(document).ready(function () {
-    let tag = $('#messagetag').html()
-    let message = $('#messagecontent').html()
-    if (tag == 'error') {
-      toastr.error(message);
-    }
-    if (tag == 'success') {
-      toastr.success(message);
     }
   });
 </script>

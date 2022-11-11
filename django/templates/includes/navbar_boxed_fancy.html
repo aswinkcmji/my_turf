@@ -6,7 +6,7 @@
           <path fill="currentColor" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"></path>
       </svg>
       </button>
-      <a href="/static/dashboard/index.html" class="logo-center navbar-brand col-md-3 col-lg-3 ms-0">
+      <a href="{% url 'home' %}" class="logo-center navbar-brand col-md-3 col-lg-3 ms-0">
           <!--Logo start-->
           <svg width="30" class="text-primary" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="-0.757324" y="19.2427" width="28" height="4" rx="2" transform="rotate(-45 -0.757324 19.2427)" fill="currentColor"/>
@@ -37,8 +37,9 @@
             <li class="nav-item"><a class="nav-link " href="{% url 'home' %}"> Home </a></li>
             <li class="nav-item"><a class="nav-link " href="{% url 'shop' %}"> Shop </a></li>
             <li class="nav-item"><a class="nav-link " href="{% url 'matches' %}"> Matches </a></li>
+            <li class="nav-item"><a class="nav-link " href="{% url 'turfs' %}"> Turf </a></li>
+            <li class="nav-item"><a class="nav-link " href="{% url 'all-tournaments' %}"> Tournaments </a></li>
             <li class="nav-item"><a class="nav-link " href="{% url 'turfs_list' %}"> Turf </a></li>
-            <li class="nav-item"><a class="nav-link " href=""> Tournaments </a></li>
          </ul>
       </div> 
       <!-- container-fluid.// -->

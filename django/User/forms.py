@@ -206,8 +206,64 @@ class updatematchform(ModelForm):
                 self._errors['end_time_f']=self.error_class(['End time must be time type'])
         print("khsfdagjfdghsuj",slots,self.cleaned_data['slot_available'])
         return self.cleaned_data
+
+
+#----------------------------------------------------------Tournament Section--------------------------------------------------------------------------------
 class createtournamentForm(ModelForm):
 
+
+    category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
+    end_time_f = forms.TimeField(required=False, widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
+    start_time = forms.DateTimeField(widget=forms.HiddenInput())
+    end_time = forms.DateTimeField(widget=forms.HiddenInput())
+    teams = forms.IntegerField()#nos = number of slots           
+    creator= forms.CharField(widget=forms.HiddenInput())
+    locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
+    # status=forms.CharField(widget=forms.HiddenInput())
+    team_space_available=forms.IntegerField(widget=forms.HiddenInput())
+    # cron=forms.IntegerField(widget=forms.HiddenInput())
+    class Meta:
+        model = TournamentModel
+        fields = 'category','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','team_space_available','creator','locality','creator'
+    
+    def __init__(self,*args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(createtournamentForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        print("hasgfsdyfgsdhjfdg")
+        self.cleaned_data = super().clean()
+        teams=self.cleaned_data.get('teams')
+        creator=self.cleaned_data.get('creator')
+        status=self.cleaned_data.get('status')
+        start_time_f=self.cleaned_data.get('start_time_f')
+        end_time_f=self.cleaned_data.get('end_time_f')
+        print(teams)
+        if teams != None and teams >= 2:
+            self.cleaned_data['team_space_available']=teams-1
+        else :
+            self._errors['teams']=self.error_class(['No of teams can not be less than 2'])
+        self.cleaned_data['creator']=self.request.user.username
+        if creator !=  self.request.user.username:
+            self._errors['creator']=self.error_class([''])
+        # if status != "Upcoming":
+        #     self._errors['status']=self.error_class([''])
+        self.cleaned_data['status']="Upcoming"
+        if   start_time_f != None and end_time_f !=None :
+                if start_time_f >= end_time_f:
+                    self._errors['start_time_f']=self.error_class(['Start time can not be more than end time'])
+        elif  start_time_f == None:
+                self._errors['start_time_f']=self.error_class(['Start time must be time type'])
+        elif  end_time_f == None:
+                self._errors['end_time_f']=self.error_class(['End time must be time type'])
+        print("khsfdagjfdghsuj",teams,self.cleaned_data['team_space_available'])
+        return self.cleaned_data
+
+
+class updatetournamentform(ModelForm):
     options =[
         ("Cricket", "Cricket"),
         ("Football", "Football"),
@@ -219,48 +275,120 @@ class createtournamentForm(ModelForm):
     ]
 
 
-    category= forms.ChoiceField(choices=options)
+
+    tournament_id = forms.ModelChoiceField(queryset=TournamentModel.objects.all(),widget=forms.HiddenInput())
+    category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
-    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
-    teams = forms.IntegerField()          
+    start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
+    end_time_f = forms.TimeField(required=False, widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
+    start_time = forms.DateTimeField(widget=forms.HiddenInput())
+    end_time = forms.DateTimeField(widget=forms.HiddenInput())
+    teams = forms.IntegerField()#nos = number of slots           
     creator= forms.CharField(widget=forms.HiddenInput())
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
-    status=forms.CharField(widget=forms.HiddenInput())
+    # status=forms.CharField(widget=forms.HiddenInput())
     team_space_available=forms.IntegerField(widget=forms.HiddenInput())
+    # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
-        model = TournamentModel
-        fields = '__all__'
+        model = MatchModel
+        fields = 'category','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','creator','locality','team_space_available'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
-        super(createtournamentForm, self).__init__(*args, **kwargs)
+        super(updatetournamentform, self).__init__(*args, **kwargs)
 
-   
     def clean(self):
+        print("hasgfsdyfgsdhjfdg")
         self.cleaned_data = super().clean()
         teams=self.cleaned_data.get('teams')
         creator=self.cleaned_data.get('creator')
         status=self.cleaned_data.get('status')
-        start_time=self.cleaned_data.get('start_time')
-        end_time=self.cleaned_data.get('end_time')
-        print(teams)
+        start_time_f=self.cleaned_data.get('start_time_f')
+        end_time_f=self.cleaned_data.get('end_time_f')
+        print("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",type(teams))
         if teams != None and teams >= 2:
-            self.cleaned_data['team_space_available']=teams-1 
+            self.cleaned_data['team_space_available']=teams-1
         else :
-            self._errors['teams']=self.error_class(['No of slots can not be less than 2'])
-        self.cleaned_data['creator']=self.request.user.username
+            self._errors['teams']=self.error_class(['No of teams can not be less than 2'])
         if creator !=  self.request.user.username:
             self._errors['creator']=self.error_class([''])
         if status != "Upcoming":
             self._errors['status']=self.error_class([''])
-        if   start_time != None and end_time !=None :
-                if start_time >= end_time:
-                    self._errors['start_time']=self.error_class(['Start time can not be more than end time'])
-        elif  start_time == None:
-                self._errors['start_time']=self.error_class(['Start time must be time type'])
-        elif  end_time == None:
-                self._errors['end_time']=self.error_class(['End time must be time type'])
+        if   start_time_f != None and end_time_f !=None :
+                if start_time_f >= end_time_f:
+                    self._errors['start_time_f']=self.error_class(['Start time can not be more than end time'])
+        elif  start_time_f == None:
+                self._errors['start_time_f']=self.error_class(['Start time must be time type'])
+        elif  end_time_f == None:
+                self._errors['end_time_f']=self.error_class(['End time must be time type'])
         print("khsfdagjfdghsuj",teams,self.cleaned_data['team_space_available'])
         return self.cleaned_data
+
+
+
+class TournamentRequestForm(ModelForm):
+    category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'true'}))
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','readonly':'true','type': 'date'}))
+    end_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','readonly':'true','type': 'date'}))
+    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
+    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control','readonly':'true','type': 'time'}))
+    username= forms.CharField(widget=forms.HiddenInput(attrs={'class': 'form-control','readonly':'true'}))
+    locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly':'true'}))
+    status=forms.CharField(widget=forms.HiddenInput())
+    # match_id= forms.ModelMultipleChoiceField(queryset=RequestModel.objects.all())
+    tournament_id=forms.IntegerField(widget=forms.HiddenInput())
+    phoneno=forms.IntegerField(widget=forms.HiddenInput())
+    class Meta():
+        model = TournamentRequestModel    
+        # exclude = '__all__'
+        fields =('category','start_date','end_date','start_time','end_time','username','locality','status','phoneno')
+    
+
+    def __init__(self,*args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(TournamentRequestForm, self).__init__(*args, **kwargs)
+    
+    def clean(self):
+        print("---------------Inside RequestForm's Clean Method-------------------")
+        self.cleaned_data = super().clean()
+        print(self.cleaned_data.get('tournament_id'))
+        print(self.cleaned_data.get('category'))
+        tournament=TournamentModel.objects.get(id=int(self.cleaned_data.get('tournament_id')))
+        print(tournament.category)
+        if self.cleaned_data.get('category') != tournament.category:
+            self._errors['category']=self.error_class(['Do not change the category'])
+            print(" category  er0rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        if self.cleaned_data.get('date')!=tournament.date:
+            self._errors['date']=self.error_class(['Do not change the date'])
+            print("date  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        if self.cleaned_data.get('start_time')!=tournament.start_time:
+            self._errors['date']=self.error_class(['Do not change the start_time'])
+            print("start_time   erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        if self.cleaned_data.get('end_time')!=tournament.end_time:
+            self._errors['date']=self.error_class(['Do not change the end_time'])
+            print("end_time  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        if self.cleaned_data.get('locality')!=tournament.locality:
+            self._errors['date']=self.error_class(['Do not change the locality'])
+            print("locality  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")   
+        if self.cleaned_data.get('username')!=self.request.user.username:
+            self._errors['username']=self.error_class(['Do not change the username'])
+            print("username  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")  
+        # print("phone number in form",self.cleaned_data.get('phoneno'),"its type is",type(self.cleaned_data.get('phoneno')))
+        # print("phone number in session",self.request.user.phone,"its type is",type(self.request.user.phone))
+        if self.cleaned_data.get('phoneno')!=int(self.request.user.phone):
+            self._errors['phoneno']=self.error_class(['Do not change the phone number'])
+            print("phone number  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr") 
+        if self.cleaned_data.get('status')!="Pending":
+            self._errors['status']=self.error_class(['Do not change the status'])
+            print("status  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        else:
+            print("no erorrrrrrrrrrrrrrrrrrrrrrr")
+        return self.cleaned_data
+
+
+class CreateTurfCommentForm(ModelForm):
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows':"2" , 'placeholder':"Add Your Comment "}))
+    class Meta():
+        model = TurfCommentsModel
+        fields =('turf','commenter','comment','date')

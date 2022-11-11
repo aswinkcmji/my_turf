@@ -11,6 +11,9 @@ class ProductsModel(models.Model):
     
     def __str__(self):
         return str(self.id)
+    class Meta:
+        ordering = ['product_name']
+
 
 
 class CartModel(models.Model):
@@ -31,7 +34,7 @@ class CheckoutModel(models.Model):
     username = models.TextField(max_length=100, blank=False)
     product_id = models.TextField(blank=False )
     product_name = models.TextField(max_length=100, blank=False)
-    price = models.TextField(blank=False)
+    price = models.FloatField(default=0.0,blank=False)
     quantity = models.TextField(blank=False,)
     image = models.TextField(max_length=100, blank=False)
 

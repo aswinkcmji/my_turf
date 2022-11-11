@@ -4,6 +4,8 @@ from django.db import models
 from unittest.util import _MAX_LENGTH
 from datetime import datetime,timedelta
 from dashboard.models import CategoriesModel
+from accounts.models import UserModel
+from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
 
@@ -19,6 +21,7 @@ class MatchModel(models.Model):
     slots =models.IntegerField(default=2,null=False,blank=False)
     slot_available =models.IntegerField(default = 1,null=False,blank=False)
     cron =models.IntegerField(default = 1,null=True,blank=False)
+
 
 
 class RequestModel(models.Model):
@@ -37,19 +40,21 @@ class TournamentModel(models.Model):
     category = models.CharField(max_length=30,null=False,blank=False)
     start_date= models.DateField(blank=True)
     end_date= models.DateField(blank=True) 
-    start_time= models.TimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
-    end_time= models.TimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
+    start_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
+    end_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
     locality = models.CharField(max_length=30,null=True,blank=False)
     creator = models.CharField(max_length=30,null=True,blank=False)
     status = models.CharField(default="Upcoming",max_length=30,null=False,blank=False)
     teams =models.IntegerField(default=1,null=False,blank=False)
     team_space_available =models.IntegerField(default = 1,null=False,blank=False)
 
+    # start_time= models.DateTimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
+    # end_time= models.DateTimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
 class TournamentRequestModel(models.Model):
-    tournament_id = models.ForeignKey(MatchModel, on_delete=models.CASCADE)
+    tournament_id = models.ForeignKey(TournamentModel, on_delete=models.CASCADE)
     category=models.CharField(max_length=30,null=False,blank=False)
     username=models.CharField(max_length=30,null=False,blank=False)
-    # phoneno=models.CharField(max_length=16,default=7414414141)
+    phoneno=models.CharField(max_length=16,default=7414414141)
     status=models.CharField(default="Pending",max_length=30,null=False,blank=False)
     start_date= models.DateField(blank=True)
     end_date= models.DateField(blank=True) 
@@ -57,9 +62,20 @@ class TournamentRequestModel(models.Model):
     end_time= models.TimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
     locality = models.CharField(max_length=30,null=True,blank=False)
 
+# class CreateTeamModel(models.Model):
+#     Name = models.CharField(max_length=30,blank=False,null=False)
+
 
 
 
 
     # def __str__(self):
     #     return str(self.category)
+
+class TurfCommentsModel(models.Model):
+    turf = models.ForeignKey(UserModel, on_delete=models.CASCADE , related_name='turf')
+    commenter = models.ForeignKey(UserModel, on_delete=models.CASCADE , related_name='commenter')
+    comment = models.CharField(max_length=30,null=False,blank=False)
+    likes_count = models.IntegerField(default=0, null=False)
+    date = models.DateTimeField(max_length=30,default=datetime.now())
+    liked_users = ArrayField(models.CharField(max_length=512, null=False) , null=False, default=[]) 

@@ -6,7 +6,7 @@
   {% for match in matches%}
 <div class="column col-md-4">
   <div class="card p-2 m-4">
-        <!-- {% if match.category == "cricket" %}
+        {% if match.category == "cricket" %}
         <img src="https://cdn.britannica.com/47/148847-050-C4FB5341/Cricket-bat-ball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
         {% elif match.category == Football %}
         <img src="https://images.squarespace-cdn.com/content/v1/51e6a2b7e4b038b7a667f1b3/1375240864715-15RNHVOTAV215YF2R60V/PES%2B2014%2BBall%2Bgrass.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
@@ -20,7 +20,7 @@
         <img src="https://sportslounge.co.in/file/2020/09/volleyball.jpg" class="card-img-top" alt="Product 1" style="height:350px;">
         {% elif match.category == "Basketball" %}
         
-        {%endif%} -->
+        {%endif%}
         <img src="/media/{{match.category.image}}" class="card-img-top" alt="Product 1" style="height:350px;">
         <div class="card-body p-1 ">
        <h2 class="card-text p-1">{{match.category}}</h2>

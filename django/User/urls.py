@@ -20,12 +20,15 @@ urlpatterns = [
     path('matches/join/<int:id>',JoinMatchView.as_view(),name="join"),
     path("matches-history/cancel/<int:id>",CancelMatchView.as_view(),name="cancelmatch"),
     path("my-matches/cancel/<int:id>",CancelMatchView.as_view(),name="cancelmatch"),
+    
     path('create-tournament/', CreateTournamentView.as_view(), name="create-tournament"),
-    # path('all-tournaments/', MyTournamentsView.as_view(), name="tournaments"),
+    path('all-tournaments/', AllTournamentView.as_view(), name="all-tournaments"),
     path('my-tournaments/', MyTournamentView.as_view(), name="my-tournaments"),
-    path('turfs/', TurfsListView.as_view(), name="turfs_list"),
-    path('turfs/<int:id>', TurfProfileView.as_view(), name="turf_profile"),
+    path('requested-tournaments/',RequestedTournamentView.as_view(), name="requested-tournaments"),
+    path("my-tournaments/edit/<int:id>",EditTournamentView.as_view(),name="edit"),
 
-
-]
-
+    path('turfs_list/',TurfsListView.as_view(), name="turfs_list") , 
+    path('turf_profile/<str:username>',TurfProfileView.as_view(), name="turf_profile"),
+    path('like_turfComment/<int:id>',LikeTurfCommentView.as_view(), name="like_turfComment") , 
+] 
+ 

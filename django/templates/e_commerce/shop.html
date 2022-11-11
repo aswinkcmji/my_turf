@@ -44,42 +44,18 @@
     
     <!-- ecommerce main section -->
     <div class="ecom-main-section my-3">
-        {% if messages %}
-            <div id="alerts-disimissible-component" class="tab-pane tab-example-result fade active show" role="tabpanel" aria-labelledby="alerts-disimissible-component-tab">
-                <div class="alert alert-warning alert-dismissible fade show messages" role="alert">
-                    <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                
-                        <path opacity="0.4" d="M4.72251 21.1672C4.70951 21.1672 4.69751 21.1672 4.68351 21.1662C4.36851 21.1502 4.05951 
-                            21.0822 3.76551 20.9632C2.31851 20.3752 1.62051 18.7222 2.20751 17.2762L9.52851 4.45025C9.78051 3.99425 10.1625 
-                            3.61225 10.6285 3.35425C11.9935 2.59825 13.7195 3.09525 14.4745 4.45925L21.7475 17.1872C21.9095 17.5682 21.9785 
-                            17.8782 21.9955 18.1942C22.0345 18.9502 21.7765 19.6752 21.2705 20.2362C20.7645 20.7972 20.0695 21.1282 19.3145 
-                            21.1662L4.79451 21.1672H4.72251Z" fill="currentColor">
-                        </path>                                
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.1245 10.0208C11.1245 9.53875 11.5175 9.14575 11.9995 
-                            9.14575C12.4815 9.14575 12.8745 9.53875 12.8745 10.0208V12.8488C12.8745 13.3318 12.4815 13.7238 11.9995 
-                            13.7238C11.5175 13.7238 11.1245 13.3318 11.1245 12.8488V10.0208ZM11.1245 16.2699C11.1245 15.7849 11.5175 
-                            15.3899 11.9995 15.3899C12.4815 15.3899 12.8745 15.7799 12.8745 16.2589C12.8745 16.7519 12.4815 17.1449 
-                            11.9995 17.1449C11.5175 17.1449 11.1245 16.7519 11.1245 16.2699Z" fill="currentColor">
-                        </path>                                
-                    </svg>
-                {% for message in messages %}
-                <strong {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</strong>
-                {% endfor %}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"> </button>
-                </div>
-            </div>
-        {% endif %}
         <div class="container-fluid p-3">
             <div class="row">
                 
                 {% for i in ecom_data %}
                     {% if i.quantity %}
                         
-                        <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                             <div class="card  p-2 shadow-sm">
                                 <div class="img-cover border d-flex justify-content-center align-items-center" style="width:100%;">
                                     <img src="{{media_url}}{{i.image}}" class="img-fluid" style="width:100%;">
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body p-2">
                                     <h5 class="card-title" style="text-transform: uppercase;">{{i.product_name}}</h5>
                                     <p class="card-text d-flex align-items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48">
@@ -93,21 +69,38 @@
                                         {% csrf_token %}
                                         <div class="buy-buttons d-flex gap-3 justify-content-between">
                                             <div class="product-quantity d-flex align-items-center ">
-                                                <a class="sub-item-btn btn border text-center p-2" style="width: 2rem;">-</a>
-                                                    {% render_field cartForm.quantity type="number" class="product-quantity-field text-center p-2 border" style="width: 3.5rem;" min=1 max=i.quantity value="1" %}
+                                                <a class="sub-item-btn btn border text-center p-1 " style="width: 1.5rem;">-</a>
+                                                    {% render_field cartForm.quantity type="number" class="product-quantity-field text-center p-1 border" style="width: 2rem;"  min=1 max=i.quantity value="1" %}
                                                     {% render_field cartForm.product_name type="text" value=i.product_name hidden=true %}
                                                     {% render_field cartForm.product_id value=i.id hidden=true %}
                                                     {% render_field cartForm.username type="text" value=request.user.username hidden=true %}
                                                     {% render_field cartForm.price value=i.price hidden=true %}
                                                     {% render_field cartForm.image type="text" value=i.image hidden=true %}
-                                                <a class="add-item-btn btn border text-center p-2" style="width: 2rem;">+</a>
+                                                <a class="add-item-btn btn border text-center p-1 " style="width: 1.5rem;">+</a>
                                             </div>
                                             {% comment %} {% if i.id in cartorbuylist %}
                                                 <button type="submit" class="btn btn-danger">Go To Cart</button>
                                             {% else %}
                                                 <button type="submit" class="btn btn-primary">Add To Cart</button>
                                             {% endif %} {% endcomment %}
-                                            <button type="submit" class="btn btn-primary">Add To Cart</button>
+                                            <button type="submit" class="btn btn-primary p-2" style="font-size: .8rem;">
+                                                <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.4" fill-rule="evenodd" clip-rule="evenodd" d="M5.91064 20.5886C5.91064 19.7486 6.59064 19.0686 7.43064 19.0686C8.26064 
+                                                      19.0686 8.94064 19.7486 8.94064 20.5886C8.94064 21.4186 8.26064 22.0986 7.43064 22.0986C6.59064 22.0986 5.91064 21.4186 5.91064 
+                                                      20.5886ZM17.1606 20.5886C17.1606 19.7486 17.8406 19.0686 18.6806 19.0686C19.5106 19.0686 20.1906 19.7486 20.1906 20.5886C20.1906 
+                                                      21.4186 19.5106 22.0986 18.6806 22.0986C17.8406 22.0986 17.1606 21.4186 17.1606 20.5886Z" fill="white">
+                                                    </path>
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M20.1907 6.34909C20.8007 6.34909 21.2007 6.55909 21.6007 7.01909C22.0007 7.47909 
+                                                      22.0707 8.13909 21.9807 8.73809L21.0307 15.2981C20.8507 16.5591 19.7707 17.4881 18.5007 17.4881H7.59074C6.26074 17.4881 5.16074 
+                                                      16.4681 5.05074 15.1491L4.13074 4.24809L2.62074 3.98809C2.22074 3.91809 1.94074 3.52809 2.01074 3.12809C2.08074 2.71809 2.47074 
+                                                      2.44809 2.88074 2.50809L5.26574 2.86809C5.60574 2.92909 5.85574 3.20809 5.88574 3.54809L6.07574 5.78809C6.10574 6.10909 6.36574 
+                                                      6.34909 6.68574 6.34909H20.1907ZM14.1307 11.5481H16.9007C17.3207 11.5481 17.6507 11.2081 17.6507 10.7981C17.6507 10.3781 17.3207 
+                                                      10.0481 16.9007 10.0481H14.1307C13.7107 10.0481 13.3807 10.3781 13.3807 10.7981C13.3807 11.2081 13.7107 11.5481 14.1307 11.5481Z" 
+                                                      fill="white">
+                                                    </path>
+                                                  </svg>
+                                                <span>Add To Cart</span>
+                                            </button>
 
                                         
                                         </div>
@@ -152,6 +145,22 @@
         </div>
     </div>
 </section>
+
+<style>
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+</style>
 
 <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
 <script>

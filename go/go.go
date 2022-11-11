@@ -1,11 +1,11 @@
-package main
+// package main
 
-import (
+// import (
 
-	"fmt"
+// 	"fmt"
 	
-	"time"
-)
-func main(){
-	fmt.Println(time.Now())
-}
+// 	"time"
+// )
+// func main(){
+// 	fmt.Println(time.Now())
+// }
