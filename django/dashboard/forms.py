@@ -76,8 +76,8 @@ class TurfScheduleForm(ModelForm):
         return user
 
 class GalleryImgForm(ModelForm):
-    username = forms.CharField(required=True)
-    image = forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    username = forms.CharField(required=False)
+    image = forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
     caption = forms.CharField(required=False,widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Caption'}), help_text='Caption') 
 
 

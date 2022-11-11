@@ -422,3 +422,50 @@ class AdminDashboardView(View):
             return render(request,"admin/dashboard.html",context)
         else:
             return render(request,"errors/error403.html",{})
+
+
+
+class DeleteGalleryImage(View):
+    def get(self, request,id, *args,**kwargs):
+        item = TurfGallery.objects.get(id=id)
+        item.delete()
+        return HttpResponseRedirect(reverse('turf_gallery'))
+
+class GalleryUpdate(View):
+ 
+
+    def post(self, request, *args, **kwargs):
+
+        if request.method == 'POST':  
+            form = GalleryImgForm(request.POST, request.FILES)
+            if form.is_valid(): 
+                if request.FILES :
+                    updatedRecord = TurfGallery.objects.get(id=request.POST['image_id'])
+
+                    updatedRecord.image = request.FILES['image']
+
+                    updatedRecord.caption = request.POST['caption']
+
+                    updatedRecord.save()
+
+                    messages.success(request, 'Image updated Successfully')
+                    
+                    return HttpResponseRedirect(reverse('turf_gallery')) 
+                else:
+                    updatedRecord = TurfGallery.objects.get(id=request.POST['image_id'])
+
+                    updatedRecord.caption = request.POST['caption']
+
+                    updatedRecord.save()
+
+                    messages.success(request, 'Image updated Successfully')
+                    
+                    return HttpResponseRedirect(reverse('turf_gallery'))
+
+            else:  
+                print(form.errors)
+
+                messages.error(request, 'failed')
+                
+                
+            return HttpResponseRedirect(reverse('turf_gallery'))

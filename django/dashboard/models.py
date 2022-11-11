@@ -32,4 +32,5 @@ class TurfGallery(models.Model):
     caption = models.TextField( max_length=55,null=True)
     isheader = models.ImageField(null=True , upload_to='isheader/isheader')
    
-
+    class Meta :
+        ordering = ['id']
