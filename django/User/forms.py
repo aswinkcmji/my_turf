@@ -389,7 +389,9 @@ class TournamentRequestForm(ModelForm):
             print("no erorrrrrrrrrrrrrrrrrrrrrrr")
         return self.cleaned_data
 
-        # print("phone number in form",self.cleaned_data.get('phoneno'),"its type is",type(self.cleaned_data.get('phoneno')))
-        # print("phone number in session",self.request.user.phone,"its type is",type(self.request.user.phone))
 
-        
+# class CreateTurfCommentForm(forms.Form):
+#     comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows':"2" , 'placeholder':"Add Your Comment "}))
+#     # class Meta():
+#     #     model = TurfCommentsModel
+#     #     fields =('turf','commenter','comment','date')

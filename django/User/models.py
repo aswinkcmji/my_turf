@@ -4,6 +4,8 @@ from django.db import models
 from unittest.util import _MAX_LENGTH
 from datetime import datetime,timedelta
 from dashboard.models import CategoriesModel
+from accounts.models import UserModel
+from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
 
@@ -70,6 +72,15 @@ class TournamentRequestModel(models.Model):
 
     # def __str__(self):
     #     return str(self.category)
+
+class TurfCommentsModel(models.Model):
+    turf = models.ForeignKey(UserModel, on_delete=models.CASCADE , related_name='turf')
+    commenter = models.ForeignKey(UserModel, on_delete=models.CASCADE , related_name='commenter')
+    comment = models.CharField(max_length=1000,null=False,blank=False)
+    likes_count = models.IntegerField(default=0, null=False)
+    date = models.DateTimeField(max_length=30,default=datetime.now())
+    liked_users = ArrayField(models.CharField(max_length=512, null=False) , null=False, default=list) 
+
 
 class CitiesModel(models.Model):
     name=models.CharField(max_length=100,null=True,blank=False)

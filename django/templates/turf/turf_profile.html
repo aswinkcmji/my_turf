@@ -1,9 +1,18 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 {% load static%}
+{% load humanize %}
+{% load widget_tweaks %}
 <script>
     document.getElementById('turfs_list-li').classList.add('active');
 </script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+    integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
+    async></script>
+
+
 
 
 
@@ -38,7 +47,17 @@
             </div>
             <div class="iq-header-img">
                 <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
-                    class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
+                    class="theme-color-default-img  img-fluid w-100 h-100 animated-scaleX">
+                <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
+                    class="theme-color-purple-img  img-fluid w-100 h-100 animated-scaleX">
+                <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
+                    class="theme-color-blue-img  img-fluid w-100 h-100 animated-scaleX">
+                <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
+                    class="theme-color-green-img  img-fluid w-100 h-100 animated-scaleX">
+                <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
+                    class="theme-color-yellow-img  img-fluid w-100 h-100 animated-scaleX">
+                <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
+                    class="theme-color-pink-img  img-fluid w-100 h-100 animated-scaleX">
 
             </div>
         </div> <!-- Nav Header Component End -->
@@ -59,10 +78,10 @@
                                     class="profile-img position-relative me-3 mb-3 mb-lg-0 profile-logo profile-logo1 ">
                                     {% if turf.avatar %}
                                     <img src="{{media_url}}{{turf.avatar}}" alt="User-Profile"
-                                        class=" bg-     theme-color-default-img img-fluid rounded-pill avatar-100">
+                                        class=" bg-light     theme-color-default-img img-fluid rounded-pill avatar-100">
                                     {% else %}
                                     <img src="{% static 'assets/images/avatars/01.png' %}" alt="User-Profile"
-                                        class="theme-color-default-img img-fluid rounded-pill avatar-100">
+                                        class="bg-light theme-color-default-img img-fluid rounded-pill avatar-100">
 
                                     {% endif %}
                                 </div>
@@ -76,21 +95,57 @@
 
                                 <ul class="d-flex nav nav-pills mb-0 text-center profile-tab" data-toggle="slider-tab"
                                     id="profile-pills-tab" role="tablist">
+                                    <li class="nav-item " style="width: 0px;">
+                                        <a class="nav-link d-none"></a>
+                                    </li>
                                     <li class="nav-item">
-                                        <a class="nav-link active show" data-bs-toggle="tab" href="#profile-about"
-                                            role="tab" aria-selected="false">About</a>
+                                        <a class="nav-link " data-bs-toggle="tab" href="#profile-about" role="tab"
+                                            aria-selected="false">
+                                            <svg class="mb-1" xmlns="http://www.w3.org/2000/svg" width="20"
+                                                viewBox="0 0 24 24" fill="currentColor">
+                                                <path
+                                                    d="M8 10.5378C8 9.43327 8.89543 8.53784 10 8.53784H11.3333C12.4379 8.53784 13.3333 9.43327 13.3333 10.5378V19.8285C13.3333 20.9331 14.2288 21.8285 15.3333 21.8285H16C16 21.8285 12.7624 23.323 10.6667 22.9361C10.1372 22.8384 9.52234 22.5913 9.01654 22.3553C8.37357 22.0553 8 21.3927 8 20.6832V10.5378Z"
+                                                    fill="currentColor"></path>
+                                                <rect opacity="0.4" x="8" y="1" width="5" height="5" rx="2.5"
+                                                    fill="currentColor"></rect>
+                                            </svg> About</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" data-bs-toggle="tab" href="#profile-gallery" role="tab"
-                                            aria-selected="false">Gallery</a>
+                                            aria-selected="false">
+                                            <svg class="mb-1" width="20" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.4"
+                                                    d="M16.3328 22H7.66618C4.2769 22 2 19.6229 2 16.0843V7.91672C2 4.37811 4.2769 2 7.66618 2H16.3338C19.7231 2 22 4.37811 22 7.91672V16.0843C22 19.6229 19.7231 22 16.3328 22Z"
+                                                    fill="currentColor"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M11.2451 8.67496C11.2451 10.045 10.1301 11.16 8.7601 11.16C7.3891 11.16 6.2751 10.045 6.2751 8.67496C6.2751 7.30496 7.3891 6.18896 8.7601 6.18896C10.1301 6.18896 11.2451 7.30496 11.2451 8.67496ZM19.4005 14.0876C19.6335 14.3136 19.8005 14.5716 19.9105 14.8466C20.2435 15.6786 20.0705 16.6786 19.7145 17.5026C19.2925 18.4836 18.4845 19.2246 17.4665 19.5486C17.0145 19.6936 16.5405 19.7556 16.0675 19.7556H7.6865C6.8525 19.7556 6.1145 19.5616 5.5095 19.1976C5.1305 18.9696 5.0635 18.4446 5.3445 18.1026C5.8145 17.5326 6.2785 16.9606 6.7465 16.3836C7.6385 15.2796 8.2395 14.9596 8.9075 15.2406C9.1785 15.3566 9.4505 15.5316 9.7305 15.7156C10.4765 16.2096 11.5135 16.8876 12.8795 16.1516C13.8132 15.641 14.3552 14.7673 14.827 14.0069L14.8365 13.9916C14.8682 13.9407 14.8997 13.8898 14.9311 13.8391C15.0915 13.5799 15.2495 13.3246 15.4285 13.0896C15.6505 12.7986 16.4745 11.8886 17.5395 12.5366C18.2185 12.9446 18.7895 13.4966 19.4005 14.0876Z"
+                                                    fill="currentColor"></path>
+                                            </svg> Gallery</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" data-bs-toggle="tab" href="#profile-categories" role="tab"
-                                            aria-selected="false">Categories</a>
+                                            aria-selected="false"> <svg class="mb-1" width="20" viewBox="0 0 24 24"
+                                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.4"
+                                                    d="M16.191 2H7.81C4.77 2 3 3.78 3 6.83V17.16C3 20.26 4.77 22 7.81 22H16.191C19.28 22 21 20.26 21 17.16V6.83C21 3.78 19.28 2 16.191 2Z"
+                                                    fill="currentColor"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M8.07996 6.6499V6.6599C7.64896 6.6599 7.29996 7.0099 7.29996 7.4399C7.29996 7.8699 7.64896 8.2199 8.07996 8.2199H11.069C11.5 8.2199 11.85 7.8699 11.85 7.4289C11.85 6.9999 11.5 6.6499 11.069 6.6499H8.07996ZM15.92 12.7399H8.07996C7.64896 12.7399 7.29996 12.3899 7.29996 11.9599C7.29996 11.5299 7.64896 11.1789 8.07996 11.1789H15.92C16.35 11.1789 16.7 11.5299 16.7 11.9599C16.7 12.3899 16.35 12.7399 15.92 12.7399ZM15.92 17.3099H8.07996C7.77996 17.3499 7.48996 17.1999 7.32996 16.9499C7.16996 16.6899 7.16996 16.3599 7.32996 16.1099C7.48996 15.8499 7.77996 15.7099 8.07996 15.7399H15.92C16.319 15.7799 16.62 16.1199 16.62 16.5299C16.62 16.9289 16.319 17.2699 15.92 17.3099Z"
+                                                    fill="currentColor"></path>
+                                            </svg> Categories</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" data-bs-toggle="tab" href="#profile-requests" role="tab"
-                                            aria-selected="false">..</a>
+                                        <a class="nav-link active show" data-bs-toggle="tab" href="#profile-feedback"
+                                            role="tab" aria-selected="false"> <svg class="mb-1" width="20"
+                                                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.4"
+                                                    d="M12.02 2C6.21 2 2 6.74 2 12C2 13.68 2.49 15.41 3.35 16.99C3.51 17.25 3.53 17.58 3.42 17.89L2.75 20.13C2.6 20.67 3.06 21.07 3.57 20.91L5.59 20.31C6.14 20.13 6.57 20.36 7.081 20.67C8.541 21.53 10.36 21.97 12 21.97C16.96 21.97 22 18.14 22 11.97C22 6.65 17.7 2 12.02 2Z"
+                                                    fill="currentColor"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M11.9807 13.2901C11.2707 13.2801 10.7007 12.7101 10.7007 12.0001C10.7007 11.3001 11.2807 10.7201 11.9807 10.7301C12.6907 10.7301 13.2607 11.3001 13.2607 12.0101C13.2607 12.7101 12.6907 13.2901 11.9807 13.2901ZM7.37033 13.2901C6.67033 13.2901 6.09033 12.7101 6.09033 12.0101C6.09033 11.3001 6.66033 10.7301 7.37033 10.7301C8.08033 10.7301 8.65033 11.3001 8.65033 12.0101C8.65033 12.7101 8.08033 13.2801 7.37033 13.2901ZM15.3105 12.0101C15.3105 12.7101 15.8805 13.2901 16.5905 13.2901C17.3005 13.2901 17.8705 12.7101 17.8705 12.0101C17.8705 11.3001 17.3005 10.7301 16.5905 10.7301C15.8805 10.7301 15.3105 11.3001 15.3105 12.0101Z"
+                                                    fill="currentColor"></path>
+                                            </svg> Feedbacks</a>
                                     </li>
                                 </ul>
                             </div>
@@ -106,7 +161,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="profile-content tab-content">
-                                <div id="profile-about" class="tab-pane fade active show">
+                                <div id="profile-about" class="tab-pane fade ">
 
                                     <span class="h6">Location : </span> <span>{{turf.landmark}}, {{turf.location}}
                                     </span><br>
@@ -116,30 +171,32 @@
                                 </div>
 
                                 <div id="profile-gallery" class="tab-pane fade ">
+
+
                                     <!-- gallery -->
 
-                                    <div id="grid_gallery">
-
-                                        <div id="posts_gallery">
-                                            {% if images %}
-                                            {% for image in images %}
-                                            <div class="post_gallery card">
-                                                <img class="p-2" src={{media_url}}{{image.image}} />
-                                                <strong class="text-primary"> {{image.caption}} </strong>
+                                    {% if images %}
+                                    <div class="container_gallery">
+                                        {% for image in images %}
+                                        <div id="figure_gallery" class="position-relative  grid-cols-1  m-0"
+                                            style="break-inside: avoid;">
+                                            <div class=" ">
+                                                <img src="{{media_url}}{{image.image}}" alt="{{image.caption}}"
+                                                    class="rounded-2 w-100 /*d-block*/" />
 
                                             </div>
-                                            {% endfor %}
 
+                                            <div id="figcaption_gallery"
+                                                class="mb-4 mt-n4 position-relative px-3 py-1 w-100">
+                                                <div href="#" class="px-2 py-1 rounded-1 text-center text-dark w-100"
+                                                    style="background: rgba( 255, 255, 255, 0.55 );box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );backdrop-filter: blur( 7.5px );-webkit-backdrop-filter: blur( 7.5px );border-radius: 10px;border: 1px solid rgba( 255, 255, 255, 0.18 );font-weight: 500;">
+                                                    {{image.caption}}</div>
+                                            </div>
                                         </div>
-
-
+                                        {% endfor %}
                                     </div>
-
                                     {% else %}
-                                </div>
 
-
-                            </div>
                                     <div class="col-md-4 card  bg-light mx-auto">
                                         <div class="mx-auto card-body">
                                             Don't have any uploads
@@ -150,20 +207,187 @@
 
 
 
+
+
                                 </div>
 
                                 <div id="profile-categories" class="tab-pane fade ">
-                                    category
+
+
+                                    <!-- category -->
+
+
+                                    <div class="row justify-content-center">
+                                        {%if turf.category %}
+                                        {% for category in turf.category%}
+                                        {% for key, value in categories_dict.items %}
+                                        {% ifequal key category %}
+                                        <div class="col-lg-3 col-md-4 mb-3  ">
+                                            <div class="card-body  rounded-3" style="background-image: url('{{media_url}}{{ value.image}}');  background-repeat: no-repeat;
+                                                background-position: center;
+                                                background-size: cover;
+                                                -webkit-box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);
+                                                -moz-box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);
+                                                box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);">
+                                                <div
+                                                    class=" text-capitalize bg-light opacity-75 p-3 rounded-2 text-black text-center w-100">
+                                                    <h6>{{ value.category }}</h6>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        {% endifequal %}
+                                        {% endfor %}
+                                        {% endfor %}
+                                        {% else %}
+                                        <div class="col-3 card">
+                                            <div class="card-body"
+                                                style="background-image: url('{{media_url}}{{category.image}}');">
+                                                <div class="bg-light w-100">No Category available yet!</div>
+                                            </div>
+
+                                        </div>
+                                        {% endif %}
+
+
+
+
+
+
+
+
+
+
+                                    </div>
+
+                                </div>
+                                <div id="profile-feedback" class="tab-pane fade active show ">
+                                    <!-- Feedbacks -->
+                                    <!-- Feedbacks -->
+                                    <div
+                                        class="border border-1 border-primary col-lg-11 col-sm-12 mx-auto px-3 py-3 rounded-2">
+                                        <form id="TurfComment-form" class="" hx-post="{% url 'add-TurfComment' username=turf.username %}" hx-target='#comment-list'>
+                                            {% csrf_token %}
+                                            <div class="d-flex justify-content-between ">
+                                                <div class="mx-lg-3 mx-sm-1 w-100"> <textarea name="comment"
+                                                    style="height: 40px;
+                                                            max-height: 70vh;"
+                                                        id="turf-comment" cols="1" class="form-control"
+                                                        placeholder="Type Your Comment"></textarea></div>
+                                                <div class="my-auto"><button class="btn btn-primary" type="submit"
+                                                        onclick="clearComment()" id="btn-comment">Post</button></div>
+                                            </div>
+                                            <div class=" ms-4 text-danger" id="turf-comment-error"></div>
+                                        </form>
+                                    </div>
+                                    <div class="h5 mx-lg-4 mx-sm-1 my-4"> Comments :</div>
+
+                                    <!-- Comments -->
+
+
+
+                                    <div id="comment-list">
+                                        {% include 'turf/comment_list.html' %}
+                                    </div>
+
+
+
+
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
+
+
     </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <style>
+        #figure_gallery {
+            margin: 0;
+            break-inside: avoid;
+        }
+
+        #figure_gallery>img {
+            grid-row: 1 / -1;
+            grid-column: 1;
+        }
+
+        /* #figcaption_gallery {
+  grid-row: 2;
+  grid-column: 1;
+  background-color: rgba(255,255,255,.5);
+  padding: .2em .5em;
+  justify-self: start;
+} */
+
+        .container_gallery {
+            column-count: 1;
+            column-gap: 10px;
+        }
+
+
+        /* // Medium devices (tablets, 768px and up) */
+        @media screen and (min-width: 40em) and (max-width: 63.9375em) {
+            .container_gallery {
+                column-count: 2;
+                column-gap: 10px;
+            }
+        }
+
+        /* // Small devices (landscape phones, 576px and up) */
+        @media screen and (min-width: 64em) {
+            .container_gallery {
+                column-count: 3;
+                column-gap: 10px;
+            }
+        }
+    </style>
+
+    <script>
+
+
+        $('#turf-comment').on('keyup  paste', function (e) {
+            if ($('textarea#turf-comment').val().length > 999) {
+                $("#turf-comment-error").html(" Comment should be less than 1000 characters")
+                $("#btn-comment").prop('disabled', false);
+
+
+            } else {
+                $("#turf-comment-error").html("")
+
+                $("#btn-comment").prop('disabled', false);
+            }
+        })
+
+        function clearComment() {
+
+            setTimeout(function () { form = document.getElementById('TurfComment-form').reset(); }, 1000);
+        }
+
+        $("textarea").each(function () {
+            this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+        }).on("input", function () {
+            this.style.height = 0;
+            this.style.height = (this.scrollHeight) + "px";
+        });
+    </script>
+
+
+
 
 
 

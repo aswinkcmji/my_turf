@@ -14,7 +14,7 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm, DashboardHeader
+from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm
 from django.utils.dateparse import parse_datetime
 from .models import TurfGallery, TurfScheduleModel , CategoriesModel
 from User.models import MatchModel,TournamentModel
@@ -51,19 +51,20 @@ class Turf_Dashboard(View):
 
 
         turfDetails = UserModel.objects.filter(username = request.user.username  ).values()
-        gallery = TurfGallery.objects.filter( username = request.user.username )
-    
-        for a in gallery:
-            header = None if a.isheader == None else a
+        header = TurfGallery.objects.filter( username = request.user.username ,isheader = True)
+        count = TurfGallery.objects.filter(isheader = True).count()
+        # for a in gallery:
+        #     header = None if a.isheader == None else a
  
 
-        print("===========",header)
+        # print("===========",header)
         
         context = {
-            'form': DashboardHeader(),
+            'form': GalleryImgForm(),
             'turfDetails': turfDetails,
             'media_url':settings.MEDIA_URL,
             'header' : header,
+            'count' :   count,
            
 
         }
@@ -74,14 +75,15 @@ class Turf_Dashboard(View):
     def post(self,request,*args,**kwargs):
 
         if request.method == 'POST':
-                form = DashboardHeader(request.POST,request.FILES)
-                # form1= DashboardHeader(request.POST,request.FILES)
+                form = GalleryImgForm(request.POST,request.FILES)
+                # count = TurfGallery.objects.filter( username = request.user.username).values_list('isheader')
                 
+                # print("=============count===========",count)
 
                 print("====form11111111111===",form)
                 if form.is_valid():
                     form.save(request)
-                
+                    
                     messages.success(self.request, "Images added Successfully")
                     return HttpResponseRedirect(reverse('turf_dash')) 
                 else:  
@@ -265,7 +267,8 @@ class Turf_Gallery(View):
     def get(self,request):
 
 
-        turfGallery = TurfGallery.objects.filter(username = request.user.username).values()
+        turfGallery = TurfGallery.objects.filter(username = request.user.username, isheader=False).values()
+        
         print(" ",turfGallery)
         context = {
             'form': GalleryImgForm(),
@@ -282,8 +285,10 @@ class Turf_Gallery(View):
 
         if request.method == 'POST':
                 form = GalleryImgForm(request.POST,request.FILES)
+                
                 print("====form===",form)
                 if form.is_valid():
+                    
                     form.save()
                 
                     messages.success(self.request, "Images added Successfully")
@@ -292,8 +297,7 @@ class Turf_Gallery(View):
                     messages.error(self.request, "Images failed")
                     
                     return HttpResponseRedirect(reverse('turf_gallery'))           
-            #     context['form'] = form
-            #     return render(request, 'accounts/turf-sign-up.html',context)
+            
 
 @method_decorator(login_required,name='dispatch')
 class CategoriesView(View):
@@ -467,6 +471,8 @@ class DeleteGalleryImage(View):
     def get(self, request,id, *args,**kwargs):
         item = TurfGallery.objects.get(id=id)
         item.delete()
+        messages.success(request, 'Image Deleted')
+
         return HttpResponseRedirect(reverse('turf_gallery'))
 
 class GalleryUpdate(View):
@@ -507,3 +513,35 @@ class GalleryUpdate(View):
                 
                 
             return HttpResponseRedirect(reverse('turf_gallery'))
+        
+
+class DashboardImageUpdate(View):
+    def post(self, request, *args, **kwargs):
+
+        if request.method == 'POST':  
+            form = GalleryImgForm(request.POST, request.FILES)
+            if form.is_valid(): 
+
+                print("request.POST",request.POST)
+                # print("request.POST['image_id']",request.POST['image_id'])
+                if request.FILES :
+
+                    updatedRecord = TurfGallery.objects.get(isheader=True)
+                    print(updatedRecord)
+
+                    updatedRecord.image = request.FILES['image']
+
+                    updatedRecord.save()
+
+                    messages.success(request, 'Image Updated Successfully')
+                    
+                    return HttpResponseRedirect(reverse('turf_dash'))  
+                  
+
+            else:  
+                messages.error(request, 'failed')
+                return HttpResponseRedirect(reverse('turf_dash'))
+                
+                   
+                
+
