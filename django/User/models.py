@@ -75,7 +75,7 @@ class TournamentRequestModel(models.Model):
 class TurfCommentsModel(models.Model):
     turf = models.ForeignKey(UserModel, on_delete=models.CASCADE , related_name='turf')
     commenter = models.ForeignKey(UserModel, on_delete=models.CASCADE , related_name='commenter')
-    comment = models.CharField(max_length=30,null=False,blank=False)
+    comment = models.CharField(max_length=1000,null=False,blank=False)
     likes_count = models.IntegerField(default=0, null=False)
     date = models.DateTimeField(max_length=30,default=datetime.now())
-    liked_users = ArrayField(models.CharField(max_length=512, null=False) , null=False, default=[]) 
+    liked_users = ArrayField(models.CharField(max_length=512, null=False) , null=False, default=list) 

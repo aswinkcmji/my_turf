@@ -44,3 +44,10 @@ urlpatterns = [
     path('like_turfComment/<int:id>',LikeTurfCommentView.as_view(), name="like_turfComment") , 
 ] 
  
+
+htmx_urlpatterns = [
+    path("add-TurfComment/<str:username>", AddTurfCommentView.as_view() ,name="add-TurfComment"),
+]
+
+
+urlpatterns+= htmx_urlpatterns

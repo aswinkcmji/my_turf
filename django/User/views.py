@@ -27,6 +27,8 @@ import operator
 from django.db.models import Q
 from functools import reduce
 from django.http import HttpResponse
+
+import json
 # from datetime import datetime
 # import datetime as datetime
 # from .models import slotModel
@@ -867,52 +869,76 @@ class TurfProfileView(View):
         for category in categories:
             categories_dict[str(category.id)]={'category':category.category,'image':category.image}
         comments = TurfCommentsModel.objects.filter(turf=turf).order_by('-date')
-        print(comments)
-        commentForm = CreateTurfCommentForm(initial={'turf':turf,'commenter':request.user,'date':datetime.now()})
+        # commentForm = CreateTurfCommentForm(initial={'turf':turf,'commenter':request.user,'date':datetime.now()})
+
+        for comment in comments:
+            # liked_users=json.dump(comment.liked_users)
+            if comment.liked_users:
+                print(comment.liked_users[0], "sssssssssssssssssssssssssssssssssssssssssssssssssssss")
+
         context = {'id': turf.id,
                     'turf':turf,
                     'media_url':settings.MEDIA_URL,
                     'images':images,
                     'categories_dict': categories_dict,
-                    'commentForm':commentForm,
-                    'comments':comments}
+                    # 'commentForm':commentForm,
+                    'comments':comments,}
         return render(request, 'turf/turf_profile.html',context)
-    def post (self, request, *args, **kwargs):
+    # def post (self, request, *args, **kwargs):
+    #     username = kwargs.pop('username')
+
+    #     turf = UserModel.objects.filter(username=username).first()  
+    #     images = TurfGallery.objects.filter(username = username )
+    #     categories = CategoriesModel.objects.all()
+    #     categories_dict={}
+    #     for category in categories:
+    #         categories_dict[str(category.id)]={'category':category.category,'image':category.image}
+    #     comments = TurfCommentsModel.objects.filter(turf=turf).order_by('-date')
+    #     print(comments)
+    #     commentForm = CreateTurfCommentForm(initial={'turf':turf,'commenter':request.user,'date':datetime.now()})
+    #     context = {'id': turf.id,
+    #                 'turf':turf,
+    #                 'media_url':settings.MEDIA_URL,
+    #                 'images':images,
+    #                 'categories_dict': categories_dict,
+    #                 'commentForm':commentForm,
+    #                 'comments':comments,}
+
+    #     if request.method == 'POST':
+    #         commentForm = CreateTurfCommentForm(request.POST)
+    #         if commentForm.is_valid():
+    #             commentForm.turf = turf
+    #             commentForm.commenter = request.user
+    #             commentForm.date=datetime.now()
+    #             commentForm.save()
+    #             return HttpResponseRedirect(reverse('turf_profile',args=[str(username)]))
+    #         else:
+    #             context['commentForm']=commentForm
+    #             return render(request, 'turf/turf_profile.html',context)
+    #     messages.error(request	,'Something went wrong')
+    #     return render(request, 'turf/turf_profile.html',context)
+
+class AddTurfCommentView(View):
+    def post(self, request, *args, **kwargs):
+        print("working rrrrrrrrrrrrrrrrrrrrrrrr")
         username = kwargs.pop('username')
 
-        turf = UserModel.objects.filter(username=username).first()  
-        images = TurfGallery.objects.filter(username = username )
-        categories = CategoriesModel.objects.all()
-        categories_dict={}
-        for category in categories:
-            categories_dict[str(category.id)]={'category':category.category,'image':category.image}
+        turf = UserModel.objects.filter(username=username).first() 
+        try:
+            if  request.POST.get("comment") != "":
+                comment= TurfCommentsModel.objects.create(  turf = turf,
+                                                            commenter = request.user ,
+                                                            date=datetime.now(),comment=request.POST.get("comment"),)
+        except:
+            message.error(request , "something went wrong, Retry")
+            
+        
         comments = TurfCommentsModel.objects.filter(turf=turf).order_by('-date')
-        print(comments)
-        commentForm = CreateTurfCommentForm(initial={'turf':turf,'commenter':request.user,'date':datetime.now()})
-
-        context = {'id': turf.id,
-                    'turf':turf,
+        context = {
                     'media_url':settings.MEDIA_URL,
-                    'images':images,
-                    'categories_dict': categories_dict,
-                    'commentForm':commentForm,
-                    'comments':comments}
-
-        if request.method == 'POST':
-            commentForm = CreateTurfCommentForm(request.POST)
-            if commentForm.is_valid():
-                commentForm.turf = turf
-                commentForm.commenter = request.user
-                commentForm.date=datetime.now()
-                commentForm.save()
-                return HttpResponseRedirect(reverse('turf_profile',args=[str(username)]))
-            else:
-                context['commentForm']=commentForm
-                return render(request, 'turf/turf_profile.html',context)
-        messages.error(request	,'Something went wrong')
-        return render(request, 'turf/turf_profile.html',context)
-
-
+                    'comments':comments,}
+     
+        return render(request, 'turf/comment_list.html',context)
 
 
 class LikeTurfCommentView(View):

@@ -388,8 +388,8 @@ class TournamentRequestForm(ModelForm):
         return self.cleaned_data
 
 
-class CreateTurfCommentForm(ModelForm):
-    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows':"2" , 'placeholder':"Add Your Comment "}))
-    class Meta():
-        model = TurfCommentsModel
-        fields =('turf','commenter','comment','date')
+# class CreateTurfCommentForm(forms.Form):
+#     comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows':"2" , 'placeholder':"Add Your Comment "}))
+#     # class Meta():
+#     #     model = TurfCommentsModel
+#     #     fields =('turf','commenter','comment','date')
