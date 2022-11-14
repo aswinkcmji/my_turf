@@ -15,7 +15,7 @@ class MatchModel(models.Model):
     date= models.DateField(blank=True)
     start_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
     end_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
-    locality = models.CharField(max_length=30,null=True,blank=False)
+    locality = models.CharField(max_length=50,null=True,blank=False)
     city=models.CharField(max_length=100,null=True,blank=False)
     creator = models.CharField(max_length=30,null=True,blank=False)
     status = models.CharField(default="Upcoming",max_length=30,null=False,blank=False)
@@ -34,7 +34,7 @@ class RequestModel(models.Model):
     date= models.DateField(blank=True)
     start_time= models.TimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
     end_time= models.TimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
-    locality = models.CharField(max_length=30,null=True,blank=False)
+    locality = models.CharField(max_length=50,null=True,blank=False)
 
     
 class TournamentModel(models.Model):

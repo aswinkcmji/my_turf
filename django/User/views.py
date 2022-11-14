@@ -968,5 +968,17 @@ class LikeTurfCommentView(View):
         comment.save()
 
         return HttpResponseRedirect(reverse('turf_profile',args=[str(comment.turf)]))
-        
+
+
+
+class SearchCityView(View):
+    def post(self, request, *args, **kwargs):
+            search_text = request.POST.get('city')
+            print("#########################INSIDE SearchCityView ##################")
+            if len(search_text)>=3:
+                results=CitiesModel.objects.filter(name__icontains=search_text,country="India")
+                return render(request, 'Matches/cities-list.html',{"results":results})
+            else:
+                return render(request, 'Matches/cities-list.html',{})
+
         
