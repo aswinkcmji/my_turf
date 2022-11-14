@@ -32,6 +32,7 @@ urlpatterns = [
     path("requested-tournaments/cancel/<int:id>",CancelTournamentsRequestView.as_view(), name="a"),
     path("my-tournaments/cancel/<int:id>",CancelTournamentView.as_view(),name="canceltournament"),
     path("tournament-history/cancel/<int:id>",CancelTournamentView.as_view(),name="canceltournament"),
+    path('createteam',Createteamview.as_view(),name="createteam"),
 
 
 

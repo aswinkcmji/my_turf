@@ -123,15 +123,15 @@ style="display: none ;" {% endif %}>
       </div>
       <div class="card-body bg-light">
           {% for a in a%}
-          {% if tournament.creator == a.username%}
+          {% if tournament.team_name == data.team_name%}
           <div class="card row d-flex flex-row bg-danger text-white">
           <div class="col-4"><img src="/static/assets/images/avatars/01.png" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-50"></div>
-          <div class="col-8 my-auto">{{a.username}}</div>
+          <div class="col-8 my-auto">{{data.team_name}}</div>
           </div>
           {%else%}
           <div class="card row d-flex flex-row">
           <div class="col-4 "><img src="/static/assets/images/avatars/01.png" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-50"></div>
-          <div class="col-8 my-auto ">{{a.username}}</div></div>
+          <div class="col-8 my-auto ">{{data.team_name}}</div></div>
           {%endif%}
           
           {%endfor%}

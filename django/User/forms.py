@@ -213,6 +213,7 @@ class createtournamentForm(ModelForm):
 
 
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
+    team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
@@ -227,7 +228,7 @@ class createtournamentForm(ModelForm):
     # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model = TournamentModel
-        fields = 'category','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','team_space_available','creator','locality','creator'
+        fields = 'category','team_name','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','team_space_available','creator','locality','creator'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -238,6 +239,7 @@ class createtournamentForm(ModelForm):
         self.cleaned_data = super().clean()
         teams=self.cleaned_data.get('teams')
         creator=self.cleaned_data.get('creator')
+        team_name=self.cleaned_data.get('team_name')
         status=self.cleaned_data.get('status')
         start_time_f=self.cleaned_data.get('start_time_f')
         end_time_f=self.cleaned_data.get('end_time_f')
@@ -278,6 +280,7 @@ class updatetournamentform(ModelForm):
 
     tournament_id = forms.ModelChoiceField(queryset=TournamentModel.objects.all(),widget=forms.HiddenInput())
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
+    team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
@@ -292,7 +295,7 @@ class updatetournamentform(ModelForm):
     # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model = TournamentModel
-        fields = 'category','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','creator','locality','creator'
+        fields = 'category','team_name','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','creator','locality','creator'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -330,6 +333,7 @@ class updatetournamentform(ModelForm):
 
 class TournamentRequestForm(ModelForm):
     category = forms.ModelChoiceField(queryset=CategoriesModel.objects.all(),widget=forms.HiddenInput())
+    team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     start_date =forms.DateField(widget=forms.HiddenInput())
     end_date = forms.DateField(widget=forms.HiddenInput())
     start_time = forms.TimeField(widget=forms.HiddenInput())
@@ -343,7 +347,7 @@ class TournamentRequestForm(ModelForm):
     class Meta():
         model = TournamentRequestModel    
         # exclude = '__all__'
-        fields =('category','start_date','end_date','start_time','end_time','username','locality','status','phoneno')
+        fields =('category','team_name','start_date','end_date','start_time','end_time','username','locality','status','phoneno')
     
 
     def __init__(self,*args, **kwargs):
@@ -389,5 +393,19 @@ class TournamentRequestForm(ModelForm):
 
         # print("phone number in form",self.cleaned_data.get('phoneno'),"its type is",type(self.cleaned_data.get('phoneno')))
         # print("phone number in session",self.request.user.phone,"its type is",type(self.request.user.phone))
+
+class TeamCreationForm(forms.ModelForm):
+
+    team_name= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
+    category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
+    members = forms.IntegerField(widget=forms.TextInput())
+
+    class meta:
+        models=CreateTeamModel
+        fields= '__all__'
+      
+
+    
+
 
         
