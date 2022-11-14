@@ -104,7 +104,7 @@ class CreateMatchesView(View):
             'end_time_f':end_time.strftime("%H:%M:%S"),
             'start_time':datetime.now(),
             'end_time':end_time,
-            'locality':request.user.location,
+            'locality':"",
             'creator' : request.user.username,
             'status' : "Upcoming",
             'slot_available': 0,
