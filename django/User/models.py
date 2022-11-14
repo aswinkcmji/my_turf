@@ -14,6 +14,7 @@ class MatchModel(models.Model):
     start_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
     end_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
     locality = models.CharField(max_length=30,null=True,blank=False)
+    city=models.CharField(max_length=100,null=True,blank=False)
     creator = models.CharField(max_length=30,null=True,blank=False)
     status = models.CharField(default="Upcoming",max_length=30,null=False,blank=False)
     slots =models.IntegerField(default=2,null=False,blank=False)
@@ -69,3 +70,9 @@ class TournamentRequestModel(models.Model):
 
     # def __str__(self):
     #     return str(self.category)
+
+class CitiesModel(models.Model):
+    name=models.CharField(max_length=100,null=True,blank=False)
+    country=models.CharField(max_length=100,null=True,blank=False)
+    subcountry=models.CharField(max_length=100,null=True,blank=False)
+    geonameid=models.IntegerField(default=1,null=True,blank=False)

@@ -44,6 +44,14 @@
                         <!-- <p>{{addform.type}} helllll</p> -->
                         <span class="text-danger">{{addForm.errors}}</span>
                     </div>
+                    {%if  addForm.label == "City" %}
+                    <div class="search-container mb-4">
+                    <!-- <input type="text" class="form-control form-select-lg mb-4 " id="input" > -->
+                    <div class="suggestion" style="cursor:pointer;">
+                        <ul></ul>
+                    </div>
+                    <a class="btn btn-primary mb-4" onclick="myFunction()">check</a> </div>
+                    {%endif%}
                     {% else %}
                     {% render_field form.category  class="form-control  mb-4"%}
 
@@ -56,12 +64,6 @@
                     {% render_field dontForm.as_hidden %}
                     {%endfor%}
                     
-                    <div class="d-flex flex-wrap">
-                    <!-- <input type="text" class="form-control form-select-lg mb-4 " id="input" > -->
-                    <span class="btn btn-primary" onclick="myFunction()">check</span> </div>
-                    <div class="suggestion" style="cursor:pointer;">
-                        <ul></ul>
-                    </div>
                     <button class="btn btn-primary" type="submit">Submit</button>
                 </form>
             </div>
@@ -120,6 +122,9 @@ google.maps.event.addDomListener(window, 'load', function ()
             let results = JSON.parse(result)
             // console.log(results)
             list_of_addressess=[]
+            console.log(results)
+           if(typeof results !== 'object' && results !== null) {
+
             for (i of results){
             let country=i.country.name
             let city=i.name
@@ -134,6 +139,11 @@ google.maps.event.addDomListener(window, 'load', function ()
             }
             showSuggestions(list_of_addressess, x.value);
         }
+    }else{
+        list_of_addressess.push( "No matching record found")
+        showSuggestions(list_of_addressess, x.value);
+    }
+
             function showSuggestions(list_of_addressess,x) {
     
     suggestions.innerHTML = '';
@@ -156,10 +166,12 @@ google.maps.event.addDomListener(window, 'load', function ()
 
 function useSuggestion(e) {
     console.log(e.target.innerText)
-	id_locality.value = e.target.innerText;
+    if( e.target.innerText != "No matching record found")
+    {id_locality.value = e.target.innerText;
 	id_locality.focus();
 	suggestions.innerHTML = '';
-	suggestions.classList.remove('has-suggestions');
+	suggestions.classList.remove('has-suggestions');}
+	
 }
 
 // input.addEventListener('keyup', searchHandler);
@@ -168,10 +180,46 @@ suggestions.addEventListener('click', useSuggestion);
         }
     
         )
-        .catch(error => console.log('error', error));
+        .catch(error => {console.log('error', error)
+        
+    
+    
+    });
     }
 }
 </script>
+<style>
+    
+.suggestions {
 
+
+    width: 100%;
+  background: #fff;
+  text-align: left;
+
+    position: absolute;
+    top: 60px;
+  }
+  
+ .search-container ul {
+    display: none;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .search-container ul.has-suggestions {
+    display: block;
+  }
+  .search-container ul li {
+    padding: 10px;
+    cursor: pointer;
+    background: rgba(44, 44, 44, 0.2);
+  }
+ .search-container ul li:hover {
+    background-color: #00e658;
+  }</style>
 
 {% endblock content %}

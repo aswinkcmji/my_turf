@@ -11,7 +11,6 @@ from django.urls import is_valid_path, reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import *
 from datetime import datetime,timedelta, date, time
 from django.utils import timezone
 from django.contrib import messages
@@ -101,7 +100,8 @@ class CreateMatchesView(View):
             'end_time_f':end_time.strftime("%H:%M:%S"),
             'start_time':datetime.now(),
             'end_time':end_time,
-            'locality':"",
+            'locality':request.user.location,
+            'city':request.user.location,
             'creator' : request.user.username,
             'status' : "Upcoming",
             'slot_available': 0,
@@ -425,6 +425,7 @@ class CancelMatchView(View):
              return HttpResponseRedirect(reverse('my-matches'))
         print("hiiiiiiiiiiiiiiiiiiiiiii",reqdata)
         reqdata.status="Cancelled"
+        reqdata.cron=0
         reqdata.save()
         return HttpResponseRedirect(reverse('match-history'))
 
