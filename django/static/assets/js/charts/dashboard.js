@@ -250,13 +250,13 @@ if (document.querySelectorAll('#d-main').length) {
       height: 245,
       type: 'area',
       toolbar: {
-          show: false
+          show: true
       },
       sparkline: {
           enabled: false,
       },
       zoom:{
-        enabled: false,
+        enabled: true,
       },
   },
   colors: ["#3a57e8", "#4bc7d2"],
@@ -316,9 +316,9 @@ if (document.querySelectorAll('#d-main').length) {
       //         colors: ["#3a57e8", "#4bc7d2"]
       //     }
       // },
-      // tooltip: {
-      //   enabled: true,
-      // },
+      tooltip: {
+        enabled: true,
+      },
   };
 
   const chart = new ApexCharts(document.querySelector("#d-main"), options);
