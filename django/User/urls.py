@@ -41,12 +41,13 @@ urlpatterns = [
 
     path('turfs_list/',TurfsListView.as_view(), name="turfs_list") , 
     path('turf_profile/<str:username>',TurfProfileView.as_view(), name="turf_profile"),
-    path('like_turfComment/<int:id>',LikeTurfCommentView.as_view(), name="like_turfComment") , 
 ] 
  
 
 htmx_urlpatterns = [
+    path('like_turfComment/<int:id>',LikeTurfCommentView.as_view(), name="like_turfComment") , 
     path("add-TurfComment/<str:username>", AddTurfCommentView.as_view() ,name="add-TurfComment"),
+    path('search_turf_list/',SearchTurfListView.as_view(), name="search_turf_list") , 
 ]
 
 
