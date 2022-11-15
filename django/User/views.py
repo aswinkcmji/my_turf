@@ -995,14 +995,33 @@ class SearchCityView(View):
 @method_decorator(login_required,name='dispatch')
 class SearchTurfListView(View):
     def post(self, request, *args, **kwargs):
-        turfname = request.POST.get('search_turf_list')
-        turfs = UserModel.objects.filter(is_turf=True,turf_name__icontains=turfname)
+        searchkey = request.POST.get('search_turf_list')
+        turfs = UserModel.objects.filter(is_turf=True)
+
+        searched_category = CategoriesModel.objects.filter(category__icontains=searchkey)
+        turfs_by_category=CategoriesModel.objects.none()
+        for item in searched_category:
+            searched_category_id =item.pk
+            turfs_by_category |= turfs.filter(category__icontains=searched_category_id)
+        
+        turfs_by_username = turfs.filter(turf_name__icontains=searchkey)
+        turfs_by_location = turfs.filter(location__icontains=searchkey)
+
+        turfs_result = (turfs_by_username | turfs_by_location | turfs_by_category).distinct()
+        # print("turfs_by_location......................... ",turfs_by_location)
+
+        # if turfs:
+        #     if turfs_by_username:
+        #         if turfs_by_location:
+        #             turfs_by_username.union(turfs_by_location) 
+        #         if turfs_by_category:
+        #             turfs_by_username.union(turfs_by_category) 
         categories = CategoriesModel.objects.all()
         categories_dict={}
         for category in categories:
             categories_dict[str(category.id)]=category.category
-        context = {'media_url':settings.MEDIA_URL, 'turfs':turfs,
+        context = {'media_url':settings.MEDIA_URL, 'turfs':turfs_result,
                     'categories_dict': categories_dict,
                     'is_searching':True,
-                    'search_KW':turfname,}
+                    'search_KW':searchkey,}
         return render(request , 'turf/turfs.html',context)
