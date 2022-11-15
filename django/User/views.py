@@ -48,21 +48,10 @@ class AllMatchesView(View):
         def get(self, request, *args, **kwargs):
             if not request.user.is_superuser and not request.user.is_superuser:
                 print(request.user.username)
-                # context={}
                 id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
-                # user_location=request.user.location
-                # location_list=user_location.split(",")
-                # # print()
-                # try:
-                #     location_list.remove(' India')
-                # except:
-                #     pass
-                # print(location_list)
                 matches=MatchModel.objects.filter(city="Mannarakkat,Kerala,India",status="Upcoming").exclude(id__in=list(id_list)).order_by("-id")
                 form=RequestForm(request=request)
                 print("hllo",matches)
-                # context['matches']=matches
-                # context['form']=form
                 context ={'RequestForm': form ,'is_requestform':False , 'matches':matches}
                 print(context)
                 return render(request, 'Matches/all-matches.html',context)
@@ -997,16 +986,35 @@ class SearchCityView(View):
 @method_decorator(login_required,name='dispatch')
 class SearchTurfListView(View):
     def post(self, request, *args, **kwargs):
-        turfname = request.POST.get('search_turf_list')
-        turfs = UserModel.objects.filter(is_turf=True,turf_name__icontains=turfname)
+        searchkey = request.POST.get('search_turf_list')
+        turfs = UserModel.objects.filter(is_turf=True)
+
+        searched_category = CategoriesModel.objects.filter(category__icontains=searchkey)
+        turfs_by_category=CategoriesModel.objects.none()
+        for item in searched_category:
+            searched_category_id =item.pk
+            turfs_by_category |= turfs.filter(category__icontains=searched_category_id)
+        
+        turfs_by_username = turfs.filter(turf_name__icontains=searchkey)
+        turfs_by_location = turfs.filter(location__icontains=searchkey)
+
+        turfs_result = (turfs_by_username | turfs_by_location | turfs_by_category).distinct()
+        # print("turfs_by_location......................... ",turfs_by_location)
+
+        # if turfs:
+        #     if turfs_by_username:
+        #         if turfs_by_location:
+        #             turfs_by_username.union(turfs_by_location) 
+        #         if turfs_by_category:
+        #             turfs_by_username.union(turfs_by_category) 
         categories = CategoriesModel.objects.all()
         categories_dict={}
         for category in categories:
             categories_dict[str(category.id)]=category.category
-        context = {'media_url':settings.MEDIA_URL, 'turfs':turfs,
+        context = {'media_url':settings.MEDIA_URL, 'turfs':turfs_result,
                     'categories_dict': categories_dict,
                     'is_searching':True,
-                    'search_KW':turfname,}
+                    'search_KW':searchkey,}
         return render(request , 'turf/turfs.html',context)
 
 @method_decorator(login_required,name='dispatch')
@@ -1014,13 +1022,16 @@ class SearchMatchView(View):
     def post(self, request, *args, **kwargs):
         search_word = request.POST.get('search')
         try:
-            date_obj=datetime.strptime(search_word, '%y-%m%d')
+            date_obj=datetime.strptime(search_word, '%Y-%m-%d')
         except:
             date_obj=datetime.now().date()
         print(date_obj,type(date_obj))
-        # matches=MatchModel.objects.filter(Q(city__icontains=search_word)|Q(creator__icontains=search_word)|Q(date=date_obj)|Q(category=search_word)).exclude(creator=request.user.username)
-        matches=MatchModel.objects.filter(Q(city__icontains=search_word)|Q(creator__icontains=search_word)|Q(date=date_obj)).exclude(creator=request.user.username)
+        categories=CategoriesModel.objects.filter(category__icontains=search_word)
+        print(categories)
+        id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
+        matches=MatchModel.objects.filter(Q(city__icontains=search_word)|Q(creator__icontains=search_word)|Q(date=date_obj)|Q(category__in=categories)&Q(status="Upcoming")).exclude(creator=request.user.username)
+        # matches=MatchModel.objects.filter(category__in=categories).exclude(creator=request.user.username,id__in=list(id_list))
         form=RequestForm(request=request)
         context ={'RequestForm': form ,'is_requestform':False , 'matches':matches}
-        print("###################### Inside SearchMatchView ###########################",context,matches[0].date)
+        print("###################### Inside SearchMatchView ###########################",context,matches)
         return render(request, 'Matches/matches.html',context)

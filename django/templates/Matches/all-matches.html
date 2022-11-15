@@ -16,7 +16,7 @@
             <div class="col-4  ecomerce-top-bar-btns justify-content-end mx-auto">
                 <form method="POST">
                     {% csrf_token %}
-                    <input type="text" name="search" hx-post="{%url 'search-matches' %}" hx-target='#results' hx-trigger="keyup changed delay:3s"  class="form-control"  placeholder="Select a City, Username, Date or Category ..." >
+                    <input type="text" name="search" hx-post="{%url 'search-matches' %}" hx-target='#results' hx-trigger="keyup changed delay:1000ms"  class="form-control"  placeholder="Select a City, Username, Date or Category ..." >
                 </form>
             </div>
         </div>
@@ -139,6 +139,7 @@ style="display: none ;" {% endif %}>
 </div>
 
 </div>
+<!-- <rssapp-wall id="tblR6sxbIzZJcii6"></rssapp-wall><script src="https://widget.rss.app/v1/wall.js" type="text/javascript" async></script> -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
       
