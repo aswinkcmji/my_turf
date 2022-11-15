@@ -19,6 +19,7 @@ style="display: block ;" {% endif %}>
           <p class="card-text ">Start Time:{{match.start_time|time:"H:i:s"}}</p>
           <p class="card-text ">End Time:{{match.end_time|time:"H:i:s"}}</p>
           <p class="card-text  ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
+          <p class="card-text  ">City:match.match_id.city</p>
           <p class="card-text ">Locality:{{match.locality}}</p>
           {% if match.creator != request.user.username %}
          <a class="btn btn-primary" href="join/{{match.id}}">JOIN NOW</a>
