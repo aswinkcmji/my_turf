@@ -1,0 +1,33 @@
+{% for match in matches%}
+  <div class="column col-md-4">
+    <div class="card p-2 m-4">
+        <div> <img src="/media/{{match.category.image}}" class="card-img-top" alt="Product 1" style="height:350px;"></div>
+        <div class="card-body p-1 ">
+          <h2>{{match.category}}</h2>
+          <p class="card-text ">Date of Match:{{match.date|date:"Y-m-d"}}</p>
+          <p class="card-text ">Start Time:{{match.start_time|time:"H:i:s"}}</p>
+          <p class="card-text ">End Time:{{match.end_time|time:"H:i:s"}}</p>
+          <p class="card-text  ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
+          <p class="card-text  ">City:match.match_id.city</p>
+          <p class="card-text ">Locality:{{match.locality}}</p>
+          {% if match.creator != request.user.username %}
+         <a class="btn btn-primary" href="join/{{match.id}}">JOIN NOW</a>
+        {%else%}
+         <p>You are the organizer.<br>Visit <a class="" href="{% url 'my-matches' %}" id="my-matches-li">My Match</a> to edit</p>
+         {%endif%}
+          </div>
+        </div>
+   </div>
+{%empty%}
+<div class="column col-md-4"{% if is_requestform %} style="display: none ;" {% else %}
+style="display: block ;" {% endif %}>
+    <div class="card text-white bg-soft-info m-5" > 
+      <div class="card-body">   
+        <h3 class="mt-3 text-center">There aren't any more matches happening in your locality</h3>
+        <p class="mt-3 text-center">
+          Visit <a class="" href="{% url 'my-matches' %}" id="my-matches-li">My Match</a> to see the matches you created or joined
+        </p>
+      </div>
+      </div>
+</div>
+{%endfor%}

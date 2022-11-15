@@ -7,7 +7,8 @@
       <p class="d-none " id="messagecontent">{{message}}</p>
   {% endfor %}
     {% endif %} -->
-    <div class="ecomerce-top-bar card p-3">
+    <div class="ecomerce-top-bar card p-3" {% if is_requestform %} style="display: none ;" {% else %}
+    style="display: flex ;" {% endif %}>
         <div class="row">
             <div class="col-8">
                 <span class="item-name" style="font-size: 1.4rem;"></span>
@@ -15,47 +16,15 @@
             <div class="col-4  ecomerce-top-bar-btns justify-content-end mx-auto">
                 <form method="POST">
                     {% csrf_token %}
-                    <input type="text" name="search" hx-post="{%url 'search-matches' %}" hx-target='#results' hx-trigger="keyup changed delay:100ms"  class="form-control"  placeholder="Select a City, Username, Date or Category ..." >
+                    <input type="text" name="search" hx-post="{%url 'search-matches' %}" hx-target='#results' hx-trigger="keyup changed delay:3s"  class="form-control"  placeholder="Select a City, Username, Date or Category ..." >
                 </form>
             </div>
         </div>
     </div>
 <div class="row bg-soft-light d-flex justify-content-around"  {% if is_requestform %} style="display: none ;" {% else %}
 style="display: block ;" {% endif %} id="results">
-{% for match in matches%}
-  <div class="column col-md-4">
-    <div class="card p-2 m-4">
-        <div> <img src="/media/{{match.category.image}}" class="card-img-top" alt="Product 1" style="height:350px;"></div>
-        <div class="card-body p-1 ">
-          <h2>{{match.category}}</h2>
-          <p class="card-text ">Date of Match:{{match.date|date:"Y-m-d"}}</p>
-          <p class="card-text ">Start Time:{{match.start_time|time:"H:i:s"}}</p>
-          <p class="card-text ">End Time:{{match.end_time|time:"H:i:s"}}</p>
-          <p class="card-text  ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
-          <p class="card-text  ">City:match.match_id.city</p>
-          <p class="card-text ">Locality:{{match.locality}}</p>
-          {% if match.creator != request.user.username %}
-         <a class="btn btn-primary" href="join/{{match.id}}">JOIN NOW</a>
-        {%else%}
-         <p>You are the organizer.<br>Visit <a class="" href="{% url 'my-matches' %}" id="my-matches-li">My Match</a> to edit</p>
-         {%endif%}
-          </div>
-        </div>
-   </div>
-{%empty%}
-<div class="column col-md-4"{% if is_requestform %} style="display: none ;" {% else %}
-style="display: block ;" {% endif %}>
-    <div class="card text-white bg-soft-info m-5" > 
-      <div class="card-body">   
-        <h3 class="mt-3 text-center">There aren't any more matches happening in your locality</h3>
-        <p class="mt-3 text-center">
-          Visit <a class="" href="{% url 'my-matches' %}" id="my-matches-li">My Match</a> to see the matches you created or joined
-        </p>
-      </div>
-      </div>
+{% include 'Matches/matches.html' %}
 </div>
-</div>
-{%endfor%}
 <div class="row mt-5" id="RequestForm" {% if is_requestform  %} style="display: flex ;" {% else %}
 style="display: none ;" {% endif %}>
 <div class="col-lg-6 mx-auto">
@@ -195,34 +164,7 @@ style="display: none ;" {% endif %}>
 //         el.style.display = el.style.display==='block'?'none':'block'
 //     })
 // })
-$('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
-  if (!$(this).next().hasClass('show')) {
-    $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
-  }
-  var $subMenu = $(this).next(".dropdown-menu");
-  $subMenu.toggleClass('show');
 
-
-  $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
-    $('.dropdown-submenu .show').removeClass("show");
-  });
-
-
-  return false;
-});
-function useSuggestion(e) {
-    if(e.target.innerText!="No search results.Enter a valid name atleast 3 characters in length"){
-        
-        console.log(e.target.innerText)
-        id_city.value = e.target.innerText;
-        id_city.focus();
-        suggestions.innerHTML = '';
-        // suggestions.classList.remove('has-suggestions');
-    }
-	
-}
-const suggestions = document.querySelector('.suggestion');
-suggestions.addEventListener('click', useSuggestion);
 </script>
 <style>
 /* .sub-menu:hover .games-menu {
