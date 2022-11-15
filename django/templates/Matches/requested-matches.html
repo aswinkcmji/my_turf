@@ -12,11 +12,13 @@
             <img src="/media/{{match.category.image}}" class="card-img-top" alt="Product 1" style="height:350px;">
               <div class="card-body">
             <h2>{{match.category}}</h2>
-                <p class="card-text text-dark">Date of Match:{{match.date|date:"Y-m-d"}}</p>
-                <p class="card-text text-dark">Time:{{match.start_time|time:"H:i:s"}}</p>
-                <p class="card-text text-dark">Time:{{match.end_time|time:"H:i:s"}}</p>
-                <p class="card-text text-dark">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
-                <p class="card-text text-dark">Locality:{{match.locality}}</p>
+                <p class="card-text">Date of Match:{{match.date|date:"Y-m-d"}}</p>
+                <p class="card-text">Time:{{match.start_time|time:"H:i:s"}}</p>
+                <p class="card-text">Time:{{match.end_time|time:"H:i:s"}}</p>
+                <p class="card-text">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
+                <p class="card-text">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
+                <p class="card-text">Locality:{{match.locality}}</p>
+                <p class="card-text">City:{{match.city}}</p>
                 <a  class="btn btn-primary" href="cancel/{{match.id}}">
                   Cancel
                 </a>

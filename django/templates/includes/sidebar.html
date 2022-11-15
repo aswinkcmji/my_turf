@@ -47,6 +47,7 @@
                         <span class="item-name">Home</span>
                     </a>
                 </li>
+                {% if request.user.is_superuser%}
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="{% url 'admin_dash' %}">
                         <i class="icon">
@@ -60,6 +61,7 @@
                         <span class="item-name">Dashboard</span>
                     </a>
                 </li>
+                {%endif%}
                 <li class="nav-item">
                     <a class="nav-link " aria-current="page" href="{% url 'shop' %}" id="shop-li">
                         <i class="icon">

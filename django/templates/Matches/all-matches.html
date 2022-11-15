@@ -7,8 +7,21 @@
       <p class="d-none " id="messagecontent">{{message}}</p>
   {% endfor %}
     {% endif %} -->
+    <div class="ecomerce-top-bar card p-3">
+        <div class="row">
+            <div class="col-8">
+                <span class="item-name" style="font-size: 1.4rem;"></span>
+            </div>
+            <div class="col-4  ecomerce-top-bar-btns justify-content-end mx-auto">
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="search" hx-post="{%url 'search-matches' %}" hx-target='#results' hx-trigger="keyup changed delay:100ms"  class="form-control"  placeholder="Select a City, Username, Date or Category ..." >
+                </form>
+            </div>
+        </div>
+    </div>
 <div class="row bg-soft-light d-flex justify-content-around"  {% if is_requestform %} style="display: none ;" {% else %}
-style="display: block ;" {% endif %}>
+style="display: block ;" {% endif %} id="results">
 {% for match in matches%}
   <div class="column col-md-4">
     <div class="card p-2 m-4">
@@ -175,5 +188,62 @@ style="display: none ;" {% endif %}>
     //         $('#creatematch').trigger('reset');
     //       }
     //   });
+//     let dropdowns = document.querySelectorAll('.dropdown-toggle')
+// dropdowns.forEach((dd)=>{
+//     dd.addEventListener('click', function (e) {
+//         var el = this.nextElementSibling
+//         el.style.display = el.style.display==='block'?'none':'block'
+//     })
+// })
+$('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
+  if (!$(this).next().hasClass('show')) {
+    $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+  }
+  var $subMenu = $(this).next(".dropdown-menu");
+  $subMenu.toggleClass('show');
+
+
+  $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+    $('.dropdown-submenu .show').removeClass("show");
+  });
+
+
+  return false;
+});
+function useSuggestion(e) {
+    if(e.target.innerText!="No search results.Enter a valid name atleast 3 characters in length"){
+        
+        console.log(e.target.innerText)
+        id_city.value = e.target.innerText;
+        id_city.focus();
+        suggestions.innerHTML = '';
+        // suggestions.classList.remove('has-suggestions');
+    }
+	
+}
+const suggestions = document.querySelector('.suggestion');
+suggestions.addEventListener('click', useSuggestion);
 </script>
+<style>
+/* .sub-menu:hover .games-menu {
+    display: block;
+  } */
+  /* .dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu a::after {
+  transform: rotate(-90deg);
+  position: absolute;
+  right: 6px;
+  top: .8em;
+}
+
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-left: .1rem;
+  margin-right: .1rem;
+} */
+  </style>
 {% endblock content %}

@@ -48,7 +48,8 @@
                     <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
                     {%if  addForm.label == "City" %}
                     {% render_field addForm hx-post='/search-city/' hx-target='#results' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Select Your City ..." %}
-                    <label>{{addForm.label}}</label>
+                    <label>Search your {{addForm.label}}</label>
+                    <span class="text-danger">{{addForm.errors}}</span>
                     <div id="results" class="suggestion"></div>
                     </div>
                     {%endif%}
@@ -69,7 +70,7 @@
     </div>
 </section>
 
-<script>document.getElementById('create-matches-li').classList.add('active')</script>
+<script>document.getElementById('my-matches-li').classList.add('active')</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 
@@ -83,11 +84,14 @@
 </script>
 <script>
 function useSuggestion(e) {
-    console.log(e.target.innerText)
-    id_city.value = e.target.innerText;
-	id_city.focus();
-	suggestions.innerHTML = '';
-	// suggestions.classList.remove('has-suggestions');
+    if(e.target.innerText!="No search results.Enter a valid name atleast 3 characters in length"){
+        
+        console.log(e.target.innerText)
+        id_city.value = e.target.innerText;
+        id_city.focus();
+        suggestions.innerHTML = '';
+        // suggestions.classList.remove('has-suggestions');
+    }
 	
 }
 const suggestions = document.querySelector('.suggestion');
@@ -111,7 +115,7 @@ suggestions.addEventListener('click', useSuggestion);
     /* list-style-type: none; */
     padding: 0;
     margin: 0;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 2px 0 rgba(105, 105, 105, 0.2);
     max-height: 200px;
     overflow-y: auto;
   }
@@ -121,10 +125,10 @@ suggestions.addEventListener('click', useSuggestion);
   #results ul li {
     padding: 10px;
     cursor: pointer;
-    background: rgba(44, 44, 44, 0.2);
+    background: rgb(241, 241, 241);
   }
  #results ul li:hover {
-    background-color: #00e658;
+    background-color: #00ff73;
   }</style>
 
 {% endblock content %}
