@@ -49,7 +49,7 @@
                     {%if  addForm.label == "City" %}
                     {% render_field addForm hx-post='/search-city/' hx-target='#results' hx-trigger="keyup changed delay:100ms"  class="form-control"  placeholder="Select Your City ..." %}
                     <label>Search your {{addForm.label}}</label>
-                    <!-- <span class="text-danger">{{addForm.errors}}</span> -->
+                    <span class="text-danger">{{addForm.errors}}</span>
                     <div id="results" class="suggestion"></div>
                     </div>
                     {%endif%}
