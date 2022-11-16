@@ -79,20 +79,21 @@ class GalleryImgForm(ModelForm):
     username = forms.CharField(required=False)
     image = forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
     caption = forms.CharField(required=False,widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Caption'}), help_text='Caption') 
-
-
-    class Meta:
-        model = TurfGallery
-        fields = ('username','image','caption')
-
-
-class DashboardHeader(ModelForm):
-    username = forms.CharField(required=True)
-    isheader = forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    isheader = forms.BooleanField(required=False,initial=False)
 
     class Meta:
         model = TurfGallery
-        fields = ('username','isheader')
+        fields = ('username','image','caption','isheader')
+
+
+# class DashboardHeader(ModelForm):
+#     username = forms.CharField(required=True)
+#     image = forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+#     isheader = forms.BooleanField(initial=False)
+
+#     class Meta:
+#         model = TurfGallery
+#         fields = ('username','image','isheader')
     
     # def save(self,request):
     #     updategallery = TurfGallery.objects.filter( username = request.user.username ).exclude(isheader="").exists()

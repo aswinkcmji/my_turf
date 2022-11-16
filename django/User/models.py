@@ -36,7 +36,7 @@ class RequestModel(models.Model):
     
 class TournamentModel(models.Model):
     category = models.ForeignKey(CategoriesModel, on_delete=models.CASCADE)
-    team_name = models.CharField(max_length=100 ,blank=True)
+    team_name =  models.ForeignKey('User.CreateTeamModel', on_delete=models.CASCADE)
     start_date= models.DateField(blank=True)
     end_date= models.DateField(blank=True) 
     start_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
@@ -52,7 +52,7 @@ class TournamentModel(models.Model):
 class TournamentRequestModel(models.Model):
     tournament_id = models.ForeignKey(TournamentModel, on_delete=models.CASCADE)
     category=models.ForeignKey(CategoriesModel, on_delete=models.CASCADE)
-    team_name = models.CharField(max_length=100 ,blank=True)
+    team_name =  models.ForeignKey("CreateTeamModel", on_delete=models.CASCADE)
     username=models.CharField(max_length=30,null=False,blank=False)
     phoneno=models.CharField(max_length=16,default=7414414141)
     status=models.CharField(default="Pending",max_length=30,null=False,blank=False)
@@ -66,8 +66,12 @@ class CreateTeamModel(models.Model):
     team_name = models.CharField(max_length=30,blank=False,null=False)
     category=models.ForeignKey(CategoriesModel, on_delete=models.CASCADE)
     members=models.IntegerField()
+    # # tournament_id=models.ForeignKey(TournamentModel, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.team_name,)
 
+# team_name = models.CharField(max_length=100 ,blank=True)
 
 
 

@@ -54,28 +54,34 @@
 
                                                         <div class="col-lg-12">
                                                             <div class="form-group">
-                                                            {% comment %} <label for="username" class="form-label"></label>  {% endcomment %}
                                                             {% render_field form.username type="text" class='form-control'  value=request.user.username hidden=true%}
                                                             </div>
                                                             <span class="text-error  text-danger">{{ form.username.errors }}</span>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                            {% render_field form.isheader type="text" class='form-control'  hidden=true%}
+                                                            </div>
+                                                            <span class="text-error  text-danger">{{ form.isheader.errors }}</span>
                                                         </div>
                                                         
                                                         <div class="col-lg-12">
                                                             <div class="form-group">
                                                             <label for="images" class="form-label">Image</label>
-                                                            {{form.image}}
+                                                            <!-- {{form.image}} -->
+                                                            {% render_field form.image  class="form-control  mt-2" required=true %}
                                                             </div>
                                                             <span class="text-error  text-danger">{{ form.Image.errors }}</span>
                                                         </div>
                                                         <div class="col-lg-12">
                                                             <div class="form-group">
                                                             <label for="caption" class="form-label">Caption</label>
-                                                            {{form.caption}}
+                                                            {% render_field form.caption class="form-control mt-2" required=true %}
                                                             </div>
                                                             <span class="text-error  text-danger">{{ form.caption.errors }}</span>
                                                         </div>
         
-                                    
+                                                        
                                                     </div>
         
         
@@ -120,7 +126,7 @@
                             <div class="modal fade" id="staticBackdrop{{data.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <div class="modal-header">
+                                        <div class="modal-header ">
                                             <h5 class="modal-title" id="staticBackdropLabel">Edit/Delete</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
