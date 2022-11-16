@@ -62,3 +62,6 @@ class SignUpTurfForm(UserCreationForm):
         model = UserModel
         fields = ('username','turf_name' ,'email', 'phone','location','password1', 'password2','is_turf','avatar','landmark','category')
 
+
+def validateLocation():
+    return

@@ -46,18 +46,20 @@
                 </div>
             </div>
             <div class="iq-header-img">
-                <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
+                
+                <img src="{% if not header %}{% static 'assets/images/dashboard/top-header.png' %}{% else %}{{media_url}}{{header.image}}{% endif %}" alt="header"
                     class="theme-color-default-img  img-fluid w-100 h-100 animated-scaleX">
-                <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
+                <img src="{% if not header %}{% static 'assets/images/dashboard/top-header1.png' %}{% else %}{{media_url}}{{header.image}}{% endif %}" alt="header"
                     class="theme-color-purple-img  img-fluid w-100 h-100 animated-scaleX">
-                <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
+                <img src="{% if not header %}{% static 'assets/images/dashboard/top-header2.png' %}{% else %}{{media_url}}{{header.image}}{% endif %}" alt="header"
                     class="theme-color-blue-img  img-fluid w-100 h-100 animated-scaleX">
-                <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
+                <img src="{% if not header %}{% static 'assets/images/dashboard/top-header3.png' %}{% else %}{{media_url}}{{header.image}}{% endif %}" alt="header"
                     class="theme-color-green-img  img-fluid w-100 h-100 animated-scaleX">
-                <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
+                <img src="{% if not header %}{% static 'assets/images/dashboard/top-header4.png' %}{% else %}{{media_url}}{{header.image}}{% endif %}" alt="header"
                     class="theme-color-yellow-img  img-fluid w-100 h-100 animated-scaleX">
-                <img src="{% static 'assets/images/sports/15.jpg' %}" alt="header"
+                <img src="{% if not header %}{% static 'assets/images/dashboard/top-header5.png' %}{% else %}{{media_url}}{{header.image}}{% endif %}" alt="header"
                     class="theme-color-pink-img  img-fluid w-100 h-100 animated-scaleX">
+                
 
             </div>
         </div> <!-- Nav Header Component End -->
@@ -136,7 +138,7 @@
                                             </svg> Categories</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link " data-bs-toggle="tab" href="#profile-feedback"
+                                        <a class="nav-link " data-bs-toggle="tab" href="#profile-comment"
                                             role="tab" aria-selected="false"> <svg class="mb-1" width="20"
                                                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path opacity="0.4"
@@ -145,7 +147,7 @@
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
                                                     d="M11.9807 13.2901C11.2707 13.2801 10.7007 12.7101 10.7007 12.0001C10.7007 11.3001 11.2807 10.7201 11.9807 10.7301C12.6907 10.7301 13.2607 11.3001 13.2607 12.0101C13.2607 12.7101 12.6907 13.2901 11.9807 13.2901ZM7.37033 13.2901C6.67033 13.2901 6.09033 12.7101 6.09033 12.0101C6.09033 11.3001 6.66033 10.7301 7.37033 10.7301C8.08033 10.7301 8.65033 11.3001 8.65033 12.0101C8.65033 12.7101 8.08033 13.2801 7.37033 13.2901ZM15.3105 12.0101C15.3105 12.7101 15.8805 13.2901 16.5905 13.2901C17.3005 13.2901 17.8705 12.7101 17.8705 12.0101C17.8705 11.3001 17.3005 10.7301 16.5905 10.7301C15.8805 10.7301 15.3105 11.3001 15.3105 12.0101Z"
                                                     fill="currentColor"></path>
-                                            </svg> Feedbacks</a>
+                                            </svg> comments</a>
                                     </li>
                                 </ul>
                             </div>
@@ -176,8 +178,10 @@
                                     <!-- gallery -->
 
                                     {% if images %}
+                                    
                                     <div class="container_gallery">
                                         {% for image in images %}
+                                        {% if not  image.isheader %}
                                         <div id="figure_gallery" class="position-relative  grid-cols-1  m-0"
                                             style="break-inside: avoid;">
                                             <div class=" ">
@@ -188,16 +192,23 @@
 
                                             <div id="figcaption_gallery"
                                                 class="mb-4 mt-n4 position-relative px-3 py-1 w-100">
+                                                {% if image.caption %}
                                                 <div href="#" class="px-2 py-1 rounded-1 text-center text-dark w-100"
                                                     style="background: rgba( 255, 255, 255, 0.55 );box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );backdrop-filter: blur( 7.5px );-webkit-backdrop-filter: blur( 7.5px );border-radius: 10px;border: 1px solid rgba( 255, 255, 255, 0.18 );font-weight: 500;">
                                                     {{image.caption}}</div>
+                                                    {% endif %}
                                             </div>
                                         </div>
+                                        {% endif %}
                                         {% endfor %}
                                     </div>
                                     {% else %}
 
-                                    <div class="col-md-4 card  bg-light mx-auto">
+                                    <div class="col-md-4 card  mx-auto">
+                                        <div class="d-flex justify-content-center">
+                                            <img src="{% static 'assets/images/404images/noGallery.svg' %}" alt="search404"
+                class="  img-fluid  w-100 mx-auto">
+                                        </div>
                                         <div class="mx-auto card-body">
                                             Don't have any uploads
                                         </div>
@@ -240,10 +251,14 @@
                                         {% endfor %}
                                         {% endfor %}
                                         {% else %}
-                                        <div class="col-3 card">
-                                            <div class="card-body"
-                                                style="background-image: url('{{media_url}}{{category.image}}');">
-                                                <div class="bg-light w-100">No Category available yet!</div>
+                                        <div class="col-lg-5 card">
+                                            <div class="d-flex justify-content-center">
+                                                <img src="{% static 'assets/images/404images/no1.svg' %}" alt="search404"
+                    class="  img-fluid  w-75 mx-auto">
+                                            </div>
+                                            
+                                            <div class="d-flex justify-content-center mb-3">
+                                                <div class="">No Category available yet!</div>
                                             </div>
 
                                         </div>
@@ -261,9 +276,9 @@
                                     </div>
 
                                 </div>
-                                <div id="profile-feedback" class="tab-pane fade  ">
-                                    <!-- Feedbacks -->
-                                    <!-- Feedbacks -->
+                                <div id="profile-comment" class="tab-pane fade  ">
+                                    <!-- comments -->
+                                    <!-- comments -->
                                     <div
                                         class="border border-1 border-primary col-lg-11 col-sm-12 mx-auto px-3 py-3 rounded-2">
                                         <form id="TurfComment-form" class="" hx-post="{% url 'add-TurfComment' username=turf.username %}" hx-target='#comment-list'>
@@ -396,4 +411,9 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/masonry/3.1.5/masonry.pkgd.min.js"></script>
     <script src="/static/script.js"></script>{% endblock%}
 
+
+
+
+
+    
     {% endblock %}

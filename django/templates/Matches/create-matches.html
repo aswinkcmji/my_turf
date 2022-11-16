@@ -92,6 +92,7 @@ function useSuggestion(e) {
 }
 const suggestions = document.querySelector('.suggestion');
 suggestions.addEventListener('click', useSuggestion);
+document.addEventListener('click', () =>suggestions.innerHTML = '' );
 
 </script>
 <style>
