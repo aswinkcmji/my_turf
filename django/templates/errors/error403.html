@@ -30,7 +30,10 @@
       <link rel="stylesheet" href="/static/assets/css/rtl.min.css"/>
       
   </head>
-  <body class=" " data-bs-spy="scroll" data-bs-target="#elements-section" data-bs-offset="0" tabindex="0">
+  <body class=" bg-dark align-items-center" data-bs-spy="scroll" data-bs-target="#elements-section" data-bs-offset="0" tabindex="0" style="  background-image:url('/static/assets/images/error/403.webp') ;
+  background-repeat: no-repeat;
+  background-attachment: fixed;  
+  background-size: cover;">
     <!-- loader Start -->
     <div id="loading">
       <div class="loader simple-loader">
@@ -41,13 +44,13 @@
       <div class="wrapper">
 <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
 
-<div class="gradient">
-    <div class="container">
-        <img src="/static/assets/images/error/404.png" class="img-fluid mb-4 w-50" alt=""> 
-        <h2 class="mb-0 mt-4 text-white">You are not authorized</h2>
-        <p class="mt-2 text-white">The request failed.</p>
+<div class="">
+    <!-- <div class="container">
+        <img src="/static/assets/images/error/403.webp" class="img-fluid mb-4 w-75" alt=""> 
+        <h2 class="mb-0 mt-4 text-white"></h2>
+        <p class="mt-2 text-white"></p>
         <a class="btn bg-white text-primary d-inline-flex align-items-center" href="{% url 'home' %}">Back to Home</a>
-    </div>
+    </div> -->
     <div class="box">
         <div class="c xl-circle">
             <div class="c lg-circle">

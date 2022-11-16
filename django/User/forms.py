@@ -91,7 +91,7 @@ class creatematchForm(ModelForm):
     # options1 =[
     #     # for c in cat:
     #     #     (c,c)
-    # ]
+    # ] 
     # print(options1)
 
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
@@ -103,12 +103,13 @@ class creatematchForm(ModelForm):
     slots = forms.IntegerField()#nos = number of slots           
     creator= forms.CharField(widget=forms.HiddenInput())
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
+    city=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     # status=forms.CharField(widget=forms.HiddenInput())
     slot_available=forms.IntegerField(widget=forms.HiddenInput())
     # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model = MatchModel
-        fields = 'category','date','start_time_f','end_time_f','start_time','end_time','slots','creator','locality','creator'
+        fields = 'category','date','start_time_f','end_time_f','start_time','end_time','slots','city','locality','creator'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -167,12 +168,13 @@ class updatematchform(ModelForm):
     slots = forms.IntegerField()#nos = number of slots           
     creator= forms.CharField(widget=forms.HiddenInput())
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
+    city=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     # status=forms.CharField(widget=forms.HiddenInput())
     slot_available=forms.IntegerField(widget=forms.HiddenInput())
     # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model = MatchModel
-        fields = 'category','date','start_time_f','end_time_f','start_time','end_time','slots','creator','locality','creator'
+        fields = 'category','date','start_time_f','end_time_f','start_time','end_time','slots','city','locality','creator'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -393,8 +395,6 @@ class TournamentRequestForm(ModelForm):
             print("no erorrrrrrrrrrrrrrrrrrrrrrr")
         return self.cleaned_data
 
-        # print("phone number in form",self.cleaned_data.get('phoneno'),"its type is",type(self.cleaned_data.get('phoneno')))
-        # print("phone number in session",self.request.user.phone,"its type is",type(self.request.user.phone))
 
 class TeamCreationForm(forms.ModelForm):
 
@@ -420,3 +420,8 @@ class TeamCreationForm(forms.ModelForm):
 
 
         
+# class CreateTurfCommentForm(forms.Form):
+#     comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows':"2" , 'placeholder':"Add Your Comment "}))
+#     # class Meta():
+#     #     model = TurfCommentsModel
+#     #     fields =('turf','commenter','comment','date')

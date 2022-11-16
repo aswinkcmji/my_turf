@@ -8,20 +8,17 @@
   <div class="card p-2 m-4">
         <img src="/media/{{match.category.image}}" class="card-img-top" alt="Product 1" style="height:350px;object-fit: contain;">
         <div class="card-body p-1 ">
-          <h2>{{match.category}}</h2>
-          <p class="card-text text-dark ">Date of Match:<span class="text-secondary">{{match.date|date:"Y-m-d"}}</span></p>
-          <p class="card-text text-dark">Time:<span class="text-secondary">{{match.start_time|time:"H:i:s"}}</span> to  <span class="text-secondary">{{match.end_time|time:"H:i:s"}}</span></p>
-          <p class="card-text  text-dark">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
-          <p class="card-text text-dark">Locality:{{match.locality}}</p>
-          <!-- <p>{{match.creator}}</p>
-          <p>{{request.user.username}}</p> -->
+       <h2 class="card-text p-1">{{match.category}}</h2>
+          <p class="card-text ">Date of Match:{{match.date|date:"Y-m-d"}}</p>
+          <p class="card-text">Start-Time:{{match.start_time|time:"H:i:s"}}</p>
+          <p class="card-text">End-Time:{{match.end_time|time:"H:i:s"}}</p>
+          <p class="card-text">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
+          <p class="card-text">Locality:{{match.locality}}</p>
+          <p class="card-text">City:{{match.city}}</p>
           {% if match.creator == request.user.username and match.status == "Upcoming" %}
           <a href="edit/{{match.id}} "  class="btn btn-primary">
             EDIT
         </a>
-        <!-- <a  class="btn btn-primary" href="cancel/{{match.id}}">
-          Cancel
-        </a> -->
         <a onclick="return confirm('Are you sure you want to cancel this match?')" href="cancel/{{match.id}}" class="btn btn-primary">Cancel</a>
         {%elif match.creator == request.user.username%}
         <div class="col-4 "><img src="/static/assets/images/avatars/01.png" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-45"></div>

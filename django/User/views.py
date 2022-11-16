@@ -11,7 +11,6 @@ from django.urls import is_valid_path, reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import *
 from datetime import datetime,timedelta, date, time
 from django.utils import timezone
 from django.contrib import messages
@@ -26,6 +25,10 @@ from accounts.models import UserModel
 import operator
 from django.db.models import Q
 from functools import reduce
+from django.http import HttpResponse
+
+import json
+from django.views.decorators.http import require_http_methods
 # from datetime import datetime
 # import datetime as datetime
 # from .models import slotModel
@@ -45,21 +48,10 @@ class AllMatchesView(View):
         def get(self, request, *args, **kwargs):
             if not request.user.is_superuser and not request.user.is_superuser:
                 print(request.user.username)
-                # context={}
                 id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
-                user_location=request.user.location
-                location_list=user_location.split(",")
-                # print()
-                try:
-                    location_list.remove(' India')
-                except:
-                    pass
-                print(location_list)
-                matches=MatchModel.objects.filter(reduce(operator.or_, (Q(locality__icontains=x) for x in location_list)),status="Upcoming").exclude(id__in=list(id_list)).order_by("-id")
+                matches=MatchModel.objects.filter(city="Mannarakkat,Kerala,India",status="Upcoming").exclude(id__in=list(id_list)).order_by("-id")
                 form=RequestForm(request=request)
                 print("hllo",matches)
-                # context['matches']=matches
-                # context['form']=form
                 context ={'RequestForm': form ,'is_requestform':False , 'matches':matches}
                 print(context)
                 return render(request, 'Matches/all-matches.html',context)
@@ -101,7 +93,8 @@ class CreateMatchesView(View):
             'end_time_f':end_time.strftime("%H:%M:%S"),
             'start_time':datetime.now(),
             'end_time':end_time,
-            'locality':"",
+            'locality':request.user.location,
+            'city':request.user.location,
             'creator' : request.user.username,
             'status' : "Upcoming",
             'slot_available': 0,
@@ -201,12 +194,12 @@ class MatchHistoryView(View):
         jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).values().order_by("-id")#joined completed matches
         id_list3=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True).order_by("-id")
         jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).values().order_by("-id")#joined cancelled matches
-        crum=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Upcoming").order_by("-id") #created upcoming matches
-        crcom=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Completed").order_by("-id") #created completed matches
-        crcam=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Cancelled").order_by("-id") #created cancelled matches
+        crum=MatchModel.objects.filter(creator=request.user.username,status="Upcoming").order_by("-id") #created upcoming matches
+        crcom=MatchModel.objects.filter(creator=request.user.username,status="Completed").order_by("-id") #created completed matches
+        crcam=MatchModel.objects.filter(creator=request.user.username,status="Cancelled").order_by("-id") #created cancelled matches
         reqcan=RequestModel.objects.filter(username=request.user.username,status="Cancelled").order_by("-id")#requests cancelled
         reqrej=RequestModel.objects.filter(username=request.user.username,status="Rejected").order_by("-id")#requests rejected
-        id_list4=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location).values_list('id',flat=True).order_by("-id")
+        id_list4=MatchModel.objects.filter(creator=request.user.username).values_list('id',flat=True).order_by("-id")
         reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted").exclude(username=request.user.username).order_by("-id")
         reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected").exclude(username=request.user.username).order_by("-id")
         context={}
@@ -250,6 +243,7 @@ class EditMatchesView(View):
             'end_time_f':editobj.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
             'start_time':editobj.start_time,
             'end_time':editobj.end_time,
+            'city':editobj.city,
             'locality':editobj.locality,
             'status':editobj.status,
             "creator" : request.user.username,
@@ -348,8 +342,8 @@ class RequestsView(View):
 @method_decorator(login_required,name='dispatch')
 class  JoinMatchView(View):
     def get(self, request,id, *args, **kwargs):
-                user_location=request.user.location
-                location_list=user_location.split(",")
+                # user_location=request.user.location
+                # location_list=user_location.split(",")
                 matches=MatchModel.objects.filter(id=id)
 
                 
@@ -425,6 +419,7 @@ class CancelMatchView(View):
              return HttpResponseRedirect(reverse('my-matches'))
         print("hiiiiiiiiiiiiiiiiiiiiiii",reqdata)
         reqdata.status="Cancelled"
+        reqdata.cron=0
         reqdata.save()
         return HttpResponseRedirect(reverse('match-history'))
 
@@ -928,13 +923,186 @@ class TurfsListView(View):
 @method_decorator(login_required,name='dispatch')
 class TurfProfileView(View):
     def get(self, request, *args, **kwargs):
-        id = kwargs.pop('id')
+        username = kwargs.pop('username')
 
-        turf = UserModel.objects.filter(id=id).first()  
-        images = TurfGallery.objects.filter(username = "tr001").values()
+        turf = UserModel.objects.filter(username=username).first()  
+        images = TurfGallery.objects.filter(username = username )
+        categories = CategoriesModel.objects.all()
+        categories_dict={}
+        for category in categories:
+            categories_dict[str(category.id)]={'category':category.category,'image':category.image}
+        comments = TurfCommentsModel.objects.filter(turf=turf).order_by('-date')
+        # commentForm = CreateTurfCommentForm(initial={'turf':turf,'commenter':request.user,'date':datetime.now()})
+        liked_comments = []
+        for comment in comments:
+            if comment.liked_users:
+                for user in comment.liked_users:
+                    if user == request.user.username:
+                        liked_comments.append(comment)
+                        continue
 
-        context = {'id': id,
+
+        context = {'id': turf.id,
                     'turf':turf,
                     'media_url':settings.MEDIA_URL,
-                    'images':images}
+                    'images':images,
+                    'categories_dict': categories_dict,
+                    'liked_comments':liked_comments,
+                    'comments':comments,}
         return render(request, 'turf/turf_profile.html',context)
+    # def post (self, request, *args, **kwargs):
+    #     username = kwargs.pop('username')
+
+    #     turf = UserModel.objects.filter(username=username).first()  
+    #     images = TurfGallery.objects.filter(username = username )
+    #     categories = CategoriesModel.objects.all()
+    #     categories_dict={}
+    #     for category in categories:
+    #         categories_dict[str(category.id)]={'category':category.category,'image':category.image}
+    #     comments = TurfCommentsModel.objects.filter(turf=turf).order_by('-date')
+    #     print(comments)
+    #     commentForm = CreateTurfCommentForm(initial={'turf':turf,'commenter':request.user,'date':datetime.now()})
+    #     context = {'id': turf.id,
+    #                 'turf':turf,
+    #                 'media_url':settings.MEDIA_URL,
+    #                 'images':images,
+    #                 'categories_dict': categories_dict,
+    #                 'commentForm':commentForm,
+    #                 'comments':comments,}
+
+    #     if request.method == 'POST':
+    #         commentForm = CreateTurfCommentForm(request.POST)
+    #         if commentForm.is_valid():
+    #             commentForm.turf = turf
+    #             commentForm.commenter = request.user
+    #             commentForm.date=datetime.now()
+    #             commentForm.save()
+    #             return HttpResponseRedirect(reverse('turf_profile',args=[str(username)]))
+    #         else:
+    #             context['commentForm']=commentForm
+    #             return render(request, 'turf/turf_profile.html',context)
+    #     messages.error(request	,'Something went wrong')
+    #     return render(request, 'turf/turf_profile.html',context)
+@method_decorator(login_required,name='dispatch')
+class AddTurfCommentView(View):
+    def post(self, request, *args, **kwargs):
+        print("working rrrrrrrrrrrrrrrrrrrrrrrr")
+        username = kwargs.pop('username')
+
+        turf = UserModel.objects.filter(username=username).first() 
+        try:
+            if  request.POST.get("comment") != "":
+                comment= TurfCommentsModel.objects.create(  turf = turf,
+                                                            commenter = request.user ,
+                                                            date=datetime.now(),comment=request.POST.get("comment"),)
+        except:
+            message.error(request , "something went wrong, Retry")
+            
+        
+        comments = TurfCommentsModel.objects.filter(turf=turf).order_by('-date')
+        context = {
+                    'media_url':settings.MEDIA_URL,
+                    'comments':comments,}
+     
+        return render(request, 'turf/comment_list.html',context)
+
+@method_decorator(login_required,name='dispatch')
+class LikeTurfCommentView(View):
+    # @require_http_methods(['LIKETURFCOMMENT'])
+    def post(self, request, *args, **kwargs):
+        id = kwargs.pop('id')
+
+        comment = TurfCommentsModel.objects.get(id=id)
+        liked_users= comment.liked_users
+        
+
+
+        if liked_users:
+            if request.user.username in liked_users:
+                liked_users.remove(request.user.username)
+                comment.likes_count -= 1
+                comment.save()
+                return HttpResponse(' <div class="d-flex justify-content-start "> <div class="me-1 ms-2">'+ str(comment.likes_count)+' Likes </div>  <div><svg class="mb-1" width="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M2.87187 11.5983C1.79887 8.24832 3.05287 4.41932 6.56987 3.28632C8.41987 2.68932 10.4619 3.04132 11.9999 4.19832C13.4549 3.07332 15.5719 2.69332 17.4199 3.28632C20.9369 4.41932 22.1989 8.24832 21.1269 11.5983C19.4569 16.9083 11.9999 20.9983 11.9999 20.9983C11.9999 20.9983 4.59787 16.9703 2.87187 11.5983Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"> </path> <path d="M16 6.69995C17.07 7.04595 17.826 8.00095 17.917 9.12195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>  </svg> </div></div> ')
+
+            else:
+                liked_users.append(request.user.username)
+                comment.liked_users = liked_users
+                comment.likes_count += 1
+                comment.save()
+                return HttpResponse('<div class="d-flex justify-content-start "> <div class="me-1 ms-2">'+ str(comment.likes_count)+' Likes </div>  <div> <svg class="mb-1" width="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M15.85 2.50065C16.481 2.50065 17.111 2.58965 17.71 2.79065C21.401 3.99065 22.731 8.04065 21.62 11.5806C20.99 13.3896 19.96 15.0406 18.611 16.3896C16.68 18.2596 14.561 19.9196 12.28 21.3496L12.03 21.5006L11.77 21.3396C9.48102 19.9196 7.35002 18.2596 5.40102 16.3796C4.06102 15.0306 3.03002 13.3896 2.39002 11.5806C1.26002 8.04065 2.59002 3.99065 6.32102 2.76965C6.61102 2.66965 6.91002 2.59965 7.21002 2.56065H7.33002C7.61102 2.51965 7.89002 2.50065 8.17002 2.50065H8.28002C8.91002 2.51965 9.52002 2.62965 10.111 2.83065H10.17C10.21 2.84965 10.24 2.87065 10.26 2.88965C10.481 2.96065 10.69 3.04065 10.89 3.15065L11.27 3.32065C11.3618 3.36962 11.4649 3.44445 11.554 3.50912C11.6104 3.55009 11.6612 3.58699 11.7 3.61065C11.7163 3.62028 11.7329 3.62996 11.7496 3.63972C11.8354 3.68977 11.9247 3.74191 12 3.79965C13.111 2.95065 14.46 2.49065 15.85 2.50065ZM18.51 9.70065C18.92 9.68965 19.27 9.36065 19.3 8.93965V8.82065C19.33 7.41965 18.481 6.15065 17.19 5.66065C16.78 5.51965 16.33 5.74065 16.18 6.16065C16.04 6.58065 16.26 7.04065 16.68 7.18965C17.321 7.42965 17.75 8.06065 17.75 8.75965V8.79065C17.731 9.01965 17.8 9.24065 17.94 9.41065C18.08 9.58065 18.29 9.67965 18.51 9.70065Z" fill="currentColor"></path>  </svg> </div></div>')
+            
+        else:
+            liked_users = []
+            liked_users.append(request.user.username)
+            comment.liked_users = liked_users
+            comment.likes_count += 1
+            comment.save()
+            return HttpResponse('<div class="d-flex justify-content-start "> <div class="me-1 ms-2">'+ str(comment.likes_count)+' Likes </div>  <div> <svg class="mb-1" width="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M15.85 2.50065C16.481 2.50065 17.111 2.58965 17.71 2.79065C21.401 3.99065 22.731 8.04065 21.62 11.5806C20.99 13.3896 19.96 15.0406 18.611 16.3896C16.68 18.2596 14.561 19.9196 12.28 21.3496L12.03 21.5006L11.77 21.3396C9.48102 19.9196 7.35002 18.2596 5.40102 16.3796C4.06102 15.0306 3.03002 13.3896 2.39002 11.5806C1.26002 8.04065 2.59002 3.99065 6.32102 2.76965C6.61102 2.66965 6.91002 2.59965 7.21002 2.56065H7.33002C7.61102 2.51965 7.89002 2.50065 8.17002 2.50065H8.28002C8.91002 2.51965 9.52002 2.62965 10.111 2.83065H10.17C10.21 2.84965 10.24 2.87065 10.26 2.88965C10.481 2.96065 10.69 3.04065 10.89 3.15065L11.27 3.32065C11.3618 3.36962 11.4649 3.44445 11.554 3.50912C11.6104 3.55009 11.6612 3.58699 11.7 3.61065C11.7163 3.62028 11.7329 3.62996 11.7496 3.63972C11.8354 3.68977 11.9247 3.74191 12 3.79965C13.111 2.95065 14.46 2.49065 15.85 2.50065ZM18.51 9.70065C18.92 9.68965 19.27 9.36065 19.3 8.93965V8.82065C19.33 7.41965 18.481 6.15065 17.19 5.66065C16.78 5.51965 16.33 5.74065 16.18 6.16065C16.04 6.58065 16.26 7.04065 16.68 7.18965C17.321 7.42965 17.75 8.06065 17.75 8.75965V8.79065C17.731 9.01965 17.8 9.24065 17.94 9.41065C18.08 9.58065 18.29 9.67965 18.51 9.70065Z" fill="currentColor"></path>  </svg> </div></div>')
+
+
+@method_decorator(login_required,name='dispatch')
+class SearchCityView(View):
+    def post(self, request, *args, **kwargs):
+            search_text = request.POST.get('city')
+            print("#########################INSIDE SearchCityView ##################")
+            if len(search_text)>=3:
+                results=CitiesModel.objects.filter(name__icontains=search_text,country="India")
+                return render(request, 'Matches/cities-list.html',{"results":results})
+            else:
+                # return render(request, 'Matches/cities-list.html',{"results":results})
+                return render(request, 'Matches/cities-list.html',{})
+
+
+
+@method_decorator(login_required,name='dispatch')
+class SearchTurfListView(View):
+    def post(self, request, *args, **kwargs):
+        searchkey = request.POST.get('search_turf_list')
+        turfs = UserModel.objects.filter(is_turf=True)
+
+        searched_category = CategoriesModel.objects.filter(category__icontains=searchkey)
+        turfs_by_category=CategoriesModel.objects.none()
+        for item in searched_category:
+            searched_category_id =item.pk
+            turfs_by_category |= turfs.filter(category__icontains=searched_category_id)
+        
+        turfs_by_username = turfs.filter(turf_name__icontains=searchkey)
+        turfs_by_location = turfs.filter(location__icontains=searchkey)
+
+        turfs_result = (turfs_by_username | turfs_by_location | turfs_by_category).distinct()
+        # print("turfs_by_location......................... ",turfs_by_location)
+
+        # if turfs:
+        #     if turfs_by_username:
+        #         if turfs_by_location:
+        #             turfs_by_username.union(turfs_by_location) 
+        #         if turfs_by_category:
+        #             turfs_by_username.union(turfs_by_category) 
+        categories = CategoriesModel.objects.all()
+        categories_dict={}
+        for category in categories:
+            categories_dict[str(category.id)]=category.category
+        context = {'media_url':settings.MEDIA_URL, 'turfs':turfs_result,
+                    'categories_dict': categories_dict,
+                    'is_searching':True,
+                    'search_KW':searchkey,}
+        return render(request , 'turf/turfs.html',context)
+
+@method_decorator(login_required,name='dispatch')
+class SearchMatchView(View):
+    def post(self, request, *args, **kwargs):
+        search_word = request.POST.get('search')
+        try:
+            date_obj=datetime.strptime(search_word, '%Y-%m-%d')
+        except:
+            date_obj=datetime.now().date()
+        print(date_obj,type(date_obj))
+        categories=CategoriesModel.objects.filter(category__icontains=search_word)
+        print(categories)
+        id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
+        matches=MatchModel.objects.filter(Q(city__icontains=search_word)|Q(creator__icontains=search_word)|Q(date=date_obj)|Q(category__in=categories)&Q(status="Upcoming")).exclude(creator=request.user.username)
+        # matches=MatchModel.objects.filter(category__in=categories).exclude(creator=request.user.username,id__in=list(id_list))
+        form=RequestForm(request=request)
+        context ={'RequestForm': form ,'is_requestform':False , 'matches':matches}
+        print("###################### Inside SearchMatchView ###########################",context,matches)
+        return render(request, 'Matches/matches.html',context)

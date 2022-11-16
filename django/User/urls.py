@@ -20,7 +20,7 @@ urlpatterns = [
     path('matches/join/<int:id>',JoinMatchView.as_view(),name="join"),
     path("matches-history/cancel/<int:id>",CancelMatchView.as_view(),name="cancelmatch"),
     path("my-matches/cancel/<int:id>",CancelMatchView.as_view(),name="cancelmatch"),
-
+    
     path('create-tournament/', CreateTournamentView.as_view(), name="create-tournament"),
     path('all-tournaments/', AllTournamentView.as_view(), name="all-tournaments"),
     path('my-tournaments/', MyTournamentView.as_view(), name="my-tournaments"),
@@ -40,8 +40,18 @@ urlpatterns = [
 
     
 
-    path('turfs_list/',TurfsListView.as_view(), name="turfs_list"),
-    path('turf_profile/<slug:id>',TurfProfileView.as_view(), name="turf_profile"),
+    path('turfs_list/',TurfsListView.as_view(), name="turfs_list") , 
+    path('turf_profile/<str:username>',TurfProfileView.as_view(), name="turf_profile"),
+] 
+ 
 
+htmx_urlpatterns = [
+    path('like_turfComment/<int:id>',LikeTurfCommentView.as_view(), name="like_turfComment") , 
+    path("add-TurfComment/<str:username>", AddTurfCommentView.as_view() ,name="add-TurfComment"),
+    path("search-city/",SearchCityView.as_view(),name="search-city"),
+    path("search-matches/",SearchMatchView.as_view(),name="search-matches"),
+    path('search_turf_list/',SearchTurfListView.as_view(), name="search_turf_list") , 
 ]
 
+
+urlpatterns+= htmx_urlpatterns
