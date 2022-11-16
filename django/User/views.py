@@ -93,7 +93,7 @@ class CreateMatchesView(View):
             'end_time_f':end_time.strftime("%H:%M:%S"),
             'start_time':datetime.now(),
             'end_time':end_time,
-            'locality':request.user.location,
+            'locality':"",
             'city':request.user.location,
             'creator' : request.user.username,
             'status' : "Upcoming",
@@ -152,8 +152,8 @@ class CreateMatchesView(View):
             return HttpResponseRedirect(reverse('create-matches'))
 
         else:
-            # print(form.errors['start_time'])
-            if  not form.has_error('start_time_f', code=None) or not form.has_error('end_time_f', code=None):
+            print("########### HAS CITY ERROR #############", form.has_error('end_time_f', code=None))
+            if  not form.has_error('start_time_f', code=None) or not form.has_error('end_time_f', code=None) or not  form.has_error('city', code=None):
                      messages.error(request	,'Please do not change the fields')
             return render(request,self.template,{'form':form})
         
