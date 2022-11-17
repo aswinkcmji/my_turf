@@ -54,6 +54,9 @@ class SignupTurf(View):
             if request.method == 'POST':
                 form = SignUpTurfForm(request.POST,request.FILES)
                 if form.is_valid():
+                    print(request.POST.get('category'),"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+                    if request.POST.get('category') == "" or request.POST.get('category') == "[]":
+                        SignUpTurfForm.category= list
                     form.save()
                     
                     messages.success(self.request, "Account Created Successfully")

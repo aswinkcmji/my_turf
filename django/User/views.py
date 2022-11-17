@@ -853,32 +853,38 @@ class TurfsListView(View):
 class TurfProfileView(View):
     def get(self, request, *args, **kwargs):
         username = kwargs.pop('username')
+        
 
         turf = UserModel.objects.filter(username=username).first()  
-        images = TurfGallery.objects.filter(username = username )
-        categories = CategoriesModel.objects.all()
-        categories_dict={}
-        for category in categories:
-            categories_dict[str(category.id)]={'category':category.category,'image':category.image}
-        comments = TurfCommentsModel.objects.filter(turf=turf).order_by('-date')
-        # commentForm = CreateTurfCommentForm(initial={'turf':turf,'commenter':request.user,'date':datetime.now()})
-        liked_comments = []
-        for comment in comments:
-            if comment.liked_users:
-                for user in comment.liked_users:
-                    if user == request.user.username:
-                        liked_comments.append(comment)
-                        continue
+        if turf:
+            images = TurfGallery.objects.filter(username = username )
+            categories = CategoriesModel.objects.all()
+            categories_dict={}
+            for category in categories:
+                categories_dict[str(category.id)]={'category':category.category,'image':category.image}
+            comments = TurfCommentsModel.objects.filter(turf=turf).order_by('-date')
+            # commentForm = CreateTurfCommentForm(initial={'turf':turf,'commenter':request.user,'date':datetime.now()})
+            liked_comments = []
+            for comment in comments:
+                if comment.liked_users:
+                    for user in comment.liked_users:
+                        if user == request.user.username:
+                            liked_comments.append(comment)
+                            continue
 
-
-        context = {'id': turf.id,
-                    'turf':turf,
-                    'media_url':settings.MEDIA_URL,
-                    'images':images,
-                    'categories_dict': categories_dict,
-                    'liked_comments':liked_comments,
-                    'comments':comments,}
-        return render(request, 'turf/turf_profile.html',context)
+            
+            header = TurfGallery.objects.filter( username = username ,isheader = True).first()
+            context = {'id': turf.id,
+                        'turf':turf,
+                        'media_url':settings.MEDIA_URL,
+                        'images':images,
+                        'categories_dict': categories_dict,
+                        'liked_comments':liked_comments,
+                        'comments':comments,
+                        "header":header}
+            return render(request, 'turf/turf_profile.html',context)
+        else:
+            return render(request, 'errors/error404.html',{})
     # def post (self, request, *args, **kwargs):
     #     username = kwargs.pop('username')
 
@@ -951,14 +957,14 @@ class LikeTurfCommentView(View):
                 liked_users.remove(request.user.username)
                 comment.likes_count -= 1
                 comment.save()
-                return HttpResponse(' <div class="d-flex justify-content-start "> <div class="me-1 ms-2">'+ str(comment.likes_count)+' Likes </div>  <div><svg class="mb-1" width="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M2.87187 11.5983C1.79887 8.24832 3.05287 4.41932 6.56987 3.28632C8.41987 2.68932 10.4619 3.04132 11.9999 4.19832C13.4549 3.07332 15.5719 2.69332 17.4199 3.28632C20.9369 4.41932 22.1989 8.24832 21.1269 11.5983C19.4569 16.9083 11.9999 20.9983 11.9999 20.9983C11.9999 20.9983 4.59787 16.9703 2.87187 11.5983Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"> </path> <path d="M16 6.69995C17.07 7.04595 17.826 8.00095 17.917 9.12195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>  </svg> </div></div> ')
+                return HttpResponse(' <div class="d-flex justify-content-start "> <div class="me-1 ms-2 text-body">'+ str(comment.likes_count)+' Likes </div>  <div><svg style="cursor:pointer ;" class="mb-1" width="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M2.87187 11.5983C1.79887 8.24832 3.05287 4.41932 6.56987 3.28632C8.41987 2.68932 10.4619 3.04132 11.9999 4.19832C13.4549 3.07332 15.5719 2.69332 17.4199 3.28632C20.9369 4.41932 22.1989 8.24832 21.1269 11.5983C19.4569 16.9083 11.9999 20.9983 11.9999 20.9983C11.9999 20.9983 4.59787 16.9703 2.87187 11.5983Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"> </path> <path d="M16 6.69995C17.07 7.04595 17.826 8.00095 17.917 9.12195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>  </svg> </div></div> ')
 
             else:
                 liked_users.append(request.user.username)
                 comment.liked_users = liked_users
                 comment.likes_count += 1
                 comment.save()
-                return HttpResponse('<div class="d-flex justify-content-start "> <div class="me-1 ms-2">'+ str(comment.likes_count)+' Likes </div>  <div> <svg class="mb-1" width="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M15.85 2.50065C16.481 2.50065 17.111 2.58965 17.71 2.79065C21.401 3.99065 22.731 8.04065 21.62 11.5806C20.99 13.3896 19.96 15.0406 18.611 16.3896C16.68 18.2596 14.561 19.9196 12.28 21.3496L12.03 21.5006L11.77 21.3396C9.48102 19.9196 7.35002 18.2596 5.40102 16.3796C4.06102 15.0306 3.03002 13.3896 2.39002 11.5806C1.26002 8.04065 2.59002 3.99065 6.32102 2.76965C6.61102 2.66965 6.91002 2.59965 7.21002 2.56065H7.33002C7.61102 2.51965 7.89002 2.50065 8.17002 2.50065H8.28002C8.91002 2.51965 9.52002 2.62965 10.111 2.83065H10.17C10.21 2.84965 10.24 2.87065 10.26 2.88965C10.481 2.96065 10.69 3.04065 10.89 3.15065L11.27 3.32065C11.3618 3.36962 11.4649 3.44445 11.554 3.50912C11.6104 3.55009 11.6612 3.58699 11.7 3.61065C11.7163 3.62028 11.7329 3.62996 11.7496 3.63972C11.8354 3.68977 11.9247 3.74191 12 3.79965C13.111 2.95065 14.46 2.49065 15.85 2.50065ZM18.51 9.70065C18.92 9.68965 19.27 9.36065 19.3 8.93965V8.82065C19.33 7.41965 18.481 6.15065 17.19 5.66065C16.78 5.51965 16.33 5.74065 16.18 6.16065C16.04 6.58065 16.26 7.04065 16.68 7.18965C17.321 7.42965 17.75 8.06065 17.75 8.75965V8.79065C17.731 9.01965 17.8 9.24065 17.94 9.41065C18.08 9.58065 18.29 9.67965 18.51 9.70065Z" fill="currentColor"></path>  </svg> </div></div>')
+                return HttpResponse('<div class="d-flex justify-content-start "> <div class="me-1 ms-2 text-body">'+ str(comment.likes_count)+' Likes </div>  <div> <svg style="cursor:pointer ;" class="mb-1" width="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M15.85 2.50065C16.481 2.50065 17.111 2.58965 17.71 2.79065C21.401 3.99065 22.731 8.04065 21.62 11.5806C20.99 13.3896 19.96 15.0406 18.611 16.3896C16.68 18.2596 14.561 19.9196 12.28 21.3496L12.03 21.5006L11.77 21.3396C9.48102 19.9196 7.35002 18.2596 5.40102 16.3796C4.06102 15.0306 3.03002 13.3896 2.39002 11.5806C1.26002 8.04065 2.59002 3.99065 6.32102 2.76965C6.61102 2.66965 6.91002 2.59965 7.21002 2.56065H7.33002C7.61102 2.51965 7.89002 2.50065 8.17002 2.50065H8.28002C8.91002 2.51965 9.52002 2.62965 10.111 2.83065H10.17C10.21 2.84965 10.24 2.87065 10.26 2.88965C10.481 2.96065 10.69 3.04065 10.89 3.15065L11.27 3.32065C11.3618 3.36962 11.4649 3.44445 11.554 3.50912C11.6104 3.55009 11.6612 3.58699 11.7 3.61065C11.7163 3.62028 11.7329 3.62996 11.7496 3.63972C11.8354 3.68977 11.9247 3.74191 12 3.79965C13.111 2.95065 14.46 2.49065 15.85 2.50065ZM18.51 9.70065C18.92 9.68965 19.27 9.36065 19.3 8.93965V8.82065C19.33 7.41965 18.481 6.15065 17.19 5.66065C16.78 5.51965 16.33 5.74065 16.18 6.16065C16.04 6.58065 16.26 7.04065 16.68 7.18965C17.321 7.42965 17.75 8.06065 17.75 8.75965V8.79065C17.731 9.01965 17.8 9.24065 17.94 9.41065C18.08 9.58065 18.29 9.67965 18.51 9.70065Z" fill="currentColor"></path>  </svg> </div></div>')
             
         else:
             liked_users = []
@@ -966,20 +972,28 @@ class LikeTurfCommentView(View):
             comment.liked_users = liked_users
             comment.likes_count += 1
             comment.save()
-            return HttpResponse('<div class="d-flex justify-content-start "> <div class="me-1 ms-2">'+ str(comment.likes_count)+' Likes </div>  <div> <svg class="mb-1" width="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M15.85 2.50065C16.481 2.50065 17.111 2.58965 17.71 2.79065C21.401 3.99065 22.731 8.04065 21.62 11.5806C20.99 13.3896 19.96 15.0406 18.611 16.3896C16.68 18.2596 14.561 19.9196 12.28 21.3496L12.03 21.5006L11.77 21.3396C9.48102 19.9196 7.35002 18.2596 5.40102 16.3796C4.06102 15.0306 3.03002 13.3896 2.39002 11.5806C1.26002 8.04065 2.59002 3.99065 6.32102 2.76965C6.61102 2.66965 6.91002 2.59965 7.21002 2.56065H7.33002C7.61102 2.51965 7.89002 2.50065 8.17002 2.50065H8.28002C8.91002 2.51965 9.52002 2.62965 10.111 2.83065H10.17C10.21 2.84965 10.24 2.87065 10.26 2.88965C10.481 2.96065 10.69 3.04065 10.89 3.15065L11.27 3.32065C11.3618 3.36962 11.4649 3.44445 11.554 3.50912C11.6104 3.55009 11.6612 3.58699 11.7 3.61065C11.7163 3.62028 11.7329 3.62996 11.7496 3.63972C11.8354 3.68977 11.9247 3.74191 12 3.79965C13.111 2.95065 14.46 2.49065 15.85 2.50065ZM18.51 9.70065C18.92 9.68965 19.27 9.36065 19.3 8.93965V8.82065C19.33 7.41965 18.481 6.15065 17.19 5.66065C16.78 5.51965 16.33 5.74065 16.18 6.16065C16.04 6.58065 16.26 7.04065 16.68 7.18965C17.321 7.42965 17.75 8.06065 17.75 8.75965V8.79065C17.731 9.01965 17.8 9.24065 17.94 9.41065C18.08 9.58065 18.29 9.67965 18.51 9.70065Z" fill="currentColor"></path>  </svg> </div></div>')
+            return HttpResponse('<div class="d-flex justify-content-start "> <div class="me-1 ms-2 text-body">'+ str(comment.likes_count)+' Likes </div>  <div> <svg style="cursor:pointer ;" class="mb-1" width="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M15.85 2.50065C16.481 2.50065 17.111 2.58965 17.71 2.79065C21.401 3.99065 22.731 8.04065 21.62 11.5806C20.99 13.3896 19.96 15.0406 18.611 16.3896C16.68 18.2596 14.561 19.9196 12.28 21.3496L12.03 21.5006L11.77 21.3396C9.48102 19.9196 7.35002 18.2596 5.40102 16.3796C4.06102 15.0306 3.03002 13.3896 2.39002 11.5806C1.26002 8.04065 2.59002 3.99065 6.32102 2.76965C6.61102 2.66965 6.91002 2.59965 7.21002 2.56065H7.33002C7.61102 2.51965 7.89002 2.50065 8.17002 2.50065H8.28002C8.91002 2.51965 9.52002 2.62965 10.111 2.83065H10.17C10.21 2.84965 10.24 2.87065 10.26 2.88965C10.481 2.96065 10.69 3.04065 10.89 3.15065L11.27 3.32065C11.3618 3.36962 11.4649 3.44445 11.554 3.50912C11.6104 3.55009 11.6612 3.58699 11.7 3.61065C11.7163 3.62028 11.7329 3.62996 11.7496 3.63972C11.8354 3.68977 11.9247 3.74191 12 3.79965C13.111 2.95065 14.46 2.49065 15.85 2.50065ZM18.51 9.70065C18.92 9.68965 19.27 9.36065 19.3 8.93965V8.82065C19.33 7.41965 18.481 6.15065 17.19 5.66065C16.78 5.51965 16.33 5.74065 16.18 6.16065C16.04 6.58065 16.26 7.04065 16.68 7.18965C17.321 7.42965 17.75 8.06065 17.75 8.75965V8.79065C17.731 9.01965 17.8 9.24065 17.94 9.41065C18.08 9.58065 18.29 9.67965 18.51 9.70065Z" fill="currentColor"></path>  </svg> </div></div>')
 
 
-@method_decorator(login_required,name='dispatch')
+
 class SearchCityView(View):
+    def get (self, request,*args, **kwargs):
+        return HttpResponse("Method Not Allowed")
     def post(self, request, *args, **kwargs):
-            search_text = request.POST.get('city')
-            print("#########################INSIDE SearchCityView ##################")
-            if len(search_text)>=3:
-                results=CitiesModel.objects.filter(name__icontains=search_text,country="India")
-                return render(request, 'Matches/cities-list.html',{"results":results})
+            feildname = kwargs.pop('feildname')
+            search_text = request.POST.get(feildname)
+            print("#########################INSIDE SearchCityView" ,search_text ,"##################")
+            if search_text:
+                if len(search_text)>=3:
+                    results=CitiesModel.objects.filter(name__icontains=search_text)
+                    print(results,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    return render(request, 'Matches/cities-list.html',{"results":results})
+                else:
+                    return render(request, 'Matches/cities-list.html',{})
             else:
                 # return render(request, 'Matches/cities-list.html',{"results":results})
                 return render(request, 'Matches/cities-list.html',{})
+
 
 
 
