@@ -215,7 +215,8 @@ class createtournamentForm(ModelForm):
 
 
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
-    team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
+    # team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
+    team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     # team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
@@ -283,7 +284,7 @@ class updatetournamentform(ModelForm):
 
     tournament_id = forms.ModelChoiceField(queryset=TournamentModel.objects.all(),widget=forms.HiddenInput())
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
-    team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
+    team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
@@ -337,7 +338,7 @@ class updatetournamentform(ModelForm):
 
 class TournamentRequestForm(ModelForm):
     category = forms.ModelChoiceField(queryset=CategoriesModel.objects.all(),widget=forms.HiddenInput())
-    team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all(),widget=forms.HiddenInput())
+    team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     start_date =forms.DateField(widget=forms.HiddenInput())
     end_date = forms.DateField(widget=forms.HiddenInput())
     start_time = forms.TimeField(widget=forms.HiddenInput())
@@ -396,16 +397,16 @@ class TournamentRequestForm(ModelForm):
         return self.cleaned_data
 
 
-class TeamCreationForm(forms.ModelForm):
+# class TeamCreationForm(forms.ModelForm):
 
-    team_name= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
-    members = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    # team_name= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    # category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
+    # members = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     # tournament_id =forms.IntegerField(widget=forms.HiddenInput())
 
-    class Meta:
-        model = CreateTeamModel
-        fields = ('team_name','category','members',)
+    # class Meta:
+        # model = CreateTeamModel
+        # fields = ('team_name',)
 
     # def clean(self):
     #     self.cleaned_data = super().clean()
