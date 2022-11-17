@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.views import View
 from .forms import *
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import auth
@@ -30,7 +30,9 @@ class Signup(View):
             if request.method == 'POST':
                 form = SignUpForm(request.POST)
                 if form.is_valid():
-                    form.save()
+                    user_obj=form.save(commit=False)
+                    user_obj.current_location=user_obj.location
+                    user_obj.save()
                     messages.success(self.request, "Account Created Successfully")
                     return HttpResponseRedirect(reverse('login'))
                       
@@ -57,7 +59,9 @@ class SignupTurf(View):
                     print(request.POST.get('category'),"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
                     if request.POST.get('category') == "" or request.POST.get('category') == "[]":
                         SignUpTurfForm.category= list
-                    form.save()
+                    user_obj=form.save(commit=False)
+                    user_obj.current_location=user_obj.location
+                    user_obj.save()
                     
                     messages.success(self.request, "Account Created Successfully")
                     return HttpResponseRedirect(reverse('login'))
@@ -109,27 +113,59 @@ class User_ProfileView(View):
             }
             print(data,request.user.id)
             form=UpdateProfileForm(data)
+            cpform=MyPasswordChangeForm(request.user)
             print(form)
-            return render(request,self.template_name,{"form":form})
+            return render(request,self.template_name,{"form":form,"cpform":cpform})
         else:
            return HttpResponseRedirect(reverse('login')) 
     def post(self, request, *args, **kwargs):
             if request.method == 'POST':
-                form=UpdateProfileForm(request.POST)
-                if form.is_valid():
-                    print("Kiki")
-                    user_obj=UserModel.objects.get(id=request.user.id)
-                    print(user_obj)
-                    user_obj.first_name=form.cleaned_data['first_name'] 
-                    user_obj.last_name=form.cleaned_data['last_name'] 
-                    user_obj.email=form.cleaned_data['email']
-                    user_obj.phone=form.cleaned_data['phone']
-                    user_obj.location=form.cleaned_data['location']
-                    user_obj.age=form.cleaned_data['age']
-                    user_obj.gender=form.cleaned_data['gender']
-                    user_obj.save()
-                    return HttpResponseRedirect(reverse('user-profile'))
-                else:
-                    print("###### Form not valid ################")
-                    print(form)
-                    return render(request,self.template_name,{"form":form})
+                if 'user-profile' in request.POST:
+                    form=UpdateProfileForm(request.POST)
+                    if form.is_valid():
+                        print("Kiki")
+                        user_obj=UserModel.objects.get(id=request.user.id)
+                        print(user_obj)
+                        user_obj.first_name=form.cleaned_data['first_name'] 
+                        user_obj.last_name=form.cleaned_data['last_name'] 
+                        user_obj.email=form.cleaned_data['email']
+                        user_obj.phone=form.cleaned_data['phone']
+                        user_obj.location=form.cleaned_data['location']
+                        user_obj.age=form.cleaned_data['age']
+                        user_obj.gender=form.cleaned_data['gender']
+                        user_obj.save()
+                        return HttpResponseRedirect(reverse('user-profile'))
+                    else:
+                        print("###### Form not valid ################")
+                        print(form)
+                        return render(request,self.template_name,{"form":form})
+                if 'change_pass' in request.POST:
+                    cpform=MyPasswordChangeForm(request.user,request.POST)   
+                    print(cpform)
+                    if cpform.is_valid():
+                        print("########################  form is valid ############")
+                        user = cpform.save()
+
+                        update_session_auth_hash(request, user) # Important!
+
+                        messages.success(request, 'Your password was successfully updated!')
+
+                        return HttpResponseRedirect(reverse('user-profile')) 
+                    else:
+                        print("########################  form is not valid ############")
+
+                        data={
+                                "first_name":request.user.first_name,
+                                "last_name":request.user.last_name,
+                                "email":request.user.email,
+                                "phone":request.user.phone,
+                                "location":request.user.location,
+                                "age":request.user.age,
+                                "gender":request.user.gender
+                            }
+                        print(data,request.user.id)
+                        form=UpdateProfileForm(data)
+                        messages.error(request, 'Please correct the below errors!')
+
+                        return render(request,self.template_name,{"form":form,"cpform":MyPasswordChangeForm(request.user,request.POST),"is_pass_error":True})
+                

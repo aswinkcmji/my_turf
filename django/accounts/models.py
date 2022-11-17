@@ -15,5 +15,7 @@ class UserModel(AbstractUser):
     category = ArrayField(models.CharField(max_length=512, null=True) , null=True, default=list, blank=True) 
     landmark = models.CharField(max_length=255, null=True)
     is_turf = models.BooleanField(default=False )
+    current_location=models.CharField(max_length=200,null=True,blank=True)
+
 
     USERNAME_FIELD = 'username'
