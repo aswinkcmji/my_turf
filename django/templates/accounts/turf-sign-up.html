@@ -230,11 +230,16 @@
                      let index = tags.indexOf(tag);
                      let index_show = tags_show.indexOf(tag);
 
-                     tags = [...tags.slice(0, index), ...tags.slice(index + 1)];
-                     tags_show = [...tags_show.slice(0, index_show), ...tags_show.slice(index_show + 1)];
+                     // tags = [...tags.slice(0, index), ...tags.slice(index + 1)];
+                     // tags_show = [...tags_show.slice(0, index_show), ...tags_show.slice(index_show + 1)];
+                     
+                     tags_show.splice(index_show,1);
+                     tags.splice(index,1);
 
                      element.parentElement.remove();
                      category_input.value = JSON.stringify(tags) ;
+
+                     
 
                   }
 

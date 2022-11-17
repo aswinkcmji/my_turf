@@ -48,6 +48,7 @@ htmx_urlpatterns = [
     path('like_turfComment/<int:id>',LikeTurfCommentView.as_view(), name="like_turfComment") , 
     path("add-TurfComment/<str:username>", AddTurfCommentView.as_view() ,name="add-TurfComment"),
     path("search-city/<str:feildname>",SearchCityView.as_view(),name="search-city"),
+    path("search-matches/",SearchMatchView.as_view(),name="search-matches"),
     path('search_turf_list/',SearchTurfListView.as_view(), name="search_turf_list") , 
 ]
 

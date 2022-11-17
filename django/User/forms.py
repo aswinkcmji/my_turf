@@ -121,6 +121,15 @@ class creatematchForm(ModelForm):
         slots=self.cleaned_data.get('slots')
         creator=self.cleaned_data.get('creator')
         status=self.cleaned_data.get('status')
+        city=self.cleaned_data.get('city')
+        if city :
+            list=city.split(",")
+            if len(list) ==3:
+                check_city=CitiesModel.objects.filter(name=list[0],subcountry=list[1],country=list[2])
+                if len(check_city) == 0:
+                     self._errors['city']=self.error_class(['Please Select a City from the provided list'])
+            else:
+                self._errors['city']=self.error_class(['Please Select a City from the provided list'])
         start_time_f=self.cleaned_data.get('start_time_f')
         end_time_f=self.cleaned_data.get('end_time_f')
         print(slots)
@@ -188,6 +197,15 @@ class updatematchform(ModelForm):
         status=self.cleaned_data.get('status')
         start_time_f=self.cleaned_data.get('start_time_f')
         end_time_f=self.cleaned_data.get('end_time_f')
+        city=self.cleaned_data.get('city')
+        if city :
+            list=city.split(",")
+            if len(list) ==3:
+                check_city=CitiesModel.objects.filter(name=list[0],subcountry=list[1],country=list[2])
+                if len(check_city) == 0:
+                     self._errors['city']=self.error_class(['Please Select a City from the provided list'])
+            else:
+                self._errors['city']=self.error_class(['Please Select a City from the provided list'])
         print(slots)
         if slots != None and slots >= 2:
             self.cleaned_data['slot_available']=slots-1

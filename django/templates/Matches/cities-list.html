@@ -5,11 +5,10 @@
 <ul class="list-group col-xs-12">
 {% for result in results %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
-        {{ result.name }},{{result.subcountry}},{{result.country}}
-        
+        {{ result.name }}, {{result.subcountry}}, {{result.country}}
     </li>
 {% endfor %}
 </ul>
 {% else %}
-<p>No search results</p>
+<p>No search results.Enter a valid name atleast 3 characters in length</p>
 {% endif %}

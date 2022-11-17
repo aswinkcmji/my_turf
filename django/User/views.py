@@ -48,21 +48,10 @@ class AllMatchesView(View):
         def get(self, request, *args, **kwargs):
             if not request.user.is_superuser and not request.user.is_superuser:
                 print(request.user.username)
-                # context={}
                 id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
-                user_location=request.user.location
-                location_list=user_location.split(",")
-                # print()
-                try:
-                    location_list.remove(' India')
-                except:
-                    pass
-                print(location_list)
-                matches=MatchModel.objects.filter(reduce(operator.or_, (Q(locality__icontains=x) for x in location_list)),status="Upcoming").exclude(id__in=list(id_list)).order_by("-id")
+                matches=MatchModel.objects.filter(city="Mannarakkat,Kerala,India",status="Upcoming").exclude(id__in=list(id_list)).order_by("-id")
                 form=RequestForm(request=request)
                 print("hllo",matches)
-                # context['matches']=matches
-                # context['form']=form
                 context ={'RequestForm': form ,'is_requestform':False , 'matches':matches}
                 print(context)
                 return render(request, 'Matches/all-matches.html',context)
@@ -205,12 +194,12 @@ class MatchHistoryView(View):
         jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).values().order_by("-id")#joined completed matches
         id_list3=RequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('match_id',flat=True).order_by("-id")
         jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).values().order_by("-id")#joined cancelled matches
-        crum=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Upcoming").order_by("-id") #created upcoming matches
-        crcom=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Completed").order_by("-id") #created completed matches
-        crcam=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Cancelled").order_by("-id") #created cancelled matches
+        crum=MatchModel.objects.filter(creator=request.user.username,status="Upcoming").order_by("-id") #created upcoming matches
+        crcom=MatchModel.objects.filter(creator=request.user.username,status="Completed").order_by("-id") #created completed matches
+        crcam=MatchModel.objects.filter(creator=request.user.username,status="Cancelled").order_by("-id") #created cancelled matches
         reqcan=RequestModel.objects.filter(username=request.user.username,status="Cancelled").order_by("-id")#requests cancelled
         reqrej=RequestModel.objects.filter(username=request.user.username,status="Rejected").order_by("-id")#requests rejected
-        id_list4=MatchModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location).values_list('id',flat=True).order_by("-id")
+        id_list4=MatchModel.objects.filter(creator=request.user.username).values_list('id',flat=True).order_by("-id")
         reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted").exclude(username=request.user.username).order_by("-id")
         reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected").exclude(username=request.user.username).order_by("-id")
         context={}
@@ -254,6 +243,7 @@ class EditMatchesView(View):
             'end_time_f':editobj.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
             'start_time':editobj.start_time,
             'end_time':editobj.end_time,
+            'city':editobj.city,
             'locality':editobj.locality,
             'status':editobj.status,
             "creator" : request.user.username,
@@ -352,8 +342,8 @@ class RequestsView(View):
 @method_decorator(login_required,name='dispatch')
 class  JoinMatchView(View):
     def get(self, request,id, *args, **kwargs):
-                user_location=request.user.location
-                location_list=user_location.split(",")
+                # user_location=request.user.location
+                # location_list=user_location.split(",")
                 matches=MatchModel.objects.filter(id=id)
 
                 
@@ -987,18 +977,21 @@ class LikeTurfCommentView(View):
 
 
 class SearchCityView(View):
+    def get (self, request,*args, **kwargs):
+        return HttpResponse("Method Not Allowed")
     def post(self, request, *args, **kwargs):
             feildname = kwargs.pop('feildname')
             search_text = request.POST.get(feildname)
             print("#########################INSIDE SearchCityView" ,search_text ,"##################")
             if search_text:
                 if len(search_text)>=3:
-                    results=CitiesModel.objects.filter(name__icontains=search_text,country="India")
+                    results=CitiesModel.objects.filter(name__icontains=search_text)
                     print(results,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
                     return render(request, 'Matches/cities-list.html',{"results":results})
                 else:
                     return render(request, 'Matches/cities-list.html',{})
             else:
+                # return render(request, 'Matches/cities-list.html',{"results":results})
                 return render(request, 'Matches/cities-list.html',{})
 
 
@@ -1037,3 +1030,22 @@ class SearchTurfListView(View):
                     'is_searching':True,
                     'search_KW':searchkey,}
         return render(request , 'turf/turfs.html',context)
+
+@method_decorator(login_required,name='dispatch')
+class SearchMatchView(View):
+    def post(self, request, *args, **kwargs):
+        search_word = request.POST.get('search')
+        try:
+            date_obj=datetime.strptime(search_word, '%Y-%m-%d')
+        except:
+            date_obj=datetime.strptime("2000-01-01", '%Y-%m-%d')
+        print(date_obj,type(date_obj))
+        categories=CategoriesModel.objects.filter(category__icontains=search_word)
+        print(categories)
+        id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
+        matches=MatchModel.objects.filter(Q(city__icontains=search_word)|Q(creator__icontains=search_word)|Q(date=date_obj)|Q(category__in=categories)&Q(status="Upcoming")).exclude(creator=request.user.username)
+        # matches=MatchModel.objects.filter(category__in=categories).exclude(creator=request.user.username,id__in=list(id_list))
+        form=RequestForm(request=request)
+        context ={'RequestForm': form ,'is_requestform':False , 'matches':matches,'is_searching':True,'search_KW':search_word}
+        print("###################### Inside SearchMatchView ###########################",context,matches)
+        return render(request, 'Matches/matches.html',context)

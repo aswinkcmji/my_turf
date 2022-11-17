@@ -99,7 +99,9 @@
                             <th>
                               Location
                             </th>
-                            
+                            <th>
+                              City
+                            </th>
                           </thead>
                           <tbody>
                            {% for data in jum %}
@@ -115,6 +117,7 @@
                               <td>
                                  {{data.locality}}
                               </td>
+                              <td>{{data.city}}</td>
                
                             </tr>
                             {%endif%}
@@ -156,6 +159,7 @@
                           <th>
                             Location
                           </th> 
+                          <th>City</th>
                          </thead>
                          <tbody>
                            {% for data in jcom %}
@@ -172,7 +176,7 @@
                             <td>
                                {{data.locality}}
                             </td>
-             
+                            <td>{{data.city}}</td>
                           </tr>
                             {%endif%}
                             {% endfor %}
@@ -213,6 +217,7 @@
                             <th>
                               Location
                             </th> 
+                            <th>City</th>
                            </thead>
                           <tbody>
                            {% for data in jcam %}
@@ -229,7 +234,7 @@
                             <td>
                                {{data.locality}}
                             </td>
-             
+                            <td>{{data.city}}</td>
                           </tr>
                             {%endif%}
                             {% endfor %}
@@ -286,6 +291,7 @@
                           <th>
                             Location
                           </th>
+                           <th>City</th>
                            <th></th>
                          </thead>
                          <tbody>
@@ -300,6 +306,8 @@
                             <td>{{data.end_time|time:"H:i:s"}}</td>
                             <td>
                                {{data.locality}}
+                            </td>
+                            <td>{{data.city}}
                             </td>
                             <td><a onclick="return confirm('Are you sure you want to cancel this match?')" href="cancel/{{match.id}}" class="btn btn-primary">Cancel</a></td>
                           </tr>
@@ -341,7 +349,7 @@
                           <th>
                             Location
                           </th>
-                           
+                           <th>City</th>
                          </thead>
                          <tbody>
                            {% for data in crcom %}
@@ -356,7 +364,7 @@
                             <td>
                                {{data.locality}}
                             </td>
-                           
+                           <td>{{data.city}}</td>
                           </tr>
                             {% endfor %}
                             
@@ -396,7 +404,7 @@
                             <th>
                               Location
                             </th>
-                            
+                            <th>City</th>
                           </thead>
                           <tbody>
                            {% for data in crcam %}
@@ -411,7 +419,7 @@
                             <td>
                                {{data.locality}}
                             </td>
-             
+                            <td>{{data.city}}</td>
                           </tr>
                             {% endfor %}
                             
@@ -461,7 +469,7 @@
                               End Time
                             </th>
                             <th>
-                              Location
+                             Match Location
                             </th>
                           </thead>
                           <tbody>
@@ -515,7 +523,7 @@
                              End Time
                            </th>
                            <th>
-                             Location
+                            Match Location
                            </th>
                          </thead>
                          <tbody>
@@ -582,7 +590,7 @@
                              End Time
                            </th>
                            <th>
-                             Location
+                            Match Location
                            </th>
                            <th>
                             Status
@@ -642,7 +650,7 @@
                            End Time
                          </th>
                          <th>
-                           Location
+                          Match Location
                          </th>
                          <th>
                           Status

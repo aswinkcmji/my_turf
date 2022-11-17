@@ -47,8 +47,9 @@
                     {% endif %}
                     <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
                     {%if  addForm.label == "City" %}
-                    {% render_field addForm hx-post='/search-city/' hx-target='#results' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Select Your City ..." %}
-                    <label>{{addForm.label}}</label>
+                    {% render_field addForm hx-post='/search-city/' hx-target='#results' hx-trigger="keyup changed delay:100ms"  class="form-control"  placeholder="Select Your City ..." %}
+                    <label>Search your {{addForm.label}}</label>
+                    <span class="text-danger">{{addForm.errors}}</span>
                     <div id="results" class="suggestion"></div>
                     </div>
                     {%endif%}
@@ -83,11 +84,14 @@
 </script>
 <script>
 function useSuggestion(e) {
-    console.log(e.target.innerText)
-    id_city.value = e.target.innerText;
-	id_city.focus();
-	suggestions.innerHTML = '';
-	// suggestions.classList.remove('has-suggestions');
+    if(e.target.innerText!="No search results.Enter a valid name atleast 3 characters in length"){
+        
+        console.log(e.target.innerText)
+        id_city.value = e.target.innerText;
+        id_city.focus();
+        suggestions.innerHTML = '';
+        // suggestions.classList.remove('has-suggestions');
+    }
 	
 }
 const suggestions = document.querySelector('.suggestion');
@@ -122,10 +126,10 @@ document.addEventListener('click', () =>suggestions.innerHTML = '' );
   #results ul li {
     padding: 10px;
     cursor: pointer;
-    background: rgba(44, 44, 44, 0.2);
+    background: rgba(248, 248, 248, 0.89);
   }
  #results ul li:hover {
-    background-color: #00e658;
+    background-color: #00ff73;
   }</style>
 
 {% endblock content %}

@@ -32,11 +32,13 @@
                            </a>
                            <h2 class="mb-2 text-center">Sign In</h2>
                            <p class="text-center">Login to stay connected.</p>
+                           {% for message in messages %}
+                           {% if message.tags != "success" %}
                            <p class="text-danger">
-                              {% for message in messages %}
-                              {{message}}
+                           {{message}}
+                           </p>
+                              {% endif %}
                               {% endfor %}
-                            </p>
                            <form  method="post">
                               {% csrf_token %}
                               <div class="row">
@@ -66,6 +68,9 @@
                             
                               <p class="mt-3 text-center">
                                  Don’t have an account? <a href="{% url 'register' %}" class="text-underline">Click here to sign up.</a>
+                              </p>
+                              <p class="mt-3 text-center">
+                                 or  <a href="{% url 'register_turf' %}" class="text-underline">Click here Register Your Turf.</a>
                               </p>
                            </form>
                         </div>
