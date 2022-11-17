@@ -57,6 +57,7 @@ class Turf_Dashboard(View):
         category = UserModel.objects.filter(username = request.user.username  ).values_list('category')
         editForm = UserModel.objects.filter(username = request.user.username, is_turf = True).count()
         categories= CategoriesModel.objects.all()
+        # cpform=TurfPasswordChange(request.user)
 
         print('========count ==',editForm)
 
@@ -560,8 +561,8 @@ class dashDataUpdate(View):
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':  
             editForm = TurfEditForm(request.POST, request.FILES)
-            print ("========editForm=====",editForm)
-            print("RRRRRRRRRRRRRRRRRRR",request.POST['category'])
+            # print ("========editForm=====",editForm)
+            # print("RRRRRRRRRRRRRRRRRRR",request.POST['category'])
             if editForm.is_valid(): 
 
                 if request.FILES :
@@ -618,3 +619,12 @@ class dashDataUpdate(View):
                 print("-----------------------1111---------------------",editForm.errors)
                 messages.error(request,"Updation failed")
                 return HttpResponseRedirect(reverse('turf_dash'))
+
+
+class DeleteTurfHead(View):
+    def get(self, request, *args,**kwargs):
+        item = TurfGallery.objects.get(isheader=True)
+        item.delete()
+        messages.success(request, 'Image Deleted')
+
+        return HttpResponseRedirect(reverse('turf_dash'))
