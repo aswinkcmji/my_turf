@@ -1,0 +1,68 @@
+{% load static %}
+{% if turfs%}
+        {% for turf in turfs %}
+        <div class="card col-md-5 col-lg-3  mx-auto px-0 overflow-hidden">
+            <div class="img-cover border d-flex justify-content-center align-items-center" style="width:100%;">
+                <img src="{{media_url}}{{turf.avatar}}" alt="turf_image" class="img-fluid"
+                    style="width:100%;">
+            </div>
+
+
+            <div class="card-header mx-auto ">
+                <h5 class="card-title ">
+                    {{turf.turf_name}}
+                </h5>
+            </div>
+            <hr class="mx-3">
+            <div class="card-body">
+
+                <span class="h6">Location : </span> <span>{{turf.landmark}}, {{turf.location}} </span><br>
+                <p class="h6 my-2">Categories of Sports and games available : </p>
+                <div class=" ms-2 d-flex flex-wrap   gap-1">
+                    {% for category in turf.category%}
+                    {% for key, value in categories_dict.items %}
+                    {% ifequal key category %}
+                    <span class=" p-2 d-inline badge bg-light text-dark">{{ value }} </span><br>
+                    {% endifequal %}
+                    {% endfor %}
+                    {% endfor %}
+                    
+                </div>
+
+                <div class="d-flex justify-content-end">
+                <a class="btn btn-primary mt-3 ms-auto" href="{% url 'turf_profile' username=turf.username %}"> See More</a></div>
+
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        
+        
+        <div class="card col-md-6 col-lg-6  mx-auto px-0 overflow-hidden">
+            <div class="d-flex justify-content-center">
+                {% if is_searching %}
+                <img src="{% static 'assets/images/404images/search404_defualt.png' %}" alt="search404"
+                    class="theme-color-default-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/404images/search404_1.png' %}" alt="search404"
+                    class="theme-color-purple-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/404images/search404_2.png' %}" alt="search404"
+                    class="theme-color-blue-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/404images/search404_3.png' %}" alt="search404"
+                    class="theme-color-green-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/404images/search404_4.png' %}" alt="search404"
+                    class="theme-color-yellow-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/404images/search404_5.png' %}" alt="search404"
+                class="theme-color-pink-img  img-fluid  w-50 mx-auto">
+                {% else %}
+                <img src="{% static 'assets/images/404images/noTurf.svg' %}" alt="search404"
+                class="  img-fluid  w-50 mx-auto">
+                {% endif %}
+            </div>
+            <div class="card-body"> <p class="text-center">{% if is_searching %}Couldn't Find Anything Related to "<span class="text-black">{{search_KW}}</span>" !{% else %}No Turfs Available Yet !  {% endif %}</p> 
+                <p class="text-center">{% if is_searching %} Try Searching  With Different Keyword{% else %}Stay Tuned{% endif %}</p>
+          </div>
+        </div>
+        
+        
+      
+       {% endif %}

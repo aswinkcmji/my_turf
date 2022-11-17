@@ -4,7 +4,7 @@ from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.views import View
-from .forms import LoginForm,SignUpForm ,SignUpTurfForm
+from .forms import *
 from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -54,6 +54,9 @@ class SignupTurf(View):
             if request.method == 'POST':
                 form = SignUpTurfForm(request.POST,request.FILES)
                 if form.is_valid():
+                    print(request.POST.get('category'),"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+                    if request.POST.get('category') == "" or request.POST.get('category') == "[]":
+                        SignUpTurfForm.category= list
                     form.save()
                     
                     messages.success(self.request, "Account Created Successfully")
@@ -91,3 +94,42 @@ class LoginPage(LoginView):
         return HttpResponseRedirect(reverse('login'))
 
 
+class User_ProfileView(View):
+    template_name = 'accounts/user_profile.html'
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            data={
+                "first_name":request.user.first_name,
+                "last_name":request.user.last_name,
+                "email":request.user.email,
+                "phone":request.user.phone,
+                "location":request.user.location,
+                "age":request.user.age,
+                "gender":request.user.gender
+            }
+            print(data,request.user.id)
+            form=UpdateProfileForm(data)
+            print(form)
+            return render(request,self.template_name,{"form":form})
+        else:
+           return HttpResponseRedirect(reverse('login')) 
+    def post(self, request, *args, **kwargs):
+            if request.method == 'POST':
+                form=UpdateProfileForm(request.POST)
+                if form.is_valid():
+                    print("Kiki")
+                    user_obj=UserModel.objects.get(id=request.user.id)
+                    print(user_obj)
+                    user_obj.first_name=form.cleaned_data['first_name'] 
+                    user_obj.last_name=form.cleaned_data['last_name'] 
+                    user_obj.email=form.cleaned_data['email']
+                    user_obj.phone=form.cleaned_data['phone']
+                    user_obj.location=form.cleaned_data['location']
+                    user_obj.age=form.cleaned_data['age']
+                    user_obj.gender=form.cleaned_data['gender']
+                    user_obj.save()
+                    return HttpResponseRedirect(reverse('user-profile'))
+                else:
+                    print("###### Form not valid ################")
+                    print(form)
+                    return render(request,self.template_name,{"form":form})

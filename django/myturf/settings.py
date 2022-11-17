@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'accounts',
     'dashboard',
     'e_commerce',
-    'mathfilters'
+    'mathfilters',
+    'django.contrib.humanize'
 ]
 
 MIDDLEWARE = [
