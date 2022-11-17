@@ -70,7 +70,7 @@ class SignUpTurfForm(UserCreationForm):
     category = forms.CharField( required=False,widget=forms.HiddenInput(attrs={'id':"category-input",'readonly':"true"}))
 
     is_turf=forms.BooleanField(widget=forms.CheckboxInput(attrs={'checked':"true" ,'hidden':"true" , 'readonly':"true"}))
-    avatar=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    avatar=forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
     landmark = forms.CharField( max_length=255, required=True,widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Landmark"}))
     class Meta:
         model = UserModel
@@ -87,6 +87,26 @@ class SignUpTurfForm(UserCreationForm):
                 self._errors['location']=self.error_class(['Please Select a City from the provided list'])
         return location
 
+
+
+class TurfEditForm(forms.Form):
+    
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Username"}))
+    turf_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Turf Name"}))
+    
+    email = forms.CharField(max_length=254, required=False, widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':"Email"}))
+    phone = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Phone Number" , 'type':"tel" }))
+    location = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Location"}))
+    # password1=forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+    # password2=forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password Again'}))
+    # category = forms.CharField( required=False, widget=forms.HiddenInput(attrs={'id':"category-input",'raedonly':"true"}))
+
+    # is_turf=forms.BooleanField(widget=forms.CheckboxInput(attrs={'checked':"true" ,'hidden':"true" , 'readonly':"true"}))
+    avatar=forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
+    landmark = forms.CharField( max_length=255, required=False ,widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Landmark"}))
+    class Meta:
+        model = UserModel
+        fields = ('username','turf_name' ,'email', 'phone','location','avatar','landmark','category')
 
 
 class UpdateProfileForm(ModelForm):
