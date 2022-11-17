@@ -37,10 +37,10 @@
         {% endfor %}
         {% else %}
         
-        {% if is_searching %}
-
+        
         <div class="card col-md-6 col-lg-6  mx-auto px-0 overflow-hidden">
             <div class="d-flex justify-content-center">
+                {% if is_searching %}
                 <img src="{% static 'assets/images/404images/search404_defualt.png' %}" alt="search404"
                     class="theme-color-default-img  img-fluid  w-50 mx-auto">
                 <img src="{% static 'assets/images/404images/search404_1.png' %}" alt="search404"
@@ -52,20 +52,17 @@
                 <img src="{% static 'assets/images/404images/search404_4.png' %}" alt="search404"
                     class="theme-color-yellow-img  img-fluid  w-50 mx-auto">
                 <img src="{% static 'assets/images/404images/search404_5.png' %}" alt="search404"
-                    class="theme-color-pink-img  img-fluid  w-50 mx-auto">
+                class="theme-color-pink-img  img-fluid  w-50 mx-auto">
+                {% else %}
+                <img src="{% static 'assets/images/404images/noTurf.svg' %}" alt="search404"
+                class="  img-fluid  w-50 mx-auto">
+                {% endif %}
             </div>
-          <div class="card-body"> <p class="text-center">Couldn't Find Anything Related to "<span class="text-black">{{search_KW}}</span>" ! </p> 
-           <p class="text-center"> Try Searching  With Different Keyword</p>
+            <div class="card-body"> <p class="text-center">{% if is_searching %}Couldn't Find Anything Related to "<span class="text-black">{{search_KW}}</span>" !{% else %}No Turfs Available Yet !  {% endif %}</p> 
+                <p class="text-center">{% if is_searching %} Try Searching  With Different Keyword{% else %}Stay Tuned{% endif %}</p>
           </div>
         </div>
         
-        {% else %}
         
-        <div class="card col-md-5 col-lg-3  mx-auto px-0 overflow-hidden">
-          <div class="card-body"> <p class="text-center">No Turfs Available Yet ! </p> 
-           <p class="text-center"> Stay Tuned</p>
-          </div>
-        </div>
-
-       {% endif %}
+      
        {% endif %}

@@ -47,7 +47,7 @@
                     {% endif %}
                     <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
                     {%if  addForm.label == "City" %}
-                    {% render_field addForm hx-post='/search-city/' hx-target='#results' hx-trigger="keyup changed delay:100ms"  class="form-control"  placeholder="Select Your City ..." %}
+                    {% render_field addForm hx-post='/search-city/city' hx-target='#results' hx-trigger="keyup changed delay:100ms"  class="form-control"  placeholder="Select Your City ..." %}
                     <label>Search your {{addForm.label}}</label>
                     <span class="text-danger">{{addForm.errors}}</span>
                     <div id="results" class="suggestion"></div>
@@ -96,6 +96,7 @@ function useSuggestion(e) {
 }
 const suggestions = document.querySelector('.suggestion');
 suggestions.addEventListener('click', useSuggestion);
+document.addEventListener('click', () =>suggestions.innerHTML = '' );
 
 </script>
 <style>

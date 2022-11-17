@@ -63,7 +63,7 @@ func main(){
 			}
 			
 			
-			upadateCrone(1, db, match_id)
+			upadateCrone(0, db, match_id)
 			
 			//##############################update status start
 			// t:=time.Now()
