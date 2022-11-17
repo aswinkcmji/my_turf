@@ -1029,7 +1029,7 @@ class SearchMatchView(View):
         categories=CategoriesModel.objects.filter(category__icontains=search_word)
         print(categories)
         id_list=RequestModel.objects.filter(username=request.user.username).values_list('match_id',flat=True)
-        matches=MatchModel.objects.filter(Q(city__icontains=search_word)|Q(creator__icontains=search_word)|Q(date=date_obj)|Q(category__in=categories)&Q(status="Upcoming")).exclude(creator=request.user.username)
+        matches=MatchModel.objects.filter((Q(city__icontains=search_word)|Q(creator__icontains=search_word)|Q(date=date_obj)|Q(category__in=categories))&Q(status="Upcoming")).exclude(creator=request.user.username)
         # matches=MatchModel.objects.filter(category__in=categories).exclude(creator=request.user.username,id__in=list(id_list))
         form=RequestForm(request=request)
         context ={'RequestForm': form ,'is_requestform':False , 'matches':matches,'is_searching':True,'search_KW':search_word}
