@@ -18,16 +18,13 @@ class E_commercePage(View):
     def get(self, request ,*args, **kwargs):
         cartForm = addToCartForm()
         default = ProductsModel.objects.all()
-        highPrice = ProductsModel.objects.order_by('-price').all()
-        lowPrice = ProductsModel.objects.order_by('price').all()
-        AtoZ = ProductsModel.objects.order_by('product_name').all()
-        latest = ProductsModel.objects.order_by('-id').all()
-
         cartData = CartModel.objects.filter(username = request.user.username)
-        # cartorbuy = CartModel.objects.filter(username = request.user.username).values_list('product_id')
-        # cartorbuylist = []
-        # for i in cartorbuy:
-        #     cartorbuylist = cartorbuylist + list(i)
+
+
+        cartorbuy = CartModel.objects.filter(username = request.user.username).values_list('product_id')
+        cartorbuylist = []
+        for i in cartorbuy:
+            cartorbuylist = cartorbuylist + list(i)
 
         totalPrice = CartModel.objects.filter(username = request.user.username).values_list('quantity','price')
         totalAmount = 0
@@ -36,14 +33,10 @@ class E_commercePage(View):
             totalAmount = totalAmount + (i[0]*i[1])
         context = {
             'default': default,
-            'hTol' : highPrice,
-            'lToh' : lowPrice,
-            'aToz' : AtoZ,
-            'latest' : latest,
             'media_url':settings.MEDIA_URL,
             'cartForm':cartForm,
             'cartData':cartData,
-            # 'cartorbuylist':cartorbuylist,
+            'cartorbuylist':cartorbuylist,
             'totalAmount':totalAmount,
             'totalItemCount':totalItemCount,
             # 'date':datetime.date()
@@ -231,3 +224,116 @@ def increaseBtn(request,id):
     item = CartModel.objects.get(id=id)
     item.update()
     return HttpResponseRedirect(reverse('stocktable'))
+
+
+class HtoL_Filter(View):
+    def get(self,request,*args, **kwargs):
+        highPrice = ProductsModel.objects.order_by('-price').all()
+        cartForm = addToCartForm()
+        cartorbuy = CartModel.objects.filter(username = request.user.username).values_list('product_id')
+        cartorbuylist = []
+        for i in cartorbuy:
+            cartorbuylist = cartorbuylist + list(i)
+            
+
+        context = {
+            'default': highPrice,
+            'cartForm': cartForm,
+            'media_url':settings.MEDIA_URL,
+            'cartorbuylist':cartorbuylist,
+            
+
+
+        }
+        return render(request, 'e_commerce/productlist.html',context)
+
+
+
+class LtoH_Filter(View):
+    def get(self,request,*args, **kwargs):
+        lowPrice = ProductsModel.objects.order_by('price').all()
+        cartForm = addToCartForm()
+        cartorbuy = CartModel.objects.filter(username = request.user.username).values_list('product_id')
+        cartorbuylist = []
+        for i in cartorbuy:
+            cartorbuylist = cartorbuylist + list(i)
+            
+
+        context = {
+            'default': lowPrice,
+            'cartForm': cartForm,
+            'media_url':settings.MEDIA_URL,
+            'cartorbuylist':cartorbuylist,
+            
+
+
+        }
+        return render(request, 'e_commerce/productlist.html',context)
+
+
+class AtoZ_Filter(View):
+    def get(self,request,*args, **kwargs):
+
+        AtoZ = ProductsModel.objects.order_by('product_name').all()
+        cartForm = addToCartForm()
+        cartorbuy = CartModel.objects.filter(username = request.user.username).values_list('product_id')
+        cartorbuylist = []
+        for i in cartorbuy:
+            cartorbuylist = cartorbuylist + list(i)
+            
+
+        context = {
+            'default': AtoZ,
+            'cartForm': cartForm,
+            'media_url':settings.MEDIA_URL,
+            'cartorbuylist':cartorbuylist,
+            
+
+        }
+        return render(request, 'e_commerce/productlist.html',context)
+
+
+class Latest_Filter(View):
+    def get(self,request,*args, **kwargs):
+
+        latest = ProductsModel.objects.order_by('-id').all()
+        cartForm = addToCartForm()
+        cartorbuy = CartModel.objects.filter(username = request.user.username).values_list('product_id')
+        cartorbuylist = []
+        for i in cartorbuy:
+            cartorbuylist = cartorbuylist + list(i)
+            
+
+        context = {
+            'default': latest,
+            'cartForm': cartForm,
+            'media_url':settings.MEDIA_URL,
+            'cartorbuylist':cartorbuylist,
+            
+
+
+        }
+        return render(request, 'e_commerce/productlist.html',context)
+
+
+class SearchProduct(View):
+    def post(self, request, *args, **kwargs):
+        cartForm = addToCartForm()
+        cartorbuy = CartModel.objects.filter(username = request.user.username).values_list('product_id')
+        cartorbuylist = []
+        for i in cartorbuy:
+            cartorbuylist = cartorbuylist + list(i)
+        search_word = request.POST.get('searchproduct')
+        result = ProductsModel.objects.filter(product_name__icontains=search_word)
+
+        context = {
+                    'default': result,
+                    'cartForm': cartForm,
+                    'media_url':settings.MEDIA_URL,
+                    'cartorbuylist':cartorbuylist,
+                    'is_searching' : True,
+                    'search_KW' : search_word,
+
+
+                }
+        return render(request, 'e_commerce/productlist.html',context)

@@ -1,5 +1,5 @@
 from django.urls import URLPattern, path
-from .views import  Checkout,DeleteCartItem, DeleteStock, E_commercePage, OrderView, OutOfStock, StockTable,CartDetailsView
+from .views import  *
 from dashboard.views import AddStockView
 
 urlpatterns = [
@@ -12,3 +12,18 @@ urlpatterns = [
     path('deletestock/<int:id>/',DeleteStock.as_view(),name='deletestock'),
     path('cart/',CartDetailsView.as_view(),name='cartdetails'),
 ]
+
+htmx_urlpatterns = [
+
+    path('filterhl/',HtoL_Filter.as_view(),name='htol_filter'),
+    path('filterlh/',LtoH_Filter.as_view(),name='ltoh_filter'),
+    path('filteraz/',AtoZ_Filter.as_view(),name='atoz_filter'),
+    path('filterlt/',Latest_Filter.as_view(),name='latest_filter'),
+    path('searchProduct/',SearchProduct.as_view(),name='searchProduct'),
+
+
+
+
+]
+
+urlpatterns += htmx_urlpatterns
