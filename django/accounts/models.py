@@ -12,7 +12,7 @@ class UserModel(AbstractUser):
     gender = models.CharField(max_length=10)
     avatar = models.ImageField( null=True , upload_to='images/avatar')
     turf_name= models.CharField(max_length=255, null=True)
-    category = ArrayField(models.CharField(max_length=512, null=True) , null=True) 
+    category = ArrayField(models.CharField(max_length=512, null=True) , null=True, default=list, blank=True) 
     landmark = models.CharField(max_length=255, null=True)
     is_turf = models.BooleanField(default=False )
 
