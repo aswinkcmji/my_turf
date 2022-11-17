@@ -1,6 +1,32 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 {% load widget_tweaks %}
+{% load static%}
+<style>
+    .card .fas {
+    position: absolute;
+    
+    bottom: -100px;
+    background-color: #4e9525;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    color: gold;
+    opacity: 0;
+    transform: translate(16rem ,-4rem);
+    transition: all 0.5s ease;
+}
+
+.card:hover .fas.bt {
+    bottom: 0px;
+    opacity: 1;
+}
+</style>
 
 <div class="iq-navbar-header" style="height: 215px;">
     <div class="container-fluid iq-container">
@@ -59,20 +85,20 @@
                                                         
                                                         <label for="images" class="form-label text-danger">Image</label>
                                                         {{form.image}}
-                                                            </div>
-                                                            <span class="text-error  text-danger">{{ form.Image.errors }}</span>
-                                                        </div>
                                                     </div>
+                                                            <span class="text-error  text-danger">{{ form.Image.errors }}</span>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Save</button>
-                                                </div>
-                                            </form>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="modal-footer">
+                                            
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
                                 </div>
+                            </div>
+                        </div>
                                 {% else %}
                          <a type="button" href="" class="btn btn-link btn-soft-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{data.id}}">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >                                
@@ -93,43 +119,43 @@
                             </svg> 
                         </a>
                         
-                            <div class="modal fade" id="staticBackdrop{{data.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title text-black" id="staticBackdropLabel">Edit Image</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form action="{% url 'dashboardimageupdate' %}" method="POST" enctype="multipart/form-data">
-                                            <div class="modal-body">
-                                                
-                                                
-                                               
-                                                {% csrf_token %}
-                                                
-                                                <input type="text" name="image_id" value="{{data.id}}" hidden>
-                                                
-                                                    <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-5">
-                                                        <span class="text-danger">Image</span>
-                                                        {% render_field form.image value=data.image class="form-control mt-2" required=true %}
-                                                    </div>
-
-                                                <span class="text-danger">{{form.errors}}</span>
-                                                
-
-                                            </div>
-                                            <div class="modal-footer">
-
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Update</button>
-                                            </div>
-                                        </form>
+                        <div class="modal fade" id="staticBackdrop{{data.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-black" id="staticBackdropLabel">Edit Image</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
+                                    <form action="{% url 'dashboardimageupdate' %}" method="POST" enctype="multipart/form-data">
+                                        <div class="modal-body">
+                                            
+                                            
+                                            
+                                            {% csrf_token %}
+                                            
+                                            <input type="text" name="image_id" value="{{data.id}}" hidden>
+                                            
+                                                <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-5">
+                                                    <span class="text-danger">Image</span>
+                                                    {% render_field form.image value=data.image class="form-control mt-2" required=true %}
+                                                </div>
+
+                                            <span class="text-danger">{{form.errors}}</span>
+                                            
+
+                                        </div>
+                                        <div class="modal-footer">
+
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Update</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                            {% endif %}
-                            
+                        </div>
+                        
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -173,21 +199,6 @@
        
     </div>
 
-
-    <!-- <div class="iq-header-img">
-        <img src="/static/assets/images/dashboard/top-header.png" alt="header"
-            class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header1.png" alt="header"
-            class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
-            <img src="/static/assets/images/dashboard/top-header2.png" alt="header"
-            class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header3.png" alt="header"
-            class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header4.png" alt="header"
-        class="theme-color-yellow-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header5.png" alt="header"
-            class="theme-color-pink-img img-fluid w-100 h-100 animated-scaleX">
-    </div> -->
 </div>
 
 {% for data in turfDetails %}
@@ -220,7 +231,153 @@
             <div class="card">
                 <div class="card-header">
                     <div class="header-title">
+                        
+                            <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2{{data.id}}">
+                                <svg  width="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 
+                                        21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" 
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    </path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 
+                                        2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 
+                                        15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 
+                                        11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    </path>
+                                    <path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </a>
+                            <div class="modal fade" id="staticBackdrop2{{data.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">Details</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form action="{% url 'dashDataUpdate' %}" method="post" enctype="multipart/form-data" >
+                                            <div class="modal-body">
+                                                {% csrf_token %}
+                                                
+                                                <!-- {{editForm.is_turf}}   -->
+                    
+                                                <div class="row">
+
+                                                <input type="text" name="details_id" value="{{data.id}}" hidden id="">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="avatar" class="form-label">Avatar</label>
+                                                        {% render_field editForm.avatar  class="form-control mt-2" %}
+                                                    </div>
+                                                    <span class="text-error  text-danger">{{ editForm.Avatar.errors }}</span>
+                                                </div>
+                    
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="username" class="form-label">Username</label>
+                                                        {% render_field editForm.username value=request.user.username class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error  text-danger">{{ editForm.username.errors }}</span>
+                                                </div>
+                    
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="truf_name" class="form-label">Turf Name</label>
+                                                        {% render_field editForm.turf_name value=data.turf_name class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error text-danger">{{ editForm.turf_name.errors }}</span>
+                                                </div>
+                    
+                    
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="email" class="form-label">Email</label>
+                                                        {% render_field editForm.email value=data.email class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error text-danger">{{ editForm.email.errors }}</span>
+                                                </div>
+                    
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="phone" class="form-label">Phone No.</label>
+                                                        {% render_field editForm.phone value=data.phone class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error text-danger">{{ editForm.phone.errors }}</span>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="location" class="form-label">Location</label>
+                                                        {% render_field editForm.location value=data.location class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error text-danger">{{ editForm.location.errors }}</span>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="Landmark" class="form-label">Landmark</label>
+                                                        {% render_field editForm.landmark value=data.landmark class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error text-danger">{{ editForm.landmark.errors }}</span>
+                                                </div>
+                                                
+                    
+                                                
+                                                <!-- #######################################taginput###################################################### -->
+                                                <!-- <div class="wrapper-taginput">
+                    
+                                                    <div class="form-label">Game Categories
+                    
+                                                    </div>
+                    
+                    
+                                                    <div class="content-taginput">
+                    
+                                                        <p>Select Type of Games can be played at your turf</p>
+                    
+                                                        <ul id="ul-taginput"><select type="text" spellcheck="false" id="taginput" class="form-control">
+                    
+                                                            <option>Categories</option>
+                                                            {% for category in categories %}
+                                                            <option value="{{category.id}}">{{category.category}}</option>
+                                                            {% endfor %}
+                                                            </select>
+                                                        </ul>
+                    
+                                                    </div>
+                    
+                    
+                                                    
+                                                    <div class="d-flex justify-content-end">
+                                                        <span id="bt-remove-taginput" style="cursor: pointer;"
+                                                        class=" text-danger text-end w-auto">Remove All</span></div>
+                                                        
+                                                    </div>
+                                                    <span class="text-error text-danger">{{ editForm.category.errors }}</span>
+                                                {{editForm.category}} -->
+                                                <!-- #######################################end taginput###################################################### -->
+                    
+                    
+                                                <!-- <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="password1" class="form-label">Password</label>
+                                                        {{editForm.password1}}
+                                                    </div>
+                                                    <span class="text-error text-danger">{{ editForm.password1.errors }}</span>
+                                                </div>
+                    
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="password2" class="form-label">Confirm Password</label>
+                                                        {{editForm.password2}}
+                                                    </div>
+                                                    <span class="text-error text-danger">{{ editForm.password2.errors }}</span>
+                                                </div>                                             
+                                                </div>  -->
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Update</button>
+                                            </div> 
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        
                         <h4 class="card-title">{{data.turf_name}}</h4>
+
                     </div>
                 </div>
                 <div class="card-body">
@@ -233,8 +390,37 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div class="card-title mb-0">
+                            <h2 class="mb-0">Categories</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="grid_gallery">
+            <div id="posts_gallery">
+                
+                {% for data in image %}
+                <div class="post_gallery card ">
+                        <img class="p-2 "
+                            src={{media_url}}{{data.image}}/>
+                            <strong class="text-primary"> {{data.category}} </strong>
+        
+                </div>
+                
+                    {% endfor %}
+            </div>
+        </div>
+           
     </div>
 </div>
+
+
+
 
         
 
@@ -243,5 +429,103 @@
 <script>
     document.getElementById('turfdash-li').classList.add('active');
 </script>
+{% block js%} 
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/masonry/3.1.5/masonry.pkgd.min.js"></script>	
+<script src="/static/script.js"></script>
+<script>
 
-{% endblock content %}
+
+    const ul = document.getElementById("ul-taginput");
+
+    const input = document.getElementById("taginput")
+    const category_input = document.getElementById("category-input")
+
+    // const tagNumb = document.querySelector(".details-taginput span");
+
+
+    let maxTags = 1000,
+
+       tags = [];
+       tags_show=[]
+
+
+
+
+    createTag();
+
+
+    function createTag() {
+
+       ul.querySelectorAll("li").forEach(li => li.remove());
+
+       tags_show.slice().reverse().forEach(tag => {
+
+          let liTag = ` <li>${tag} <i class="" onclick="remove(this, '${tag}')"> <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M14.3955 9.59497L9.60352 14.387" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14.3971 14.3898L9.60107 9.59277" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M16.3345 2.75024H7.66549C4.64449 2.75024 2.75049 4.88924 2.75049 7.91624V16.0842C2.75049 19.1112 4.63549 21.2502 7.66549 21.2502H16.3335C19.3645 21.2502 21.2505 19.1112 21.2505 16.0842V7.91624C21.2505 4.88924 19.3645 2.75024 16.3345 2.75024Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></i></li>`;
+
+          ul.insertAdjacentHTML("afterbegin", liTag);
+
+       });
+
+    }
+
+
+    function remove(element, tag) {
+
+       let index = tags.indexOf(tag);
+       let index_show = tags_show.indexOf(tag);
+
+       tags = [...tags.slice(0, index), ...tags.slice(index + 1)];
+       tags_show = [...tags_show.slice(0, index_show), ...tags_show.slice(index_show + 1)];
+
+       element.parentElement.remove();
+       category_input.value = JSON.stringify(tags) ;
+
+    }
+
+
+    function addTag(e) {
+
+       let tag = e.target.value;
+       let tag_show = e.target.selectedOptions[0].text;
+
+       if (tag.length >= 1 && !tags.includes(tag) && tag != "Categories") {
+
+          // tag.split(',').forEach(tag => {
+
+             tags.push(tag);
+             tags_show.push(tag_show);
+             category_input.value = JSON.stringify(tags) ;
+
+             createTag();
+
+          // });
+       }
+
+       // e.target.value = "Select from here to Add Another";
+    }
+
+
+
+
+    input.addEventListener("click", addTag);
+
+    const removeBtn = document.querySelector("#bt-remove-taginput");
+
+    removeBtn.addEventListener("click", () => {
+
+       tags.length = 0;
+
+       ul.querySelectorAll("li").forEach(li => li.remove());
+
+       countTags();
+
+    });
+
+
+
+
+ </script>
+
+{% endblock %}
+{% endblock %}
