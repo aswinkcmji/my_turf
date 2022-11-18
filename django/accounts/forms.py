@@ -1,11 +1,12 @@
 from this import d
 from tkinter import HIDDEN
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm,PasswordChangeForm
 from django.forms import HiddenInput
 from .models import UserModel
 from django.forms import ModelForm
 from User.models import CitiesModel
+from django.contrib.auth.hashers import check_password
 
 class SignUpForm(UserCreationForm):
     
@@ -135,3 +136,36 @@ class UpdateProfileForm(ModelForm):
         if not age >= 5 or not age <= 200:
             raise forms.ValidationError("Not a valid age")
         return age
+    def clean_location(self, *args, **kwargs):
+        location=self.cleaned_data.get('location')
+        if location :
+            list=location.split(", ")
+            if len(list) ==3:
+                check_location=CitiesModel.objects.filter(name=list[0],subcountry=list[1],country=list[2])
+                if len(check_location) == 0:
+                        self._errors['location']=self.error_class(['Please Select a City from the provided list'])
+            else:
+                self._errors['location']=self.error_class(['Please Select a City from the provided list'])
+        return location
+
+class MyPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["old_password"].widget = forms.PasswordInput(attrs={"class": "form-control"})
+        self.fields["new_password1"].widget = forms.PasswordInput(attrs={"class": "form-control"})
+        self.fields["new_password2"].widget = forms.PasswordInput(attrs={"class": "form-control"})
+
+
+    def clean(self):
+
+        super(MyPasswordChangeForm,self).clean()
+
+        user_passwrd = self.user.password
+
+        new_paswd = self.cleaned_data["new_password1"]
+
+        matchcheck = check_password(new_paswd, user_passwrd)
+
+        if matchcheck:
+
+            raise forms.ValidationError({'new_password1': ("Cannot use previous password as new password")})

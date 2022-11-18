@@ -98,6 +98,9 @@
                   Phone No
                 </th>
                 <th>
+                  Email
+                </th>
+                <th>
                   Date
                 </th>
                 <th>
@@ -107,7 +110,7 @@
                   End Time
                 </th>
                 <th>
-                  Location
+                Match  Location
                 </th>
               </thead>
 
@@ -117,8 +120,9 @@
                   <td><input type="checkbox" name="selected[]" id="checks[]" value="{{data.id}}"></td>
                   <td>{{forloop.counter0|add:1}}</td>
                   <td>{{data.category}}</td>
-                  <td>{{data.username }}</td>
+                  <td>{{data.username}}</td>
                   <td>{{data.phoneno}}</td>
+                  <td>{{data.username.email}}</td>
                   <td>{{data.date|date:"Y-m-d"}}</td>
                   <td>{{data.start_time|time:"h:i:s"}}</td>
                   <td>{{data.end_time|time:"h:i:s"}}</td>
