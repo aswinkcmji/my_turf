@@ -26,7 +26,7 @@ import operator
 from django.db.models import Q
 from functools import reduce
 from django.http import HttpResponse
-
+from django.db.models import Count
 import json
 from django.views.decorators.http import require_http_methods
 # from datetime import datetime
@@ -654,12 +654,15 @@ class  JoinTournamentView(View):
     def get(self, request,id, *args, **kwargs):
                 user_location=request.user.location
                 tournaments=TournamentModel.objects.filter(id=id)
+                team_now=TournamentModel.objects.filter(id=id)
+
+                teams = CreateTeamModel.objects.all()
                 
                 print("==================================",tournaments)
 
                 if len(tournaments) == 1:
                         tournament = tournaments[0]
-                        # team=teams[0]
+                        team=teams[0]
            
 
                 if len(tournaments) == 0:
@@ -667,21 +670,19 @@ class  JoinTournamentView(View):
                 print("##################### INSIDE JOIN MATCHES #########################",tournament)
 
                 a=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=tournament.pk).values().order_by("id")
+                b=TournamentRequestModel.objects.values_list()
                 request.session['id']=tournament.id 
                 print("#### Match.Category #####",tournament.category,type(tournament.category))
                 print("#### Match.Category #####",tournament.team_name,type(tournament.team_name))
-                # print("#### a.Category #####",a,type(a))
-
-               
-                # print(" #####==================================",tournament.team_name_id)
-                # data1={
-                #     'team_name':team.team_name,
-                #      }
+                # print("--",b.team_name)
                 
 
                 data={
                     'category':tournament.category,
-                    'team_name':tournament.team_name,
+                    # 'team_name_now':b.team_name,
+                    'joined_teams':TournamentRequestModel.objects.order_by('tournament_id'),
+                    # 'joined_teams':TournamentRequestModel.objects.annotate(count=Count('tournament_id')).order_by('id').distinct('tournament_id').filter(count__gt=1),
+                    'team_name':CreateTeamModel.objects.filter(),
                     'start_date':tournament.start_date,
                     'end_date':tournament.end_date,
                     'start_time':tournament.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
@@ -703,19 +704,19 @@ class  JoinTournamentView(View):
             tournament_id=request.session.get('id')
             print(tournament_id)
             tournaments=TournamentModel.objects.filter(id=tournament_id)
+            # form=updatetournamentform(request.POST,request=request)
 
             # teams = CreateTeamModel.objects.all()
             # print("==================+++++++++++++++++++++======================",teams)
-
+            print("===request.POST",(request.POST['team-select']))
             if len(tournaments) == 1:
                 requested_tournament = tournaments[0]
                 # team=teams[0]
-            # data1={
-            #     'team_name':team.team_name,
-            # }
+          
             data1={
                     'category':requested_tournament.category.id,
-                    'team_name':CreateTeamModel.objects.first(),
+                    'team_name':request.POST['team-select'],
+                    # "team_name":requested_tournament.team_name,
                     'start_date':requested_tournament.start_date,
                     'end_date':requested_tournament.end_date,
                     'start_time':requested_tournament.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
@@ -728,7 +729,8 @@ class  JoinTournamentView(View):
                 }
             form=TournamentRequestForm(data1,request=request)
             print("================++++++++++++=================",data1)
-            print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",form)
+            print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",form.errors)
+            # print("",team_name)
 
             if form.is_valid():
                 print("kikikiki")
@@ -736,11 +738,12 @@ class  JoinTournamentView(View):
                 obj.tournament_id=requested_tournament
                 obj.save()
                 print("========================================================================")
+                messages.success(request,"Tournamnt Requested Successfully")
                 return  HttpResponseRedirect(reverse('all-tournaments'))
             else:
                 messages.error(request	,'Please do not change the fields')
                 a=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=requested_tournament.pk).values()
-                context ={'is_tournamentrequestform':True ,'tournament':requested_tournament,'a':a,'data':data1,}
+                context ={'is_tournamentrequestform':True ,'tournament':requested_tournament,'a':a,'data1':data1,}
                 print(context)
                 # return render(request, 'Tournaments/tournaments.html',context)
                 return render(request, 'Tournaments/tournaments.html',context)

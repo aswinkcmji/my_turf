@@ -306,6 +306,7 @@ class updatetournamentform(ModelForm):
     tournament_id = forms.ModelChoiceField(queryset=TournamentModel.objects.all(),widget=forms.HiddenInput())
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
     team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
+    # team_name =forms.CharField(widget=forms.TextInput(attrs={"class":'form-control'}))
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
@@ -359,7 +360,8 @@ class updatetournamentform(ModelForm):
 
 class TournamentRequestForm(ModelForm):
     category = forms.ModelChoiceField(queryset=CategoriesModel.objects.all(),widget=forms.HiddenInput())
-    team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
+    # team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
+    team_name =forms.CharField(widget=forms.TextInput(attrs={"class":'form-control'}))
     start_date =forms.DateField(widget=forms.HiddenInput())
     end_date = forms.DateField(widget=forms.HiddenInput())
     start_time = forms.TimeField(widget=forms.HiddenInput())
@@ -383,6 +385,8 @@ class TournamentRequestForm(ModelForm):
     def clean(self):
         print("---------------Inside RequestForm's Clean Method-------------------")
         self.cleaned_data = super().clean()
+        team_name = self.cleaned_data.get('team_name')
+
         print(self.cleaned_data.get('tournament_id'))
         print(self.cleaned_data.get('category'))
         tournament=TournamentModel.objects.get(id=int(self.cleaned_data.get('tournament_id')))
@@ -390,6 +394,9 @@ class TournamentRequestForm(ModelForm):
         if self.cleaned_data.get('category') != tournament.category:
             self._errors['category']=self.error_class(['Do not change the category'])
             print(" category  er0rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        # if self.cleaned_data.get('team_name') != tournament.team_name:
+        #     self._errors['team_name']=self.error_class(['Do not change the team_name'])
+        #     print(" team_name  er0rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         if self.cleaned_data.get('start_date')!=tournament.start_date:
             self._errors['start_date']=self.error_class(['Do not change the date'])
         if self.cleaned_data.get('end_date')!=tournament.end_date:
