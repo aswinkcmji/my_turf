@@ -1,6 +1,32 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 {% load widget_tweaks %}
+{% load static%}
+<!-- <style>
+    .card .fas {
+    position: absolute;
+    
+    bottom: -100px;
+    background-color: #4e9525;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    color: gold;
+    opacity: 0;
+    transform: translate(16rem ,-4rem);
+    transition: all 0.5s ease;
+}
+
+.card:hover .fas.bt {
+    bottom: 0px;
+    opacity: 1;
+}
+</style> -->
 
 <div class="iq-navbar-header" style="height: 215px;">
     <div class="container-fluid iq-container">
@@ -59,20 +85,20 @@
                                                         
                                                         <label for="images" class="form-label text-danger">Image</label>
                                                         {{form.image}}
-                                                            </div>
-                                                            <span class="text-error  text-danger">{{ form.Image.errors }}</span>
-                                                        </div>
                                                     </div>
+                                                            <span class="text-error  text-danger">{{ form.Image.errors }}</span>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Save</button>
-                                                </div>
-                                            </form>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="modal-footer">
+                                            
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
                                 </div>
+                            </div>
+                        </div>
                                 {% else %}
                          <a type="button" href="" class="btn btn-link btn-soft-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{data.id}}">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >                                
@@ -93,42 +119,60 @@
                             </svg> 
                         </a>
                         
-                            <div class="modal fade" id="staticBackdrop{{data.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title text-black" id="staticBackdropLabel">Edit Image</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form action="{% url 'dashboardimageupdate' %}" method="POST" enctype="multipart/form-data">
-                                            <div class="modal-body">
-                                                
-                                                
-                                               
-                                                {% csrf_token %}
-                                                
-                                                <input type="text" name="image_id" value="{{data.id}}" hidden>
-                                                
-                                                    <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-5">
-                                                        <span class="text-danger">Image</span>
-                                                        {% render_field form.image value=data.image class="form-control mt-2" required=true %}
-                                                    </div>
-
-                                                <span class="text-danger">{{form.errors}}</span>
-                                                
-
-                                            </div>
-                                            <div class="modal-footer">
-
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Update</button>
-                                            </div>
-                                        </form>
+                        <div class="modal fade" id="staticBackdrop{{data.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-black" id="staticBackdropLabel">Edit Image</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
+                                    <div class="d-flex justify-content-end">
+                                        <a  class=" btn btn-danger me-2 mt-2 p-2" title="Delete" href="{% url 'DeleteTurfHead' %}">
+                                            <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.4" d="M19.643 9.48851C19.643 9.5565 19.11 16.2973 18.8056 19.1342C18.615 20.8751 17.4927 
+                                                    21.9311 15.8092 21.9611C14.5157 21.9901 13.2494 22.0001 12.0036 22.0001C10.6809 22.0001 9.38741 21.9901 
+                                                    8.13185 21.9611C6.50477 21.9221 5.38147 20.8451 5.20057 19.1342C4.88741 16.2873 4.36418 9.5565 4.35445 
+                                                    9.48851C4.34473 9.28351 4.41086 9.08852 4.54507 8.93053C4.67734 8.78453 4.86796 8.69653 5.06831 
+                                                    8.69653H18.9388C19.1382 8.69653 19.3191 8.78453 19.4621 8.93053C19.5953 9.08852 19.6624 9.28351 
+                                                    19.643 9.48851Z" fill="currentColor">
+                                                </path>                                
+                                                <path d="M21 5.97686C21 5.56588 20.6761 5.24389 20.2871 5.24389H17.3714C16.7781 5.24389 16.2627 4.8219 16.1304 
+                                                    4.22692L15.967 3.49795C15.7385 2.61698 14.9498 2 14.0647 2H9.93624C9.0415 2 8.26054 2.61698 8.02323 3.54595L7.87054 
+                                                    4.22792C7.7373 4.8219 7.22185 5.24389 6.62957 5.24389H3.71385C3.32386 5.24389 3 5.56588 3 5.97686V6.35685C3 
+                                                    6.75783 3.32386 7.08982 3.71385 7.08982H20.2871C20.6761 7.08982 21 6.75783 21 6.35685V5.97686Z" fill="currentColor">
+                                                </path>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <form action="{% url 'dashboardimageupdate' %}" method="POST" enctype="multipart/form-data">
+                                        <div class="modal-body">
+                                            
+                                            
+                                            
+                                            {% csrf_token %}
+                                            
+                                            <input type="text" name="image_id" value="{{data.id}}" hidden>
+                                            
+                                                <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-5">
+                                                    <span class="text-danger">Image</span>
+                                                    {% render_field form.image value=data.image class="form-control mt-2" required=true %}
+                                                </div>
+
+                                            <span class="text-danger">{{form.errors}}</span>
+                                            
+
+                                        </div>
+                                        <div class="modal-footer">
+
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Update</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                            {% endif %}
-                            
+                        </div>
+                        
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -173,21 +217,6 @@
        
     </div>
 
-
-    <!-- <div class="iq-header-img">
-        <img src="/static/assets/images/dashboard/top-header.png" alt="header"
-            class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header1.png" alt="header"
-            class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
-            <img src="/static/assets/images/dashboard/top-header2.png" alt="header"
-            class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header3.png" alt="header"
-            class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header4.png" alt="header"
-        class="theme-color-yellow-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header5.png" alt="header"
-            class="theme-color-pink-img img-fluid w-100 h-100 animated-scaleX">
-    </div> -->
 </div>
 
 {% for data in turfDetails %}
@@ -202,12 +231,41 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-wrap align-items-center justify-content-between">
-                            <div class="d-flex flex-wrap align-items-center">
+                            <div class="d-flex flex-wrap align-items-center w-100 ">
                                 <div class="profile-img position-relative me-3 mb-3 mb-lg-0 profile-logo profile-logo1">
                                     <img src="{{media_url}}{{data.avatar}}" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-100">
                                 </div>
                                 <div class="d-flex flex-wrap align-items-center mb-3 mb-sm-0">
                                     <h2 class="me-2 h2">{{ data.turf_name}}</h2>
+                                </div>
+                                <div class="card-action ms-auto">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop4">
+                                        Change Password
+                                    </button>
+                                    <div class="modal fade" id="staticBackdrop4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="staticBackdropLabel">Change Password</h5>                                            
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="{% url 'TurfPasswordChange' %}" method="POST" enctype="multipart/form-data">
+                                                    <div class="modal-body">
+
+                                                        {% csrf_token %}
+                                                        
+                                                        {{ passform.as_p }}
+                                                        
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary" name="change_pass">Save</button>
+                                                    </div>
+                                                    
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -218,14 +276,106 @@
 
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header ">
                     <div class="header-title">
+                        <div style="color:black; font-size: 2rem;" class="d-flex justify-content-center">Details</div>                        
+                            <a type="button" class="d-flex justify-content-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop2{{data.id}}">
+                                <svg  width="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 
+                                        21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" 
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    </path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 
+                                        2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 
+                                        15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 
+                                        11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    </path>
+                                    <path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg> Edit
+                            </a>
+                            <div class="modal fade" id="staticBackdrop2{{data.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">Details</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form action="{% url 'dashDataUpdate' %}" method="post" enctype="multipart/form-data" >
+                                            <div class="modal-body">
+                                                {% csrf_token %}
+                                                
+                                                <!-- {{editForm.is_turf}}   -->
+                    
+                                                <div class="row">
+
+                                                <input type="text" name="details_id" value="{{data.id}}" hidden id="">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="avatar" class="form-label">Avatar</label>
+                                                        {% render_field editForm.avatar  class="form-control mt-2" %}
+                                                    </div>
+                                                    <span class="text-error  text-danger">{{ editForm.Avatar.errors }}</span>
+                                                </div>
+                    
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="username" class="form-label">Username</label>
+                                                        {% render_field editForm.username value=request.user.username class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error  text-danger">{{ editForm.username.errors }}</span>
+                                                </div>
+                    
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="truf_name" class="form-label">Turf Name</label>
+                                                        {% render_field editForm.turf_name value=data.turf_name class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error text-danger">{{ editForm.turf_name.errors }}</span>
+                                                </div>
+                    
+                    
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="email" class="form-label">Email</label>
+                                                        {% render_field editForm.email value=data.email class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error text-danger">{{ editForm.email.errors }}</span>
+                                                </div>
+                    
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="phone" class="form-label">Phone No.</label>
+                                                        {% render_field editForm.phone value=data.phone class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error text-danger">{{ editForm.phone.errors }}</span>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="location" class="form-label">Location</label>
+                                                        {% render_field editForm.location value=data.location class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error text-danger">{{ editForm.location.errors }}</span>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="Landmark" class="form-label">Landmark</label>
+                                                        {% render_field editForm.landmark value=data.landmark class="form-control" placeholder="Place Holder"%}                                                  </div>
+                                                    <span class="text-error text-danger">{{ editForm.landmark.errors }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Update</button>
+                                            </div> 
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        
                         <h4 class="card-title">{{data.turf_name}}</h4>
+
                     </div>
                 </div>
                 <div class="card-body">
-                    <p>{{data.location}}</p>
-                    <p>Near:{{data.landmark}}</p>
+                    <p>Location: {{data.location}}</p>
+                    <p>Near: {{data.landmark}}</p>
                     <div class="mb-1">Email: <a href="#" class="ms-3">{{data.email}}</a></div>
                     <div class="mb-1">Phone: <a href="#" class="ms-3">{{data.phone}}</a></div>
                     
@@ -233,15 +383,232 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div class="card-title mb-0">
+                            <h2 class="mb-0">Categories</h2>
+                        </div>
+                        <div class="card-action">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop5">
+                                Edit Category
+                            </button>
+                            <div class="modal fade" id="staticBackdrop5" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">Edit Category</h5>                                            
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form action="{% url 'TurfCategoryUpdate' %}" method="POST" enctype="multipart/form-data">    
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    {% csrf_token %}
+
+                                                    <div class="wrapper-taginput">
+
+                                                        <div class="form-label">Game Categories</div>
+                                                        <div class="content-taginput">
+                                                            <p>Select Type of Games can be played at your turf</p>
+                                                            <ul id="ul-taginput">
+                                                                <select type="text" spellcheck="false" id="taginput" class="form-control">                       
+                                                                    <option>Categories</option>
+                                                                    {% for category in categories %}
+                                                                    <option value="{{category.id}}">{{category.category}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </ul>                       
+                                                        </div>                                                                                
+                                                        <div class="d-flex justify-content-end">
+                                                            <span id="bt-remove-taginput" style="cursor: pointer;"
+                                                                class=" text-danger text-end w-auto">
+                                                                Remove All
+                                                            </span>
+                                                        </div>                                                           
+                                                    </div>
+                                                    <span class="text-error text-danger">{{ form.category.errors }}</span>
+                                                            {{form.category}}                                                        
+                                                </div>    
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- category -->
+
+            <div class="row justify-content-center">
+                {% for data in image %}
+                    <div class="col-lg-3 col-md-4 mb-3  ">
+                        <div class="card-body  rounded-3" style="background-image: url('{{media_url}}{{ data.image}}');  background-repeat: no-repeat;
+                            background-position: center;
+                            background-size: cover;
+                            -webkit-box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);
+                            -moz-box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);
+                            box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);">
+                            <div
+                                class=" text-capitalize bg-light opacity-75 p-3 rounded-2 text-black text-center w-100">
+                                <h6>{{ data.category }}</h6>
+                            </div>
+                        </div>
+
+                    </div>
+                {% endfor %}
+
+            </div>
+           
     </div>
 </div>
+
+
+
+
+
+
+
+<script>
+
+
+    $('#turf-comment').on('keyup  paste', function (e) {
+        if ($('textarea#turf-comment').val().length > 999) {
+            $("#turf-comment-error").html(" Comment should be less than 1000 characters")
+            $("#btn-comment").prop('disabled', false);
+
+
+        } else {
+            $("#turf-comment-error").html("")
+
+            $("#btn-comment").prop('disabled', false);
+        }
+    })
+
+    function clearComment() {
+
+        setTimeout(function () { form = document.getElementById('TurfComment-form').reset(); }, 1000);
+    }
+
+    $("textarea").each(function () {
+        this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+    }).on("input", function () {
+        this.style.height = 0;
+        this.style.height = (this.scrollHeight) + "px";
+    });
+</script>
 
         
 
 
+{% block js%} 
 
 <script>
     document.getElementById('turfdash-li').classList.add('active');
 </script>
 
-{% endblock content %}
+<script>
+
+
+    const ul = document.getElementById("ul-taginput");
+
+    const input = document.getElementById("taginput")
+    const category_input = document.getElementById("category-input")
+
+    // const tagNumb = document.querySelector(".details-taginput span");
+
+
+    let maxTags = 1000,
+
+       tags = [];
+       tags_show=[]
+
+
+
+
+    createTag();
+
+
+    function createTag() {
+
+       ul.querySelectorAll("li").forEach(li => li.remove());
+
+       tags_show.slice().reverse().forEach(tag => {
+
+          let liTag = ` <li>${tag} <i class="" onclick="remove(this, '${tag}')"> <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M14.3955 9.59497L9.60352 14.387" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14.3971 14.3898L9.60107 9.59277" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M16.3345 2.75024H7.66549C4.64449 2.75024 2.75049 4.88924 2.75049 7.91624V16.0842C2.75049 19.1112 4.63549 21.2502 7.66549 21.2502H16.3335C19.3645 21.2502 21.2505 19.1112 21.2505 16.0842V7.91624C21.2505 4.88924 19.3645 2.75024 16.3345 2.75024Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></i></li>`;
+
+          ul.insertAdjacentHTML("afterbegin", liTag);
+
+       });
+
+    }
+
+
+    function remove(element, tag) {
+
+       let index = tags.indexOf(tag);
+       let index_show = tags_show.indexOf(tag);
+
+       tags = [...tags.slice(0, index), ...tags.slice(index + 1)];
+       tags_show = [...tags_show.slice(0, index_show), ...tags_show.slice(index_show + 1)];
+
+       element.parentElement.remove();
+       category_input.value = JSON.stringify(tags) ;
+
+    }
+
+
+    function addTag(e) {
+
+       let tag = e.target.value;
+       let tag_show = e.target.selectedOptions[0].text;
+
+       if (tag.length >= 1 && !tags.includes(tag) && tag != "Categories") {
+
+          // tag.split(',').forEach(tag => {
+
+             tags.push(tag);
+             tags_show.push(tag_show);
+             category_input.value = JSON.stringify(tags) ;
+
+             createTag();
+
+          // });
+       }
+
+       // e.target.value = "Select from here to Add Another";
+    }
+
+
+
+
+    input.addEventListener("click", addTag);
+
+    const removeBtn = document.querySelector("#bt-remove-taginput");
+
+    removeBtn.addEventListener("click", () => {
+
+       tags.length = 0;
+
+       ul.querySelectorAll("li").forEach(li => li.remove());
+
+       countTags();
+
+    });
+
+
+
+
+ </script>
+ <script src="http://code.jquery.com/jquery.js"></script>
+ <script src="http://cdnjs.cloudflare.com/ajax/libs/masonry/3.1.5/masonry.pkgd.min.js"></script>
+ <script src="/static/script.js"></script>
+{% endblock %}
+{% endblock %}

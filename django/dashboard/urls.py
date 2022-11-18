@@ -19,7 +19,16 @@ urlpatterns = [
     path('admin/dashboard',AdminDashboardView.as_view(),name="admin_dash"),
     path('deleteturfimag/<int:id>',DeleteGalleryImage.as_view(),name="deleteturfimag"),
     path('galleryupdate',GalleryUpdate.as_view(),name="galleryupdate"),
-    path('dashboardimageupdate',DashboardImageUpdate.as_view(),name="dashboardimageupdate")
+    path('dashboardimageupdate',DashboardImageUpdate.as_view(),name="dashboardimageupdate"),
+    path('dashDataUpdate',dashDataUpdate.as_view(),name="dashDataUpdate"),
+    path('DeleteTurfHead',DeleteTurfHead.as_view(),name="DeleteTurfHead"),
+    path('TurfPasswordChange',TurfPasswordChange.as_view(),name="TurfPasswordChange"),
+    path('TurfCategoryUpdate',TurfCategoryUpdate.as_view(),name="TurfCategoryUpdate")
+
+
+
+
+
 
 
 
