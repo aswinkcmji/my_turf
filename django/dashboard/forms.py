@@ -6,10 +6,10 @@ from turtle import color
 from unicodedata import category
 from django import forms
 from django.utils.dateparse import parse_datetime
-
-
+from django.contrib.auth.forms import PasswordChangeForm
 from django.forms import ModelForm
 from .models import TurfScheduleModel, TurfGallery, CategoriesModel
+from django.contrib.auth.hashers import check_password
 
 
 class TurfScheduleForm(ModelForm):
@@ -140,3 +140,30 @@ class CategoriesEditForm(ModelForm):
     class Meta:
         model = CategoriesModel 
         fields = '__all__'
+
+
+class TurfPasswordChangeForm(PasswordChangeForm):
+
+    def __init__(self, args, *kwargs):
+
+        super().__init__(args, *kwargs)
+
+        self.fields["old_password"].widget = forms.PasswordInput(attrs={"class": "form-control"})
+
+        self.fields["new_password1"].widget = forms.PasswordInput(attrs={"class": "form-control"})
+
+        self.fields["new_password2"].widget = forms.PasswordInput(attrs={"class": "form-control"})
+
+    def clean(self):
+
+        super(TurfPasswordChangeForm,self).clean()
+
+        user_passwrd = self.user.password
+
+        new_paswd = self.cleaned_data["new_password1"]
+
+        matchcheck = check_password(new_paswd, user_passwrd)
+
+        if matchcheck:
+
+            raise forms.ValidationError({'new_password1': ("Cannot use previous password as new password")})

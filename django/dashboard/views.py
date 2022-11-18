@@ -14,11 +14,15 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm
+from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm, TurfPasswordChangeForm
 from django.utils.dateparse import parse_datetime
 from .models import TurfGallery, TurfScheduleModel , CategoriesModel
 from User.models import MatchModel,TournamentModel
 from django.db.models import Sum
+from accounts.forms import TurfEditForm
+from django.contrib.auth import update_session_auth_hash
+
+
 
 
 
@@ -49,15 +53,25 @@ class AddStockView(View):
 class Turf_Dashboard(View):
     def get(self,request):
 
-
+        
         turfDetails = UserModel.objects.filter(username = request.user.username  ).values()
         header = TurfGallery.objects.filter( username = request.user.username ,isheader = True)
         count = TurfGallery.objects.filter(isheader = True).count()
-        # for a in gallery:
-        #     header = None if a.isheader == None else a
- 
+        category = UserModel.objects.filter(username = request.user.username  ).values_list('category')
+        editForm = UserModel.objects.filter(username = request.user.username, is_turf = True).count()
+        categories= CategoriesModel.objects.all()
+        passform=TurfPasswordChangeForm(request.user)
 
-        # print("===========",header)
+        print('========count ==',editForm)
+        print('@@@@@@catergory@@@@@@@',category)
+        print('category',category.__dict__)
+        a=None
+        for i in category:
+            for j in i:
+                a=j
+        image = CategoriesModel.objects.filter(id__in = a )
+
+     
         
         context = {
             'form': GalleryImgForm(),
@@ -65,10 +79,15 @@ class Turf_Dashboard(View):
             'media_url':settings.MEDIA_URL,
             'header' : header,
             'count' :   count,
+            'image': image,
+            'editForm' : TurfEditForm(),
+            'categories':categories,
+            'passform':passform,
            
 
         }
-        print("==============")
+        print("========form4======")
+        
 
 
         return render(request,'turf/turf_dashboard.html',context)
@@ -547,7 +566,130 @@ class DashboardImageUpdate(View):
             else:  
                 messages.error(request, 'failed')
                 return HttpResponseRedirect(reverse('turf_dash'))
-                
-                   
-                
 
+class dashDataUpdate(View):
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST':  
+            editForm = TurfEditForm(request.POST, request.FILES)
+            # print ("========editForm=====",editForm)
+            # print("RRRRRRRRRRRRRRRRRRR",request.POST['category'])
+            if editForm.is_valid(): 
+
+                if request.FILES :
+
+                    updatedRecord = UserModel.objects.get(id=request.POST['details_id'])
+
+                    updatedRecord.avatar = request.FILES['avatar']
+                    
+                    updatedRecord.username = request.POST['username']
+
+                    updatedRecord.turf_name = request.POST['turf_name']
+
+                    updatedRecord.email = request.POST['email']
+                    
+                    updatedRecord.phone = request.POST['phone']
+
+                    updatedRecord.location = request.POST['location']
+
+                    updatedRecord.landmark = request.POST['landmark']
+
+                    # updatedRecord.category = request.POST['category']
+
+                    updatedRecord.save()
+
+                    messages.success(request, 'Details Updated Successfully')
+                    
+                    return HttpResponseRedirect(reverse('turf_dash'))  
+                
+                else :
+
+                    updatedRecord = UserModel.objects.get(id=request.POST['details_id'])
+                    
+
+                    updatedRecord.turf_name = request.POST['turf_name']
+                    
+                    updatedRecord.username = request.POST['username']
+
+                    updatedRecord.email = request.POST['email']
+                    
+                    updatedRecord.phone = request.POST['phone']
+
+                    updatedRecord.location = request.POST['location']
+
+                    updatedRecord.landmark = request.POST['landmark']
+
+                    # updatedRecord.category = request.POST['category']
+
+                    updatedRecord.save()
+
+                    messages.success(request,"Saved successfully")
+                    return HttpResponseRedirect(reverse('turf_dash'))  
+
+            else:  
+                print("-----------------------1111---------------------",editForm.errors)
+                messages.error(request,"Updation failed")
+                return HttpResponseRedirect(reverse('turf_dash'))
+            
+        
+
+
+class DeleteTurfHead(View):
+    def get(self, request, *args,**kwargs):
+        item = TurfGallery.objects.get(isheader=True)
+        item.delete()
+        messages.success(request, 'Image Deleted')
+
+        return HttpResponseRedirect(reverse('turf_dash'))
+
+
+
+
+class TurfPasswordChange(View):
+    def post(self, request, *args, **kwargs):
+            if request.method == 'POST':
+                if 'change_pass' in request.POST:
+                    passform=TurfPasswordChangeForm(request.user,request.POST)   
+                    print(passform)
+                    if passform.is_valid():
+                        print("########################  form is valid ############")
+                        user = passform.save()
+
+                        update_session_auth_hash(request, user) # Important!
+
+                        messages.success(request, 'Your password was successfully updated!')
+
+                        return HttpResponseRedirect(reverse('turf_dash')) 
+                    else:
+                        
+                        messages.error(request, 'Same as Old Password.. Choose New One')
+                        return HttpResponseRedirect(reverse('turf_dash')) 
+
+
+
+
+class TurfCategoryUpdate(View):
+    def post(self, request, *args, **kwargs):
+            if request.method == 'POST':
+                form = TurfEditForm(request.POST,request.FILES)
+                if form.is_valid():
+                    print(request.POST.get('category'),"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+                    if request.POST.get('category') == "" or request.POST.get('category') == "[]":
+
+                        user_obj=form.save(commit=False)
+                        user_obj.save()
+                    
+                    messages.success(self.request, "Updated Successfully")
+                    return HttpResponseRedirect(reverse('turf_dash'))
+                else:
+                    messages.error(request, 'Updation Failed!!')
+                    return HttpResponseRedirect(reverse('turf_dash'))
+
+
+
+
+class DeleteTurfCategory(View):
+    def get(self, request,id, *args,**kwargs):
+        item = CategoriesModel.objects.get(id=id)
+        item.delete()
+        messages.success(request, 'Category Removed')
+        return HttpResponseRedirect(reverse('turf_dash'))
