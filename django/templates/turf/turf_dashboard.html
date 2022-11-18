@@ -382,7 +382,7 @@
                                                     <span class="text-error text-danger">{{ editForm.password2.errors }}</span>
                                                 </div>                                             
                                                 </div>  -->
-                                                {% comment %} <form method="POST">
+                                                <form method="POST">
 
                                                     {% csrf_token %}
                                                     
@@ -391,7 +391,7 @@
                                                     <button type="submit" class=" btn btn-primary" name="change_pass"> Save Changes</button>
                                                     
                                                     
-                                                </form> {% endcomment %}
+                                                </form>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
