@@ -11,6 +11,12 @@ urlpatterns = [
     path('stockdetails/', StockTable.as_view(), name="stocktable"),
     path('deletestock/<int:id>/',DeleteStock.as_view(),name='deletestock'),
     path('cart/',CartDetailsView.as_view(),name='cartdetails'),
+    path('puchasehistory/',PurchaseHistoryView.as_view(),name='puchasehistory'),
+    path('updateorderstatus/<int:id>/',UpdateOrderStatusView.as_view(),name='updateorderstatus'),
+    path('orderdetails/<int:id>/',OrderDetailsView.as_view(),name='orderdetails'),
+
+
+
 ]
 
 htmx_urlpatterns = [
@@ -20,9 +26,6 @@ htmx_urlpatterns = [
     path('filteraz/',AtoZ_Filter.as_view(),name='atoz_filter'),
     path('filterlt/',Latest_Filter.as_view(),name='latest_filter'),
     path('searchProduct/',SearchProduct.as_view(),name='searchProduct'),
-
-
-
 
 ]
 

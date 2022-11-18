@@ -31,6 +31,7 @@ class Signup(View):
                 form = SignUpForm(request.POST)
                 if form.is_valid():
                     form.save()
+                    
                     messages.success(self.request, "Account Created Successfully")
                     return HttpResponseRedirect(reverse('login'))
                       
