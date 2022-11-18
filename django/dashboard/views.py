@@ -63,7 +63,7 @@ class Turf_Dashboard(View):
         passform=TurfPasswordChangeForm(request.user)
 
         print('========count ==',editForm)
-
+        print('@@@@@@catergory@@@@@@@',category)
         print('category',category.__dict__)
         a=None
         for i in category:
@@ -657,3 +657,33 @@ class TurfPasswordChange(View):
                         
                         messages.error(request, 'Same as Old Password.. Choose New One')
                         return HttpResponseRedirect(reverse('turf_dash')) 
+
+
+
+
+class TurfCategoryUpdate(View):
+    def post(self, request, *args, **kwargs):
+            if request.method == 'POST':
+                form = TurfEditForm(request.POST,request.FILES)
+                if form.is_valid():
+                    print(request.POST.get('category'),"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+                    if request.POST.get('category') == "" or request.POST.get('category') == "[]":
+
+                        user_obj=form.save(commit=False)
+                        user_obj.save()
+                    
+                    messages.success(self.request, "Updated Successfully")
+                    return HttpResponseRedirect(reverse('turf_dash'))
+                else:
+                    messages.error(request, 'Updation Failed!!')
+                    return HttpResponseRedirect(reverse('turf_dash'))
+
+
+
+
+class DeleteTurfCategory(View):
+    def get(self, request,id, *args,**kwargs):
+        item = CategoriesModel.objects.get(id=id)
+        item.delete()
+        messages.success(request, 'Category Removed')
+        return HttpResponseRedirect(reverse('turf_dash'))
