@@ -655,5 +655,5 @@ class TurfPasswordChange(View):
                         return HttpResponseRedirect(reverse('turf_dash')) 
                     else:
                         
-                        messages.error(request, 'Updation Failed')
+                        messages.error(request, 'Same as Old Password.. Choose New One')
                         return HttpResponseRedirect(reverse('turf_dash')) 
