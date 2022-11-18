@@ -4,8 +4,8 @@ from select import select
 from django.shortcuts import render,redirect
 from django.urls import reverse
 from django.views.generic import View
-from .forms import addStockForm, addToCartForm
-from .models import CartModel, CheckoutModel, ProductsModel
+from .forms import addStockForm, addToCartForm ,billingAddressForm
+from .models import CartModel, CheckoutModel, ProductsModel,BillingAddressModel
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponseRedirect
@@ -77,13 +77,14 @@ class DeleteCartItem(View):
 class Checkout(View):
     def get(self , request, *args, **kwargs):
 
+        shipping_address = BillingAddressModel.objects.filter(username=request.user.username)
+        form = billingAddressForm()
 
         num = int(random.random()*99999)
         cartData = CartModel.objects.filter(username = request.user.username)
         totalPrice = CartModel.objects.filter(username = request.user.username).values_list('quantity','price')
         totalAmount = 0
         totalItemCount = CartModel.objects.filter(username = request.user.username).count()
-
         if cartData :
             for i in totalPrice:
             
@@ -91,11 +92,12 @@ class Checkout(View):
 
 
                 context = {
-                    
+                    'shipping_address': shipping_address if shipping_address else None,
                     'totalAmount':totalAmount,
                     'totalItemCount':totalItemCount,
                     'cartData':cartData,
                     'num':num,
+                    'form': form,
                     
                 }
 
@@ -105,37 +107,102 @@ class Checkout(View):
 
             return HttpResponseRedirect(reverse('shop'))
 
+
+    def post(self,request, *args, **kwargs):
+        if request.method == 'POST':  
+            form = billingAddressForm(request.POST)
+            if form.is_valid(): 
+
+                if request.user.username == request.POST['username']:
+
+                    if BillingAddressModel.objects.filter(username = request.user.username):
+
+                        updatedRecord = BillingAddressModel.objects.get(username=request.POST['username'])
+
+                        updatedRecord.firstname = request.POST['firstname']
+
+                        updatedRecord.contactnumber = request.POST['contactnumber']
+
+                        updatedRecord.houseno = request.POST['houseno']
+
+                        updatedRecord.landmark = request.POST['landmark']
+
+                        updatedRecord.location = request.POST['location']
+
+                        updatedRecord.state = request.POST['state']
+
+                        updatedRecord.pincode = request.POST['pincode']
+
+                        updatedRecord.save()
+
+                        
+
+                        messages.success(request, 'Billing Address Updated...')
+                        
+                        return HttpResponseRedirect(reverse('checkout')) 
+
+                    else :
+
+                        form.save()
+                        messages.success(request, 'Billing Address Added...')
+                        return HttpResponseRedirect(reverse('checkout'))
+
+                else :
+
+                    messages.error(request, 'Enter Valid Username...')
+                    return HttpResponseRedirect(reverse('checkout'))
+
+            else:  
+                print(form.errors,"sdgfjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
+                messages.error(request, 'Form Validation Failed...')
+                return HttpResponseRedirect(reverse('checkout'))
         
 
 class OrderView(View):
     def get(self, request, id ,*args, **kwargs):
 
         # select cartDetails
+        shipping_address = BillingAddressModel.objects.filter(username=request.user.username)
 
-        cartData = CartModel.objects.filter(username = request.user.username).values_list('product_name','quantity')
+        if shipping_address :
 
-        # subtract the quantity from the stock quantity
 
-        if cartData :
-            for i in cartData :
+            cartData = CartModel.objects.filter(username = request.user.username).values_list('product_name','quantity')
 
-                productQty = ProductsModel.objects.filter(product_name=i[0]).values_list('quantity')[0][0]
+            # subtract the quantity from the stock quantity
 
-                ProductsModel.objects.filter(product_name = i[0]).update(quantity = productQty - i[1])
+            if cartData :
+                for i in cartData :
+
+                    productQty = ProductsModel.objects.filter(product_name=i[0]).values_list('quantity')[0][0]
+
+                    ProductsModel.objects.filter(product_name = i[0]).update(quantity = productQty - i[1])
+            
+            # insert the order to ordermodel
+            
+                for i in CartModel.objects.filter(username = request.user.username).values_list() :
+
+                    CheckoutModel.objects.create(orderno=id,username=i[1],
+                                                 product_id=i[2],
+                                                 product_name=i[3],
+                                                 price=i[4],
+                                                 quantity=i[5],
+                                                 image=i[6],
+                                                 date=datetime.now().date()
+                                                )
+
+                # delete the cartData
+
+                CartModel.objects.filter(username = request.user.username).delete()
+
+            messages.success(request, 'Your order confirmed successfully')
+            
+            return HttpResponseRedirect(reverse('shop'))
         
-        # insert the order to ordermodel
-        
-            for i in CartModel.objects.filter(username = request.user.username).values_list() :
+        else :
 
-                CheckoutModel.objects.create(orderno=id,username=i[1],product_id=i[2],product_name=i[3],price=i[4],quantity=i[5],image=i[6],date=datetime.now().date())
-
-            # delete the cartData
-
-            CartModel.objects.filter(username = request.user.username).delete()
-
-        messages.success(request, 'your order confirmed successfully')
-        
-        return HttpResponseRedirect(reverse('shop'))
+            messages.warning(request, 'Please fill your billing address')
+            return HttpResponseRedirect(reverse('checkout'))
 
 class OutOfStock(View):
     def get(self, request, *args, **kwargs):
@@ -173,7 +240,7 @@ class StockTable(View):
 
                     updatedRecord.product_name = request.POST['product_name']
 
-                    updatedRecord. price = request.POST['price']
+                    updatedRecord.price = request.POST['price']
                     
                     updatedRecord.quantity = request.POST['quantity']
                     
@@ -224,6 +291,7 @@ def increaseBtn(request,id):
     item = CartModel.objects.get(id=id)
     item.update()
     return HttpResponseRedirect(reverse('stocktable'))
+
 
 
 class HtoL_Filter(View):
@@ -337,3 +405,59 @@ class SearchProduct(View):
 
                 }
         return render(request, 'e_commerce/productlist.html',context)
+
+
+class PurchaseHistoryView(View):
+    def get(self, request,*args, **kwargs):
+        purchasedata = CheckoutModel.objects.all()
+        purchasedatauser = CheckoutModel.objects.filter(username = request.user.username)
+
+        context = {
+            'puchasedata': purchasedata,
+            'purchasedatauser' : purchasedatauser,
+        }
+        return render(request, 'e_commerce/purchasehistory.html',context)
+
+
+class UpdateOrderStatusView(View) :
+    def get(self, request, id, *args, **kwargs):
+
+        updatedRecord = CheckoutModel.objects.get(id=id)
+
+        if updatedRecord.status == "Awaiting Fulfillment":
+            
+            updatedRecord.status = "Shipped"
+            updatedRecord.save()
+            messages.success(request, 'Order Confirmed...')
+
+
+
+        return HttpResponseRedirect(reverse('puchasehistory'))
+
+class OrderDetailsView(View):
+    def get( self, request, id, *args, **kwargs):
+        order = CheckoutModel.objects.filter(orderno=id)
+        billingAddressData = BillingAddressModel.objects.filter(username = request.user.username).first()
+        if order.count() == 1:
+            context = {
+                'order': order,
+                'media_url':settings.MEDIA_URL,
+                'billingAddressData': billingAddressData
+
+            }
+            return render(request,'e_commerce/orderdetails.html',context)
+        else:
+            context = {
+                'order': order,
+                'oneorder': order.first(),
+                'media_url':settings.MEDIA_URL,
+                'billingAddressData': billingAddressData
+
+            }
+            return render(request,'e_commerce/orderdetails.html',context)
+
+            
+
+
+
+

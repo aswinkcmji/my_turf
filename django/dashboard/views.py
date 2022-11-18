@@ -14,12 +14,15 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm
+from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm, TurfPasswordChangeForm
 from django.utils.dateparse import parse_datetime
 from .models import TurfGallery, TurfScheduleModel , CategoriesModel
 from User.models import MatchModel,TournamentModel
 from django.db.models import Sum
 from accounts.forms import TurfEditForm
+from django.contrib.auth import update_session_auth_hash
+
+
 
 
 
@@ -57,10 +60,10 @@ class Turf_Dashboard(View):
         category = UserModel.objects.filter(username = request.user.username  ).values_list('category')
         editForm = UserModel.objects.filter(username = request.user.username, is_turf = True).count()
         categories= CategoriesModel.objects.all()
-        # cpform=TurfPasswordChange(request.user)
+        passform=TurfPasswordChangeForm(request.user)
 
         print('========count ==',editForm)
-
+        print('@@@@@@catergory@@@@@@@',category)
         print('category',category.__dict__)
         a=None
         for i in category:
@@ -78,7 +81,8 @@ class Turf_Dashboard(View):
             'count' :   count,
             'image': image,
             'editForm' : TurfEditForm(),
-            'categories':categories
+            'categories':categories,
+            'passform':passform,
            
 
         }
@@ -111,42 +115,48 @@ class Turf_Dashboard(View):
 @method_decorator(login_required,name='dispatch')
 class TurfSchedule(View):
     def get(self,request):
-        turf_schedule   = TurfScheduleModel.objects.filter(turf=request.user)
+        if request.user.is_turf:
+            turf_schedule   = TurfScheduleModel.objects.filter(turf=request.user)
 
-        addScheduleform = TurfScheduleForm(initial={'turf':request.user})
-        context ={'addScheduleform': addScheduleform ,'is_addform':False , 'turf_schedule':turf_schedule}
-        return render(request,"turf/schedule.html",context)
+            addScheduleform = TurfScheduleForm(initial={'turf':request.user})
+            context ={'addScheduleform': addScheduleform ,'is_addform':False , 'turf_schedule':turf_schedule}
+            return render(request,"turf/schedule.html",context)
+        else:
+            return redirect('403')
     def post(self, request, *args, **kwargs):
-        txt_colors= ['rgba(206,32,20)','rgba(8,130,12)', 'rgba(58,87,232)','rgba(235,153,27)','rgba(108,117,125)']
-        bg_colors= ['rgba(206,32,20,0.2)','rgba(8,130,12,0.2)', 'rgba(58,87,232,0.2)','rgba(235,153,27,0.2)','rgba(108,117,125,0.4)']
-        if request.method == 'POST':
-            print(request.POST["color"])
-            form = TurfScheduleForm(request.POST)
-            
+        if request.user.is_tur:
+            txt_colors= ['rgba(206,32,20)','rgba(8,130,12)', 'rgba(58,87,232)','rgba(235,153,27)','rgba(108,117,125)']
+            bg_colors= ['rgba(206,32,20,0.2)','rgba(8,130,12,0.2)', 'rgba(58,87,232,0.2)','rgba(235,153,27,0.2)','rgba(108,117,125,0.4)']
+            if request.method == 'POST':
+                print(request.POST["color"])
+                form = TurfScheduleForm(request.POST)
+                
 
-            
-            if form.is_valid():
-                category = CategoriesModel.objects.get(id=request.POST['category'])
-                form2 =form.save(commit=False)
-                for key,value in enumerate(bg_colors):
-                    
-                    if request.POST["color"] == str(key):
-                        form2.color_txt =txt_colors[key]
-                        form2.color_bg =bg_colors[key]
-                # form2.start= parse_datetime(request.POST['start'])
-                # form2.end= parse_datetime(request.POST['end'])
-                form2.title = category.category +" - "+request.POST['user']
-                form2.turf = request.user
-                form2.save()
-                    
-                    
-                    # messages.success(self.request, "Account Created Successfully")
-                return HttpResponseRedirect(reverse('turf_schedule'))
-                      
-            else:
-                turf_schedule   = TurfScheduleModel.objects.filter(turf=request.user)
-                context ={'addScheduleform': form, 'is_addform':True ,'turf_schedule':turf_schedule}
-                return render(request,"turf/schedule.html",context)
+                
+                if form.is_valid():
+                    category = CategoriesModel.objects.get(id=request.POST['category'])
+                    form2 =form.save(commit=False)
+                    for key,value in enumerate(bg_colors):
+                        
+                        if request.POST["color"] == str(key):
+                            form2.color_txt =txt_colors[key]
+                            form2.color_bg =bg_colors[key]
+                    # form2.start= parse_datetime(request.POST['start'])
+                    # form2.end= parse_datetime(request.POST['end'])
+                    form2.title = category.category +" - "+request.POST['user']
+                    form2.turf = request.user
+                    form2.save()
+                        
+                        
+                        # messages.success(self.request, "Account Created Successfully")
+                    return HttpResponseRedirect(reverse('turf_schedule'))
+                        
+                else:
+                    turf_schedule   = TurfScheduleModel.objects.filter(turf=request.user)
+                    context ={'addScheduleform': form, 'is_addform':True ,'turf_schedule':turf_schedule}
+                    return render(request,"turf/schedule.html",context)
+        else:
+            return redirect('404')
 
 @method_decorator(login_required,name='dispatch')
 class TurfScheduleEdit(View):
@@ -619,6 +629,8 @@ class dashDataUpdate(View):
                 print("-----------------------1111---------------------",editForm.errors)
                 messages.error(request,"Updation failed")
                 return HttpResponseRedirect(reverse('turf_dash'))
+            
+        
 
 
 class DeleteTurfHead(View):
@@ -627,4 +639,57 @@ class DeleteTurfHead(View):
         item.delete()
         messages.success(request, 'Image Deleted')
 
+        return HttpResponseRedirect(reverse('turf_dash'))
+
+
+
+
+class TurfPasswordChange(View):
+    def post(self, request, *args, **kwargs):
+            if request.method == 'POST':
+                if 'change_pass' in request.POST:
+                    passform=TurfPasswordChangeForm(request.user,request.POST)   
+                    print(passform)
+                    if passform.is_valid():
+                        print("########################  form is valid ############")
+                        user = passform.save()
+
+                        update_session_auth_hash(request, user) # Important!
+
+                        messages.success(request, 'Your password was successfully updated!')
+
+                        return HttpResponseRedirect(reverse('turf_dash')) 
+                    else:
+                        
+                        messages.error(request, 'Same as Old Password.. Choose New One')
+                        return HttpResponseRedirect(reverse('turf_dash')) 
+
+
+
+
+class TurfCategoryUpdate(View):
+    def post(self, request, *args, **kwargs):
+            if request.method == 'POST':
+                form = TurfEditForm(request.POST,request.FILES)
+                if form.is_valid():
+                    print(request.POST.get('category'),"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+                    if request.POST.get('category') == "" or request.POST.get('category') == "[]":
+
+                        user_obj=form.save(commit=False)
+                        user_obj.save()
+                    
+                    messages.success(self.request, "Updated Successfully")
+                    return HttpResponseRedirect(reverse('turf_dash'))
+                else:
+                    messages.error(request, 'Updation Failed!!')
+                    return HttpResponseRedirect(reverse('turf_dash'))
+
+
+
+
+class DeleteTurfCategory(View):
+    def get(self, request,id, *args,**kwargs):
+        item = CategoriesModel.objects.get(id=id)
+        item.delete()
+        messages.success(request, 'Category Removed')
         return HttpResponseRedirect(reverse('turf_dash'))
