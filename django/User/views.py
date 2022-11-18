@@ -437,7 +437,7 @@ class CreateTournamentView(View):
         print(datetime.now()+timedelta(hours=1))
         end_time=(datetime.now()+timedelta(hours=1))
         print(end_time)
-       
+     
         data={
             'category':CategoriesModel.objects.first(),
             'team_name':CreateTeamModel.objects.first(),
@@ -650,8 +650,11 @@ class  JoinTournamentView(View):
                 a=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=tournament.pk).values().order_by("id")
                 request.session['id']=tournament.id 
                 print("#### Match.Category #####",tournament.category,type(tournament.category))
+                print("#### Match.Category #####",tournament.team_name,type(tournament.team_name))
+                # print("#### a.Category #####",a,type(a))
+
                
-                print(" #####==================================",tournament.team_name_id)
+                # print(" #####==================================",tournament.team_name_id)
                 # data1={
                 #     'team_name':team.team_name,
                 #      }
@@ -659,7 +662,7 @@ class  JoinTournamentView(View):
 
                 data={
                     'category':tournament.category,
-                    'team_name':tournament.team_name_id,
+                    'team_name':tournament.team_name,
                     'start_date':tournament.start_date,
                     'end_date':tournament.end_date,
                     'start_time':tournament.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
@@ -676,20 +679,24 @@ class  JoinTournamentView(View):
                 context ={'is_tournamentrequestform':True ,'tournament':tournament,'a':a,'data':data,}
                 print(context)
                 return render(request, 'Tournaments/tournaments.html',context)
+
     def post(self, request, *args, **kwargs):
             tournament_id=request.session.get('id')
             print(tournament_id)
             tournaments=TournamentModel.objects.filter(id=tournament_id)
-            teams = CreateTeamModel.objects.all()
+
+            # teams = CreateTeamModel.objects.all()
+            # print("==================+++++++++++++++++++++======================",teams)
+
             if len(tournaments) == 1:
                 requested_tournament = tournaments[0]
-                team=teams[0]
+                # team=teams[0]
             # data1={
             #     'team_name':team.team_name,
             # }
-            data={
+            data1={
                     'category':requested_tournament.category.id,
-                    'team_name':requested_tournament.team_name.id,
+                    'team_name':CreateTeamModel.objects.first(),
                     'start_date':requested_tournament.start_date,
                     'end_date':requested_tournament.end_date,
                     'start_time':requested_tournament.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
@@ -700,9 +707,9 @@ class  JoinTournamentView(View):
                     'phoneno': request.user.phone,
                     'tournament_id':requested_tournament.pk,
                 }
-            form=TournamentRequestForm(data,request=request)
-            print("================++++++++++++=================",team)
-            print(form)
+            form=TournamentRequestForm(data1,request=request)
+            print("================++++++++++++=================",data1)
+            print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",form)
 
             if form.is_valid():
                 print("kikikiki")
@@ -714,7 +721,7 @@ class  JoinTournamentView(View):
             else:
                 messages.error(request	,'Please do not change the fields')
                 a=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=requested_tournament.pk).values()
-                context ={'is_tournamentrequestform':True ,'tournament':requested_tournament,'a':a,'data':data ,}
+                context ={'is_tournamentrequestform':True ,'tournament':requested_tournament,'a':a,'data':data1,}
                 print(context)
                 # return render(request, 'Tournaments/tournaments.html',context)
                 return render(request, 'Tournaments/tournaments.html',context)

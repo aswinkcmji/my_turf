@@ -67,23 +67,16 @@ class TournamentRequestModel(models.Model):
     end_time= models.TimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
     locality = models.CharField(max_length=30,null=True,blank=False)
 
-# class CreateTeamModel(models.Model):
-    # team_name = models.CharField(max_length=30,blank=False,null=False)
+class CreateTeamModel(models.Model):
+    team_name = models.CharField(max_length=30,blank=False,null=False)
     # category=models.ForeignKey(CategoriesModel, on_delete=models.CASCADE)
     # members=models.IntegerField()
     # # tournament_id=models.ForeignKey(TournamentModel, on_delete=models.CASCADE)
 
-    # def __str__(self):
-        # return str(self.team_name,)
-
-# team_name = models.CharField(max_length=100 ,blank=True)
+    def __str__(self):
+        return str(self.team_name)
 
 
-
-
-
-    # def __str__(self):
-    #     return str(self.category)
 
 class TurfCommentsModel(models.Model):
     turf = models.ForeignKey(UserModel, on_delete=models.CASCADE , related_name='turf')
