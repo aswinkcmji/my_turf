@@ -14,12 +14,15 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm, TurfPasswordChange
+from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm, TurfPasswordChangeForm
 from django.utils.dateparse import parse_datetime
 from .models import TurfGallery, TurfScheduleModel , CategoriesModel
 from User.models import MatchModel,TournamentModel
 from django.db.models import Sum
 from accounts.forms import TurfEditForm
+from django.contrib.auth import update_session_auth_hash
+
+
 
 
 
@@ -57,7 +60,7 @@ class Turf_Dashboard(View):
         category = UserModel.objects.filter(username = request.user.username  ).values_list('category')
         editForm = UserModel.objects.filter(username = request.user.username, is_turf = True).count()
         categories= CategoriesModel.objects.all()
-        cpform=TurfPasswordChange(request.user)
+        passform=TurfPasswordChangeForm(request.user)
 
         print('========count ==',editForm)
 
@@ -78,7 +81,8 @@ class Turf_Dashboard(View):
             'count' :   count,
             'image': image,
             'editForm' : TurfEditForm(),
-            'categories':categories
+            'categories':categories,
+            'passform':passform,
            
 
         }
@@ -619,6 +623,8 @@ class dashDataUpdate(View):
                 print("-----------------------1111---------------------",editForm.errors)
                 messages.error(request,"Updation failed")
                 return HttpResponseRedirect(reverse('turf_dash'))
+            
+        
 
 
 class DeleteTurfHead(View):
@@ -628,3 +634,26 @@ class DeleteTurfHead(View):
         messages.success(request, 'Image Deleted')
 
         return HttpResponseRedirect(reverse('turf_dash'))
+
+
+
+
+class TurfPasswordChange(View):
+    def post(self, request, *args, **kwargs):
+            if request.method == 'POST':
+                if 'change_pass' in request.POST:
+                    passform=TurfPasswordChangeForm(request.user,request.POST)   
+                    print(passform)
+                    if passform.is_valid():
+                        print("########################  form is valid ############")
+                        user = passform.save()
+
+                        update_session_auth_hash(request, user) # Important!
+
+                        messages.success(request, 'Your password was successfully updated!')
+
+                        return HttpResponseRedirect(reverse('turf_dash')) 
+                    else:
+                        
+                        messages.error(request, 'Updation Failed')
+                        return HttpResponseRedirect(reverse('turf_dash')) 
