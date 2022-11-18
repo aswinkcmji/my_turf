@@ -1,0 +1,120 @@
+{% extends 'layouts/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+    <section class="ecommerce-purchase-history-section container-fluid ">
+        <!-- ecommerce topbar -->
+        <div class="ecomerce-top-bar card p-3 m-3">
+            <div class="row">
+                <div class="col-4">
+                    <span class="item-name" style="font-size: 1.4rem;">Purchase History</span>
+                </div>
+            </div>
+        </div>
+        <!-- ecommerce main section -->
+        <div class="ecom-purchase-history ">
+            <div class=" m-3 py-0" >
+
+                <div class="">
+                    <div class="conatiner-fluid  py-0" 
+                         >
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table id="datatable" class="table table-striped" data-toggle="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Order Number</th>
+                                                        <th>User Name</th>
+                                                        <th>Order Total</th>
+                                                        <th>Purchased Date</th>
+                                                        <th>{% if request.user.is_superuser %}
+                                                                Edit Status
+                                                            {% else %} 
+                                                                Status 
+                                                            {% endif %} </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% if request.user.is_superuser %}
+                                                        {% for data in puchasedata %}
+                                                            <tr>
+                                                                <td>{{forloop.counter0|add:1}}</td>
+                                                                <td>
+                                                                    <a href="{% url 'orderdetails' data.orderno %}" class="text-dark orderno p-0 ">{{data.orderno}}</a>
+                                                                </td>
+                                                                <td>{{data.username}}</td>
+                                                                <td>{{data.price}}</td>
+                                                                <td>{{data.date}}</td>
+                                                                <td>
+                                                                    {% if data.status == "Shipped" %}
+                                                                        <span class="bg-success text-white p-2 rounded" 
+                                                                            style="font-size: .8rem;">
+                                                                            {{data.status}}
+                                                                        </span>
+                                                                    {% else %}
+                                                                        <a class="btn btn-small btn-warning"
+                                                                            style="font-size: .8rem;"
+                                                                            href="{% url 'updateorderstatus' data.id %}">
+                                                                            {{data.status}}
+                                                                        </a>
+                                                                    {% endif%}
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                            
+                                                        {% for data in purchasedatauser %}
+                                                            <tr>
+                                                                <td>{{forloop.counter0|add:1}}</td>
+                                                                <td>
+                                                                    <a href="{% url 'orderdetails' data.orderno %}" class="text-dark orderno p-0 ">{{data.orderno}}</a>
+                                                                </td>
+                                                                <td>{{data.username}}</td>
+                                                                <td>{{data.price}}</td>
+                                                                <td>{{data.date}}</td>
+                                                                <td>
+                                                                    {% if data.status == "Shipped" %}
+                                                                        <span class="bg-success text-white p-2 rounded" 
+                                                                            style="font-size: .8rem;">
+                                                                            {{data.status}}
+                                                                        </span>
+                                                                    {% else %}
+                                                                        <span class="bg-warning text-white p-2 rounded" 
+                                                                            style="font-size: .8rem;">
+                                                                            {{data.status}}
+                                                                        </span>
+                                                                    {% endif%}
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+
+                                                    {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+        .orderno:hover{
+            border-bottom: solid 2px #3a57e8 ;
+        }
+    </style>
+    
+    <script>
+        document.getElementById('purchasehistory-li').classList.add('active')
+    </script>
+    
+{% endblock content %}

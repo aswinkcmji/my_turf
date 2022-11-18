@@ -2,7 +2,7 @@
 {% block content %}
 {% load widget_tweaks %}
 {% load static%}
-<style>
+<!-- <style>
     .card .fas {
     position: absolute;
     
@@ -26,7 +26,7 @@
     bottom: 0px;
     opacity: 1;
 }
-</style>
+</style> -->
 
 <div class="iq-navbar-header" style="height: 215px;">
     <div class="container-fluid iq-container">
@@ -231,12 +231,41 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-wrap align-items-center justify-content-between">
-                            <div class="d-flex flex-wrap align-items-center">
+                            <div class="d-flex flex-wrap align-items-center w-100 ">
                                 <div class="profile-img position-relative me-3 mb-3 mb-lg-0 profile-logo profile-logo1">
                                     <img src="{{media_url}}{{data.avatar}}" alt="User-Profile" class="theme-color-default-img img-fluid rounded-pill avatar-100">
                                 </div>
                                 <div class="d-flex flex-wrap align-items-center mb-3 mb-sm-0">
                                     <h2 class="me-2 h2">{{ data.turf_name}}</h2>
+                                </div>
+                                <div class="card-action ms-auto">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop4">
+                                        Change Password
+                                    </button>
+                                    <div class="modal fade" id="staticBackdrop4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="staticBackdropLabel">Change Password</h5>                                            
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="{% url 'TurfPasswordChange' %}" method="POST" enctype="multipart/form-data">
+                                                    <div class="modal-body">
+
+                                                        {% csrf_token %}
+                                                        
+                                                        {{ passform.as_p }}
+                                                        
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary" name="change_pass">Save</button>
+                                                    </div>
+                                                    
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -247,10 +276,10 @@
 
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header ">
                     <div class="header-title">
-                        
-                            <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2{{data.id}}">
+                        <div style="color:black; font-size: 2rem;" class="d-flex justify-content-center">Details</div>                        
+                            <a type="button" class="d-flex justify-content-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop2{{data.id}}">
                                 <svg  width="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 
                                         21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" 
@@ -262,7 +291,7 @@
                                         11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                     </path>
                                     <path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
+                                </svg> Edit
                             </a>
                             <div class="modal fade" id="staticBackdrop2{{data.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -328,70 +357,6 @@
                                                         {% render_field editForm.landmark value=data.landmark class="form-control" placeholder="Place Holder"%}                                                  </div>
                                                     <span class="text-error text-danger">{{ editForm.landmark.errors }}</span>
                                                 </div>
-                                                
-                    
-                                                
-                                                <!-- #######################################taginput###################################################### -->
-                                                <!-- <div class="wrapper-taginput">
-                    
-                                                    <div class="form-label">Game Categories
-                    
-                                                    </div>
-                    
-                    
-                                                    <div class="content-taginput">
-                    
-                                                        <p>Select Type of Games can be played at your turf</p>
-                    
-                                                        <ul id="ul-taginput"><select type="text" spellcheck="false" id="taginput" class="form-control">
-                    
-                                                            <option>Categories</option>
-                                                            {% for category in categories %}
-                                                            <option value="{{category.id}}">{{category.category}}</option>
-                                                            {% endfor %}
-                                                            </select>
-                                                        </ul>
-                    
-                                                    </div>
-                    
-                    
-                                                    
-                                                    <div class="d-flex justify-content-end">
-                                                        <span id="bt-remove-taginput" style="cursor: pointer;"
-                                                        class=" text-danger text-end w-auto">Remove All</span></div>
-                                                        
-                                                    </div>
-                                                    <span class="text-error text-danger">{{ editForm.category.errors }}</span>
-                                                {{editForm.category}} -->
-                                                <!-- #######################################end taginput###################################################### -->
-                    
-                    
-                                                <!-- <div class="col-lg-12">
-                                                    <div class="form-group">
-                                                        <label for="password1" class="form-label">Password</label>
-                                                        {{editForm.password1}}
-                                                    </div>
-                                                    <span class="text-error text-danger">{{ editForm.password1.errors }}</span>
-                                                </div>
-                    
-                                                <div class="col-lg-12">
-                                                    <div class="form-group">
-                                                        <label for="password2" class="form-label">Confirm Password</label>
-                                                        {{editForm.password2}}
-                                                    </div>
-                                                    <span class="text-error text-danger">{{ editForm.password2.errors }}</span>
-                                                </div>                                             
-                                                </div>  -->
-                                                {% comment %} <form method="POST">
-
-                                                    {% csrf_token %}
-                                                    
-                                                    {{ cpform.as_p }}
-                                                    
-                                                    <button type="submit" class=" btn btn-primary" name="change_pass"> Save Changes</button>
-                                                    
-                                                    
-                                                </form> {% endcomment %}
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -409,8 +374,8 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p>{{data.location}}</p>
-                    <p>Near:{{data.landmark}}</p>
+                    <p>Location: {{data.location}}</p>
+                    <p>Near: {{data.landmark}}</p>
                     <div class="mb-1">Email: <a href="#" class="ms-3">{{data.email}}</a></div>
                     <div class="mb-1">Phone: <a href="#" class="ms-3">{{data.phone}}</a></div>
                     
@@ -425,24 +390,82 @@
                         <div class="card-title mb-0">
                             <h2 class="mb-0">Categories</h2>
                         </div>
+                        <div class="card-action">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop5">
+                                Edit Category
+                            </button>
+                            <div class="modal fade" id="staticBackdrop5" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">Edit Category</h5>                                            
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form action="{% url 'TurfCategoryUpdate' %}" method="POST" enctype="multipart/form-data">    
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    {% csrf_token %}
+
+                                                    <div class="wrapper-taginput">
+
+                                                        <div class="form-label">Game Categories</div>
+                                                        <div class="content-taginput">
+                                                            <p>Select Type of Games can be played at your turf</p>
+                                                            <ul id="ul-taginput">
+                                                                <select type="text" spellcheck="false" id="taginput" class="form-control">                       
+                                                                    <option>Categories</option>
+                                                                    {% for category in categories %}
+                                                                    <option value="{{category.id}}">{{category.category}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </ul>                       
+                                                        </div>                                                                                
+                                                        <div class="d-flex justify-content-end">
+                                                            <span id="bt-remove-taginput" style="cursor: pointer;"
+                                                                class=" text-danger text-end w-auto">
+                                                                Remove All
+                                                            </span>
+                                                        </div>                                                           
+                                                    </div>
+                                                    <span class="text-error text-danger">{{ form.category.errors }}</span>
+                                                            {{form.category}}                                                        
+                                                </div>    
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="grid_gallery">
-            <div id="posts_gallery">
-                
-                {% for data in image %}
-                <div class="post_gallery card ">
-                        <img class="p-2 "
-                            src={{media_url}}{{data.image}}/>
-                            <strong class="text-primary"> {{data.category}} </strong>
         
-                </div>
-                
-                    {% endfor %}
+        <!-- category -->
+
+            <div class="row justify-content-center">
+                {% for data in image %}
+                    <div class="col-lg-3 col-md-4 mb-3  ">
+                        <div class="card-body  rounded-3" style="background-image: url('{{media_url}}{{ data.image}}');  background-repeat: no-repeat;
+                            background-position: center;
+                            background-size: cover;
+                            -webkit-box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);
+                            -moz-box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);
+                            box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);">
+                            <div
+                                class=" text-capitalize bg-light opacity-75 p-3 rounded-2 text-black text-center w-100">
+                                <h6>{{ data.category }}</h6>
+                            </div>
+                        </div>
+
+                    </div>
+                {% endfor %}
+
             </div>
-        </div>
            
     </div>
 </div>
@@ -450,17 +473,47 @@
 
 
 
-        
 
 
 
 <script>
+
+
+    $('#turf-comment').on('keyup  paste', function (e) {
+        if ($('textarea#turf-comment').val().length > 999) {
+            $("#turf-comment-error").html(" Comment should be less than 1000 characters")
+            $("#btn-comment").prop('disabled', false);
+
+
+        } else {
+            $("#turf-comment-error").html("")
+
+            $("#btn-comment").prop('disabled', false);
+        }
+    })
+
+    function clearComment() {
+
+        setTimeout(function () { form = document.getElementById('TurfComment-form').reset(); }, 1000);
+    }
+
+    $("textarea").each(function () {
+        this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+    }).on("input", function () {
+        this.style.height = 0;
+        this.style.height = (this.scrollHeight) + "px";
+    });
+</script>
+
+        
+
+
+{% block js%} 
+
+<script>
     document.getElementById('turfdash-li').classList.add('active');
 </script>
-{% block js%} 
-<script src="http://code.jquery.com/jquery.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/masonry/3.1.5/masonry.pkgd.min.js"></script>	
-<script src="/static/script.js"></script>
+
 <script>
 
 
@@ -554,6 +607,8 @@
 
 
  </script>
-
+ <script src="http://code.jquery.com/jquery.js"></script>
+ <script src="http://cdnjs.cloudflare.com/ajax/libs/masonry/3.1.5/masonry.pkgd.min.js"></script>
+ <script src="/static/script.js"></script>
 {% endblock %}
 {% endblock %}

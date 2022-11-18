@@ -96,12 +96,8 @@ class TurfEditForm(forms.Form):
     
     email = forms.CharField(max_length=254, required=False, widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':"Email"}))
     phone = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Phone Number" , 'type':"tel" }))
-    location = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Location"}))
-    # password1=forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
-    # password2=forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password Again'}))
+    location = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Location"}))    
     # category = forms.CharField( required=False, widget=forms.HiddenInput(attrs={'id':"category-input",'raedonly':"true"}))
-
-    # is_turf=forms.BooleanField(widget=forms.CheckboxInput(attrs={'checked':"true" ,'hidden':"true" , 'readonly':"true"}))
     avatar=forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
     landmark = forms.CharField( max_length=255, required=False ,widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Landmark"}))
     class Meta:

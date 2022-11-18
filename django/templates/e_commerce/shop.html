@@ -4,14 +4,14 @@
 <section class="ecommerce container-fluid ">
 
     <!-- ecommerce top bar ,filter -->
-    <div class="ecomerce-top-bar card p-3">
-        <div class="row">
+    <div class="ecomerce-top-bar card p-3 m-3">
+        <div class="row ">
             <div class="col-4">
                 <span class="item-name" style="font-size: 1.4rem;">Shop</span>
             </div>
-            <div class="col-4 d-flex ecomerce-top-bar-btns justify-content-end">
+            <div class="col-8 d-flex ecomerce-top-bar-btns justify-content-end px-0">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-primary">
+                    <button class="btn btn-primary dropdown-toggle px-3" type="button" id="filterdropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="icon">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                
                                 <path d="M14.5715 13.5941L20.4266 7.72014C20.7929 7.35183 21 6.84877 21 6.32376V4.60099C21 3.52002 20.1423 3 
@@ -27,13 +27,11 @@
                         </i>
                         <span class="item-name">Filter</span>
                     </button>
-                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu bg-l">
+                    <ul class="dropdown-menu" aria-labelledby="filterdropdown">
                         <li>
                             <a id="hTol" 
-                               class="dropdown-item" 
+                               class="dropdown-item"
+                               style="cursor: pointer;"
                                hx-get="{% url 'htol_filter' %}" 
                                hx-target="#row-shop-content"
                                hx-trigger="click">
@@ -42,7 +40,8 @@
                         </li>
                         <li>
                             <a id="lToh" 
-                               class="dropdown-item" 
+                               class="dropdown-item"
+                               style="cursor: pointer;"
                                hx-get="{% url 'ltoh_filter' %}" 
                                hx-target="#row-shop-content"
                                hx-trigger="click">
@@ -51,7 +50,8 @@
                         </li>
                         <li>
                             <a id="aToz" 
-                               class="dropdown-item" 
+                               class="dropdown-item"
+                               style="cursor: pointer;"
                                hx-get="{% url 'atoz_filter' %}" 
                                hx-target="#row-shop-content"
                                hx-trigger="click">
@@ -60,7 +60,8 @@
                             </li>
                         <li>
                             <a id="latest" 
-                               class="dropdown-item" 
+                               class="dropdown-item"
+                               style="cursor: pointer;"
                                hx-get="{% url 'latest_filter' %}" 
                                hx-target="#row-shop-content"
                                hx-trigger="click">
@@ -70,23 +71,24 @@
                         </li>
                     </ul>
                 </div>
-            </div>
-            <div class="col-4 d-flex">
-                <span class="input-group-text px-2"  id="inputGroupPrepend3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" 
-                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                         <path fill="#3a57e8" fill-rule="evenodd" d="m16.325 14.899l5.38 5.38a1.008 1.008 0 0 1-1.427 
-                            1.426l-5.38-5.38a8 8 0 1 1 1.426-1.426ZM10 16a6 6 0 1 0 0-12a6 6 0 0 0 0 12Z"/></svg>
-                </span>
-                <input 
-                    type="text" 
-                    placeholder="Search..." 
-                    class="form-control" 
-                    name="searchproduct" 
-                    hx-post="{% url 'searchProduct' %}"
-                    hx-target='#row-shop-content'
-                    hx-trigger="keyup delay:500ms"
-                    />
+                <div class="d-flex justify-content-end px-2">
+                    <span class="input-group-text px-2"  id="inputGroupPrepend3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" 
+                             preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                             <path fill="#3a57e8" fill-rule="evenodd" d="m16.325 14.899l5.38 5.38a1.008 1.008 0 0 1-1.427 
+                                1.426l-5.38-5.38a8 8 0 1 1 1.426-1.426ZM10 16a6 6 0 1 0 0-12a6 6 0 0 0 0 12Z"/></svg>
+                    </span>
+                    <input 
+                        type="text" 
+                        placeholder="Search..." 
+                        class="form-control" 
+                        name="searchproduct" 
+                        hx-post="{% url 'searchProduct' %}"
+                        hx-target='#row-shop-content'
+                        hx-trigger="keyup delay:500ms"
+                        style="width: 14rem;"
+                        />
+                </div>
             </div>
             
         </div>

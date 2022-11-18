@@ -23,12 +23,12 @@
   <body class="">
 
     <!-- loader Start -->
-    <div id="loading">
-      <div class="loader simple-loader">
-          <div class="loader-body">
-            <img src="/static/assets/images/loader.gif " alt="">          </div>
-      </div>    
-    </div>
+    <div id="loading" class="w-100 h-100">
+      <div class="loader simple-loader w-100 h-100 ">
+          <div ssclass="loader-body w-100 h-100  d-flex justify-content-center align-items-center ">
+            <img src="/static/assets/images/loading-mt.gif" class=" " width="100px" height="100px" alt="">
+          </div>
+      </div>      </div>
     <!-- loader END -->
     
     {% include 'includes/sidebar.html' %}
@@ -43,13 +43,13 @@
 
     
     
-          <div style="position: relative;margin-bottom: 10rem;">
+          <div style="position: relative;margin-bottom: 2rem;">
             {% block content %}
             
             {% endblock content %}
           </div>
           <div > 
-          <div style="position: relative;">
+          <div class="position-fixed bottom-0 w-100">
             {% include 'includes/footer.html' %}   
           </div> 
         </div>

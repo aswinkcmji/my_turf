@@ -345,8 +345,8 @@ const loaderInit = () => {
     loader.classList.add('animate__animated', 'animate__fadeOut')
     setTimeout(() => {
       loader.classList.add('d-none')
-    }, 1000)
-  }, 1000)
+    }, 300)
+  }, 300)
 }
 
 /*---------------------------------------------------------------------
