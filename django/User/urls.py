@@ -39,9 +39,12 @@ urlpatterns = [
 
 
     
-
     path('turfs_list/',TurfsListView.as_view(), name="turfs_list") , 
     path('turf_profile/<str:username>',TurfProfileView.as_view(), name="turf_profile"),
+
+
+    # path('updatecurrentloc/<str:location',UpdateCurrentLocView.as_view(),name="update_current_location"),
+
 ] 
  
 

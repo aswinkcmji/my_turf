@@ -15,7 +15,7 @@ class RequestForm(ModelForm):
     date = forms.DateField(widget=forms.HiddenInput())
     start_time = forms.TimeField(widget=forms.HiddenInput())
     end_time = forms.TimeField(widget=forms.HiddenInput())
-    username= forms.CharField(widget=forms.HiddenInput())
+    username= forms.ModelChoiceField(queryset=UserModel.objects.all(),widget=forms.HiddenInput())
     locality=forms.CharField(widget=forms.HiddenInput())
     status=forms.CharField(widget=forms.HiddenInput())
     # match_id= forms.ModelMultipleChoiceField(queryset=RequestModel.objects.all())
@@ -40,6 +40,8 @@ class RequestForm(ModelForm):
         print(self.cleaned_data.get('match_id'))
         print(self.cleaned_data.get('category'))
         match=MatchModel.objects.get(id=int(self.cleaned_data.get('match_id')))
+        user=UserModel.objects.get(id=self.request.user.pk)
+        print(self.cleaned_data.get('username'))
         print(match.category)
         if self.cleaned_data.get('category') != match.category:
             self._errors['category']=self.error_class(['Do not change the category'])
@@ -56,9 +58,10 @@ class RequestForm(ModelForm):
         if self.cleaned_data.get('locality')!=match.locality:
             self._errors['locality']=self.error_class(['Do not change the locality'])
             print("locality  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")   
-        if self.cleaned_data.get('username')!=self.request.user.username:
-            self._errors['username']=self.error_class(['Do not change the username'])
+        if self.cleaned_data.get('username')!=user.id:
+            self._errors['username']=self.error_class(['Do not change the user'])
             print("username  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")  
+        # self.cleaned_data['username']=user
         # print("phone number in form",self.cleaned_data.get('phoneno'),"its type is",type(self.cleaned_data.get('phoneno')))
         # print("phone number in session",self.request.user.phone,"its type is",type(self.request.user.phone))
         if self.cleaned_data.get('phoneno')!=int(self.request.user.phone):
@@ -123,7 +126,7 @@ class creatematchForm(ModelForm):
         status=self.cleaned_data.get('status')
         city=self.cleaned_data.get('city')
         if city :
-            list=city.split(",")
+            list=city.split(", ")
             if len(list) ==3:
                 check_city=CitiesModel.objects.filter(name=list[0],subcountry=list[1],country=list[2])
                 if len(check_city) == 0:
@@ -199,7 +202,7 @@ class updatematchform(ModelForm):
         end_time_f=self.cleaned_data.get('end_time_f')
         city=self.cleaned_data.get('city')
         if city :
-            list=city.split(",")
+            list=city.split(", ")
             if len(list) ==3:
                 check_city=CitiesModel.objects.filter(name=list[0],subcountry=list[1],country=list[2])
                 if len(check_city) == 0:

@@ -28,7 +28,7 @@ class MatchModel(models.Model):
 class RequestModel(models.Model):
     match_id = models.ForeignKey(MatchModel, on_delete=models.CASCADE)
     category=models.ForeignKey(CategoriesModel, on_delete=models.CASCADE)
-    username=models.CharField(max_length=30,null=False,blank=False)
+    username=models.ForeignKey(UserModel, on_delete=models.CASCADE)
     phoneno=models.CharField(max_length=16,default=7414414141)
     status=models.CharField(default="Pending",max_length=30,null=False,blank=False)
     date= models.DateField(blank=True)

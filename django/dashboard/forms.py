@@ -140,3 +140,16 @@ class CategoriesEditForm(ModelForm):
     class Meta:
         model = CategoriesModel 
         fields = '__all__'
+
+
+# class TurfPasswordChange(PasswordChangeForm):
+
+# def init(self, args, *kwargs):
+
+# super().init(args, *kwargs)
+
+# self.fields["old_password"].widget = forms.PasswordInput(attrs={"class": "form-control"})
+
+# self.fields["new_password1"].widget = forms.PasswordInput(attrs={"class": "form-control"})
+
+# self.fields["new_password2"].widget = forms.PasswordInput(attrs={"class": "form-control"})

@@ -19,6 +19,7 @@ from django.utils.dateparse import parse_datetime
 from .models import TurfGallery, TurfScheduleModel , CategoriesModel
 from User.models import MatchModel,TournamentModel
 from django.db.models import Sum
+from accounts.forms import TurfEditForm
 
 
 
@@ -49,15 +50,25 @@ class AddStockView(View):
 class Turf_Dashboard(View):
     def get(self,request):
 
-
+        
         turfDetails = UserModel.objects.filter(username = request.user.username  ).values()
         header = TurfGallery.objects.filter( username = request.user.username ,isheader = True)
         count = TurfGallery.objects.filter(isheader = True).count()
-        # for a in gallery:
-        #     header = None if a.isheader == None else a
- 
+        category = UserModel.objects.filter(username = request.user.username  ).values_list('category')
+        editForm = UserModel.objects.filter(username = request.user.username, is_turf = True).count()
+        categories= CategoriesModel.objects.all()
+        # cpform=TurfPasswordChange(request.user)
 
-        # print("===========",header)
+        print('========count ==',editForm)
+
+        print('category',category.__dict__)
+        a=None
+        for i in category:
+            for j in i:
+                a=j
+        image = CategoriesModel.objects.filter(id__in = a )
+
+     
         
         context = {
             'form': GalleryImgForm(),
@@ -65,10 +76,14 @@ class Turf_Dashboard(View):
             'media_url':settings.MEDIA_URL,
             'header' : header,
             'count' :   count,
+            'image': image,
+            'editForm' : TurfEditForm(),
+            'categories':categories
            
 
         }
-        print("==============")
+        print("========form4======")
+        
 
 
         return render(request,'turf/turf_dashboard.html',context)
@@ -541,7 +556,75 @@ class DashboardImageUpdate(View):
             else:  
                 messages.error(request, 'failed')
                 return HttpResponseRedirect(reverse('turf_dash'))
-                
-                   
-                
 
+class dashDataUpdate(View):
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST':  
+            editForm = TurfEditForm(request.POST, request.FILES)
+            # print ("========editForm=====",editForm)
+            # print("RRRRRRRRRRRRRRRRRRR",request.POST['category'])
+            if editForm.is_valid(): 
+
+                if request.FILES :
+
+                    updatedRecord = UserModel.objects.get(id=request.POST['details_id'])
+
+                    updatedRecord.avatar = request.FILES['avatar']
+                    
+                    updatedRecord.username = request.POST['username']
+
+                    updatedRecord.turf_name = request.POST['turf_name']
+
+                    updatedRecord.email = request.POST['email']
+                    
+                    updatedRecord.phone = request.POST['phone']
+
+                    updatedRecord.location = request.POST['location']
+
+                    updatedRecord.landmark = request.POST['landmark']
+
+                    # updatedRecord.category = request.POST['category']
+
+                    updatedRecord.save()
+
+                    messages.success(request, 'Details Updated Successfully')
+                    
+                    return HttpResponseRedirect(reverse('turf_dash'))  
+                
+                else :
+
+                    updatedRecord = UserModel.objects.get(id=request.POST['details_id'])
+                    
+
+                    updatedRecord.turf_name = request.POST['turf_name']
+                    
+                    updatedRecord.username = request.POST['username']
+
+                    updatedRecord.email = request.POST['email']
+                    
+                    updatedRecord.phone = request.POST['phone']
+
+                    updatedRecord.location = request.POST['location']
+
+                    updatedRecord.landmark = request.POST['landmark']
+
+                    # updatedRecord.category = request.POST['category']
+
+                    updatedRecord.save()
+
+                    messages.success(request,"Saved successfully")
+                    return HttpResponseRedirect(reverse('turf_dash'))  
+
+            else:  
+                print("-----------------------1111---------------------",editForm.errors)
+                messages.error(request,"Updation failed")
+                return HttpResponseRedirect(reverse('turf_dash'))
+
+
+class DeleteTurfHead(View):
+    def get(self, request, *args,**kwargs):
+        item = TurfGallery.objects.get(isheader=True)
+        item.delete()
+        messages.success(request, 'Image Deleted')
+
+        return HttpResponseRedirect(reverse('turf_dash'))

@@ -9,20 +9,33 @@
     {% endif %} -->
     <div class="ecomerce-top-bar card p-3" {% if is_requestform %} style="display: none ;" {% else %}
     style="display: flex ;" {% endif %}>
-        <div class="row">
-            <div class="col-8">
-                <span class="item-name" style="font-size: 1.4rem;"></span>
+        <div class="row justify-content-between">
+            <div class="col-4">
+                <span class="item-name"> 
+                    <form method="POST"  class="d-flex">
+                        {% csrf_token %}
+                        <div class="pt-2">
+                           <p>Current Location  : </p>  
+                        </div>
+                     <div>
+                        <input type="text"  value="{{request.user.current_location}}" required="True" name="location" id="id_city" hx-post="{%url 'search-city' feildname="location" %}" hx-target='#results' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Select a City ..." >
+                    </div>
+                    <button type="submit" name="location_change" class="btn-primary rounded-2 mb-2 mt-2 mx-2">Change</button>
+                </form>
+                <div id="results" class="suggestion"></div>
+                </span>
             </div>
+            <div class="col-4"></div>
             <div class="col-4  ecomerce-top-bar-btns justify-content-end mx-auto">
                 <form method="POST">
                     {% csrf_token %}
-                    <input type="text" name="search" hx-post="{%url 'search-matches' %}" hx-target='#results' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Select a City, Username, Date or Category ..." >
+                    <input type="text" name="search" hx-post="{%url 'search-matches' %}" hx-target='#result-matches' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Select a  Username, Date or Category ..." >
                 </form>
             </div>
         </div>
     </div>
 <div class="row bg-soft-light d-flex justify-content-around"  {% if is_requestform %} style="display: none ;" {% else %}
-style="display: block ;" {% endif %} id="results">
+style="display: block ;" {% endif %} id="result-matches">
 {% include 'Matches/matches.html' %}
 </div>
 <div class="row mt-5" id="RequestForm" {% if is_requestform  %} style="display: flex ;" {% else %}
@@ -189,4 +202,25 @@ style="display: none ;" {% endif %}>
   margin-right: .1rem;
 } */
   </style>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+<script>
+    
+    function useSuggestion(e) {
+    if(e.target.innerText!="No search results.Enter a valid name atleast 3 characters in length"){
+        
+        console.log(e.target.innerText)
+        id_city.value = e.target.innerText;
+        id_city.focus();
+        suggestions.innerHTML = '';
+        let city=id_city.value;
+        // suggestions.classList.remove('has-suggestions');
+    }
+	
+}
+const suggestions = document.querySelector('.suggestion');
+suggestions.addEventListener('click', useSuggestion);
+document.addEventListener('click', () =>suggestions.innerHTML = '' );
+
+</script>
+{% include 'style/location_style.html' %}
 {% endblock content %}

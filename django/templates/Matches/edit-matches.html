@@ -47,7 +47,7 @@
                     {% endif %}
                     <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
                     {%if  addForm.label == "City" %}
-                    {% render_field addForm hx-post='/search-city/' hx-target='#results' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Select Your City ..." %}
+                    {% render_field addForm hx-post='/search-city/city' hx-target='#results' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Select Your City ..." %}
                     <label>Search your {{addForm.label}}</label>
                     <span class="text-danger">{{addForm.errors}}</span>
                     <div id="results" class="suggestion"></div>
@@ -96,39 +96,8 @@ function useSuggestion(e) {
 }
 const suggestions = document.querySelector('.suggestion');
 suggestions.addEventListener('click', useSuggestion);
-
+document.addEventListener('click', () =>suggestions.innerHTML = '' );
 </script>
-<style>
-    
-.suggestions {
-
-
-    width: 100%;
-  background: #fff;
-  text-align: left;
-
-  
-  }
-  
- #results ul {
-    /* display: none; */
-    /* list-style-type: none; */
-    padding: 0;
-    margin: 0;
-    box-shadow: 0 1px 2px 0 rgba(105, 105, 105, 0.2);
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  #results ul.has-suggestions {
-    display: block;
-  }
-  #results ul li {
-    padding: 10px;
-    cursor: pointer;
-    background: rgb(241, 241, 241);
-  }
- #results ul li:hover {
-    background-color: #00ff73;
-  }</style>
+{% include 'style/location_style.html' %}
 
 {% endblock content %}
