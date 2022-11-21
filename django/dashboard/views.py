@@ -126,7 +126,7 @@ class TurfSchedule(View):
         else:
             return redirect('403')
     def post(self, request, *args, **kwargs):
-        if request.user.is_tur:
+        if request.user.is_turf:
             txt_colors= ['rgba(206,32,20)','rgba(8,130,12)', 'rgba(58,87,232)','rgba(235,153,27)','rgba(108,117,125)']
             bg_colors= ['rgba(206,32,20,0.2)','rgba(8,130,12,0.2)', 'rgba(58,87,232,0.2)','rgba(235,153,27,0.2)','rgba(108,117,125,0.4)']
             if request.method == 'POST':
