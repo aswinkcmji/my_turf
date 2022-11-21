@@ -1,4 +1,4 @@
-from django.urls import URLPattern, path
+from django.urls import path
 from .views import  *
 from dashboard.views import AddStockView
 
@@ -14,6 +14,7 @@ urlpatterns = [
     path('puchasehistory/',PurchaseHistoryView.as_view(),name='puchasehistory'),
     path('updateorderstatus/<int:id>/',UpdateOrderStatusView.as_view(),name='updateorderstatus'),
     path('orderdetails/<int:id>/',OrderDetailsView.as_view(),name='orderdetails'),
+    path('updateqty/',UpdateQtyView.as_view(),name='updateqty'),
 
 
 
