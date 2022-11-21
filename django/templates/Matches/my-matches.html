@@ -17,33 +17,47 @@
                     <p class="card-text">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
                     <p class="card-text">Locality:{{match.locality}}</p>
                     <p class="card-text">City:{{match.city}}</p>
-                    {% if match.creator == request.user.username and match.status == "Upcoming" %}
+                    {% if match.creator == request.user and match.status == "Upcoming" %}
                     <a href="edit/{{match.id}} " class="btn btn-primary">
                         EDIT
                     </a>
                     <a onclick="return confirm('Are you sure you want to cancel this match?')"
                         href="cancel/{{match.id}}" class="btn btn-primary">Cancel</a>
-                    {%elif match.creator == request.user.username%}
+                        <a href="{%url 'myteam' id=match.id %} " class="btn btn-primary">
+                            View Team </a>
+                    {%elif match.creator == request.user %}
                     <div class="col-4 "><img src="/static/assets/images/avatars/01.png" alt="User-Profile"
-                            class="theme-color-default-img img-fluid rounded-pill avatar-45"></div>
+                            class="theme-color-default-img img-fluid rounded-pill avatar-45">
+                            <a href="{%url 'myteam' id=match.id %} " class="btn btn-primary">
+                                View Team </a>
+                            </div>
+                    {%else%}
+                    <p class="card-text"> Creator:{{match.creator}}</p>
+                    
+                    <!-- <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="popover" title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button> -->
+                    
+                    <a href="{%url 'myteam' id=match.id %} " class="btn btn-primary">
+                        View Team</a>
                     {%endif%}
+                    
+                   
                 </div>
             </div>
         </div>
         {% empty %}
         <div class="card col-md-6 col-lg-6 my-5 mx-auto px-0 overflow-hidden">
             <div class="d-flex justify-content-center">
-                <img src="{% static 'assets/images/404images/search404_defualt.png' %}" alt="search404"
+                <img src="{% static 'assets/images/errorImages/search404_defualt.png' %}" alt="search404"
                     class="theme-color-default-img  img-fluid  w-50 mx-auto">
-                <img src="{% static 'assets/images/404images/search404_1.png' %}" alt="search404"
+                <img src="{% static 'assets/images/errorImages/search404_1.png' %}" alt="search404"
                     class="theme-color-purple-img  img-fluid  w-50 mx-auto">
-                <img src="{% static 'assets/images/404images/search404_2.png' %}" alt="search404"
+                <img src="{% static 'assets/images/errorImages/search404_2.png' %}" alt="search404"
                     class="theme-color-blue-img  img-fluid  w-50 mx-auto">
-                <img src="{% static 'assets/images/404images/search404_3.png' %}" alt="search404"
+                <img src="{% static 'assets/images/errorImages/search404_3.png' %}" alt="search404"
                     class="theme-color-green-img  img-fluid  w-50 mx-auto">
-                <img src="{% static 'assets/images/404images/search404_4.png' %}" alt="search404"
+                <img src="{% static 'assets/images/errorImages/search404_4.png' %}" alt="search404"
                     class="theme-color-yellow-img  img-fluid  w-50 mx-auto">
-                <img src="{% static 'assets/images/404images/search404_5.png' %}" alt="search404"
+                <img src="{% static 'assets/images/errorImages/search404_5.png' %}" alt="search404"
                     class="theme-color-pink-img  img-fluid  w-50 mx-auto">
             </div>
             <div class="card-body">

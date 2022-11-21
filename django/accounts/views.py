@@ -169,3 +169,11 @@ class User_ProfileView(View):
 
                         return render(request,self.template_name,{"form":form,"cpform":MyPasswordChangeForm(request.user,request.POST),"is_pass_error":True})
                 
+
+class Error404View(View):
+    def get(self, request, *args, **kwargs):
+        return render(request,'errors/error404.html',{})
+
+class Error403View(View):
+    def get(self, request, *args, **kwargs):
+        return render(request,'errors/error403.html',{})

@@ -58,7 +58,7 @@ class RequestForm(ModelForm):
         if self.cleaned_data.get('locality')!=match.locality:
             self._errors['locality']=self.error_class(['Do not change the locality'])
             print("locality  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")   
-        if self.cleaned_data.get('username')!=user.id:
+        if self.cleaned_data.get('username')!=user:
             self._errors['username']=self.error_class(['Do not change the user'])
             print("username  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")  
         # self.cleaned_data['username']=user
@@ -104,7 +104,7 @@ class creatematchForm(ModelForm):
     start_time = forms.DateTimeField(widget=forms.HiddenInput())
     end_time = forms.DateTimeField(widget=forms.HiddenInput())
     slots = forms.IntegerField()#nos = number of slots           
-    creator= forms.CharField(widget=forms.HiddenInput())
+    creator= forms.ModelChoiceField(queryset=UserModel.objects.all(),widget=forms.HiddenInput())
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     city=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     # status=forms.CharField(widget=forms.HiddenInput())
@@ -124,6 +124,7 @@ class creatematchForm(ModelForm):
         slots=self.cleaned_data.get('slots')
         creator=self.cleaned_data.get('creator')
         status=self.cleaned_data.get('status')
+        user=UserModel.objects.get(id=self.request.user.pk)
         city=self.cleaned_data.get('city')
         if city :
             list=city.split(", ")
@@ -140,9 +141,9 @@ class creatematchForm(ModelForm):
             self.cleaned_data['slot_available']=slots-1
         else :
             self._errors['slots']=self.error_class(['No of slots can not be less than 2'])
-        self.cleaned_data['creator']=self.request.user.username
-        if creator !=  self.request.user.username:
-            self._errors['creator']=self.error_class([''])
+        self.cleaned_data['creator']=user
+        # if creator !=  self.request.user.username:
+        #     self._errors['creator']=self.error_class([''])
         # if status != "Upcoming":
         #     self._errors['status']=self.error_class([''])
         self.cleaned_data['status']="Upcoming"

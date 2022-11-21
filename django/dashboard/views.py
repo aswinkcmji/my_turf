@@ -115,42 +115,48 @@ class Turf_Dashboard(View):
 @method_decorator(login_required,name='dispatch')
 class TurfSchedule(View):
     def get(self,request):
-        turf_schedule   = TurfScheduleModel.objects.filter(turf=request.user)
+        if request.user.is_turf:
+            turf_schedule   = TurfScheduleModel.objects.filter(turf=request.user)
 
-        addScheduleform = TurfScheduleForm(initial={'turf':request.user})
-        context ={'addScheduleform': addScheduleform ,'is_addform':False , 'turf_schedule':turf_schedule}
-        return render(request,"turf/schedule.html",context)
+            addScheduleform = TurfScheduleForm(initial={'turf':request.user})
+            context ={'addScheduleform': addScheduleform ,'is_addform':False , 'turf_schedule':turf_schedule}
+            return render(request,"turf/schedule.html",context)
+        else:
+            return redirect('403')
     def post(self, request, *args, **kwargs):
-        txt_colors= ['rgba(206,32,20)','rgba(8,130,12)', 'rgba(58,87,232)','rgba(235,153,27)','rgba(108,117,125)']
-        bg_colors= ['rgba(206,32,20,0.2)','rgba(8,130,12,0.2)', 'rgba(58,87,232,0.2)','rgba(235,153,27,0.2)','rgba(108,117,125,0.4)']
-        if request.method == 'POST':
-            print(request.POST["color"])
-            form = TurfScheduleForm(request.POST)
-            
+        if request.user.is_tur:
+            txt_colors= ['rgba(206,32,20)','rgba(8,130,12)', 'rgba(58,87,232)','rgba(235,153,27)','rgba(108,117,125)']
+            bg_colors= ['rgba(206,32,20,0.2)','rgba(8,130,12,0.2)', 'rgba(58,87,232,0.2)','rgba(235,153,27,0.2)','rgba(108,117,125,0.4)']
+            if request.method == 'POST':
+                print(request.POST["color"])
+                form = TurfScheduleForm(request.POST)
+                
 
-            
-            if form.is_valid():
-                category = CategoriesModel.objects.get(id=request.POST['category'])
-                form2 =form.save(commit=False)
-                for key,value in enumerate(bg_colors):
-                    
-                    if request.POST["color"] == str(key):
-                        form2.color_txt =txt_colors[key]
-                        form2.color_bg =bg_colors[key]
-                # form2.start= parse_datetime(request.POST['start'])
-                # form2.end= parse_datetime(request.POST['end'])
-                form2.title = category.category +" - "+request.POST['user']
-                form2.turf = request.user
-                form2.save()
-                    
-                    
-                    # messages.success(self.request, "Account Created Successfully")
-                return HttpResponseRedirect(reverse('turf_schedule'))
-                      
-            else:
-                turf_schedule   = TurfScheduleModel.objects.filter(turf=request.user)
-                context ={'addScheduleform': form, 'is_addform':True ,'turf_schedule':turf_schedule}
-                return render(request,"turf/schedule.html",context)
+                
+                if form.is_valid():
+                    category = CategoriesModel.objects.get(id=request.POST['category'])
+                    form2 =form.save(commit=False)
+                    for key,value in enumerate(bg_colors):
+                        
+                        if request.POST["color"] == str(key):
+                            form2.color_txt =txt_colors[key]
+                            form2.color_bg =bg_colors[key]
+                    # form2.start= parse_datetime(request.POST['start'])
+                    # form2.end= parse_datetime(request.POST['end'])
+                    form2.title = category.category +" - "+request.POST['user']
+                    form2.turf = request.user
+                    form2.save()
+                        
+                        
+                        # messages.success(self.request, "Account Created Successfully")
+                    return HttpResponseRedirect(reverse('turf_schedule'))
+                        
+                else:
+                    turf_schedule   = TurfScheduleModel.objects.filter(turf=request.user)
+                    context ={'addScheduleform': form, 'is_addform':True ,'turf_schedule':turf_schedule}
+                    return render(request,"turf/schedule.html",context)
+        else:
+            return redirect('404')
 
 @method_decorator(login_required,name='dispatch')
 class TurfScheduleEdit(View):
