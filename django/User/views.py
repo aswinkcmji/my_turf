@@ -2,7 +2,7 @@ from datetime import datetime
 from email import message
 from multiprocessing import context
 from tkinter import FLAT
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from .models import *
 from django.views.generic import View
 from .forms import *
@@ -173,8 +173,8 @@ class CreateMatchesView(View):
 
             user=UserModel.objects.get(username=request.user.username)
             RequestModel.objects.create(match_id=form_cf,category=form.cleaned_data['category'],username=user,phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
-            messages.success(request	,'Your match has been succesfully created. Visit My Match to see .')
-            return HttpResponseRedirect(reverse('create-matches'))
+            messages.success(request	,'Your match has been succesfully created!')
+            return HttpResponseRedirect(reverse('my-matches'))
 
         else:
             print("########### HAS CITY ERROR #############", form.has_error('end_time_f', code=None))
@@ -1236,3 +1236,36 @@ class SearchTournamentView(View):
         context ={'RequestForm': form ,'is_requestform':False , 'tournaments':tournaments,'is_searching':True,'search_KW':search_word}
         print("###################### Inside SearchMatchView ###########################",context,"@@@@@@@@@@@@@@@@@@@",id_list,"!!!!!!!!!!!!!!!!!!!!!!!",tournaments)
         return render(request, 'Tournaments/tournament.html',context)
+class Contact_usView(View):
+    def get(self, request, *args, **kwargs):
+        form = contact_usForm()
+        context = {'form': form}
+
+        return render(request, 'home/contact_us.html',context)
+    def post(self, request, *args, **kwargs):
+        form = contact_usForm(request.POST)
+        if request.method == 'POST':
+
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Message sent successfully...")
+                return HttpResponseRedirect(reverse('contact_us')) 
+
+            else:  
+                
+                # form = contact_usForm()  
+        
+                return render(request, 'home/contact_us.html',{'form':form})
+        else:
+            messages.error(request,"Something went wrong....")
+            form = contact_usForm()  
+            return render(request, 'home/contact_us.html',{'form':form})
+
+@method_decorator(login_required,name='dispatch')
+class messagesView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            messages = contact_usModel.objects.filter(hidden=False).order_by('-id')
+            return render(request, 'admin/messages_contactUs.html',{'messages':messages})
+        else:
+            return redirect('403')

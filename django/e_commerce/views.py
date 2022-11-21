@@ -271,7 +271,7 @@ class DeleteStock(View):
 
 class CartDetailsView(View):
     def get(self, request,*args, **kwargs):
-        cartData = CartModel.objects.filter(username = request.user.username)
+        cartData = CartModel.objects.filter(username = request.user.username).order_by('id')
         totalPrice = CartModel.objects.filter(username = request.user.username).values_list('quantity','price')
         totalAmount = 0
         totalItemCount = CartModel.objects.filter(username = request.user.username).count()
@@ -406,12 +406,35 @@ class SearchProduct(View):
 
 class PurchaseHistoryView(View):
     def get(self, request,*args, **kwargs):
+
         purchasedata = CheckoutModel.objects.all()
         purchasedatauser = CheckoutModel.objects.filter(username = request.user.username)
 
+        totalPrice = CheckoutModel.objects.values_list('quantity','price')
+
+        totalPriceUser = CheckoutModel.objects.filter(username = request.user.username).values_list('quantity','price')
+        
+        totalAmount = 0
+       
+        if purchasedata :
+            for i in totalPrice:
+            
+                totalAmount = totalAmount + (i[0]*i[1])
+
+        
+        usertotelprice = 0 
+
+        if purchasedatauser :
+
+            for i in totalPriceUser:
+            
+                usertotelprice = usertotelprice + (i[0]*i[1])
+        print(totalAmount,usertotelprice,"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
         context = {
             'puchasedata': purchasedata,
             'purchasedatauser' : purchasedatauser,
+            'totalAmount': totalAmount,
+            'usertotelprice' : usertotelprice,
         }
         return render(request, 'e_commerce/purchasehistory.html',context)
 
@@ -469,7 +492,7 @@ class UpdateQtyView(View):
             updatedRecord = CartModel.objects.get(id=pid)
 
             pname = updatedRecord.product_name
-
+ 
             form = updateQty(request.POST)
             
             if form.is_valid():

@@ -481,3 +481,20 @@ class TeamCreationForm(forms.ModelForm):
 #     # class Meta():
 #     #     model = TurfCommentsModel
 #     #     fields =('turf','commenter','comment','date')
+
+class contact_usForm(ModelForm):
+    first_name=forms.CharField(widget=forms.TextInput(attrs={'placeholder':'First Name'}))
+    last_name=forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Last Name'}))
+    email=forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'Your Email'}))
+    phone=forms.IntegerField(widget=forms.TextInput(attrs={'type':'tel','placeholder':'Your Phone Number'}), required=False)
+    subject=forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Subject'}))
+    message =forms.CharField(widget=forms.Textarea(attrs={'placeholder':'Enter Your Message'}))
+
+    class Meta:
+        model = contact_usModel    
+        fields =('first_name','last_name','email','phone','subject','message')
+    def clean_phone(self, *args, **kwargs):
+        phone = self.cleaned_data.get("phone")
+        if not len(str(phone)) <= 15 or not len(str(phone)) >= 7 or not phone >0:
+            raise forms.ValidationError("Enter a valid phone number")
+        return phone

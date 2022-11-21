@@ -45,7 +45,8 @@ urlpatterns = [
 
 
     # path('updatecurrentloc/<str:location',UpdateCurrentLocView.as_view(),name="update_current_location"),
-
+    path('conatct_us/',Contact_usView.as_view(),name="contact_us"), 
+    path('messages-contactUs/',messagesView.as_view(),name="messages_conatct_us"), 
 ] 
  
 

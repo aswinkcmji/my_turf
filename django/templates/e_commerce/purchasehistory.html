@@ -1,5 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load widget_tweaks %}
+{% load mathfilters %}
 
 {% block content %}
 
@@ -48,7 +49,7 @@
                                                                     <a href="{% url 'orderdetails' data.orderno %}" class="text-dark orderno p-0 ">{{data.orderno}}</a>
                                                                 </td>
                                                                 <td>{{data.username}}</td>
-                                                                <td>{{data.price}}</td>
+                                                                <td>{{ data.quantity|mul:data.price }}</td>
                                                                 <td>{{data.date}}</td>
                                                                 <td>
                                                                     {% if data.status == "Shipped" %}
@@ -75,7 +76,7 @@
                                                                     <a href="{% url 'orderdetails' data.orderno %}" class="text-dark orderno p-0 ">{{data.orderno}}</a>
                                                                 </td>
                                                                 <td>{{data.username}}</td>
-                                                                <td>{{data.price}}</td>
+                                                                <td>{{ data.quantity|mul:data.price }}</td>
                                                                 <td>{{data.date}}</td>
                                                                 <td>
                                                                     {% if data.status == "Shipped" %}

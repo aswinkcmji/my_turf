@@ -7,6 +7,7 @@ from .models import UserModel
 from django.forms import ModelForm
 from User.models import CitiesModel
 from django.contrib.auth.hashers import check_password
+from dashboard.models import CategoriesModel
 
 class SignUpForm(UserCreationForm):
     
@@ -91,18 +92,32 @@ class SignUpTurfForm(UserCreationForm):
 
 class TurfEditForm(forms.Form):
     
-    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Username"}))
-    turf_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Turf Name"}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Username"}),required=False)
+    turf_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Turf Name"}),required=False)
     
     email = forms.CharField(max_length=254, required=False, widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':"Email"}))
     phone = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Phone Number" , 'type':"tel" }))
     location = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control','placeholder':"Location"}))    
-    # category = forms.CharField( required=False, widget=forms.HiddenInput(attrs={'id':"category-input",'raedonly':"true"}))
+    category = forms.CharField( required=False, widget=forms.HiddenInput(attrs={'id':"category-input",'raedonly':"true"}))
     avatar=forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
     landmark = forms.CharField( max_length=255, required=False ,widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Landmark"}))
     class Meta:
         model = UserModel
         fields = ('username','turf_name' ,'email', 'phone','location','avatar','landmark','category')
+    def clean(self):
+        data = self.cleaned_data
+        print("=======data",data)
+    def clean_location(self, *args, **kwargs):
+        location=self.cleaned_data.get('location')
+        if location :
+            list=location.split(", ")
+            if len(list) ==3:
+                check_location=CitiesModel.objects.filter(name=list[0],subcountry=list[1],country=list[2])
+                if len(check_location) == 0:
+                        self._errors['location']=self.error_class(['Please Select a City from the provided list'])
+            else:
+                self._errors['location']=self.error_class(['Please Select a City from the provided list'])
+        return location
 
 
 class UpdateProfileForm(ModelForm):
@@ -165,3 +180,4 @@ class MyPasswordChangeForm(PasswordChangeForm):
         if matchcheck:
 
             raise forms.ValidationError({'new_password1': ("Cannot use previous password as new password")})
+

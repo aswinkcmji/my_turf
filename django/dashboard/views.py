@@ -14,7 +14,7 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm, TurfPasswordChangeForm
+from .forms import *
 from django.utils.dateparse import parse_datetime
 from .models import TurfGallery, TurfScheduleModel , CategoriesModel
 from User.models import MatchModel,TournamentModel
@@ -72,7 +72,8 @@ class Turf_Dashboard(View):
         image = CategoriesModel.objects.filter(id__in = a )
 
      
-        
+        category_editForm =categoryEditForm()
+
         context = {
             'form': GalleryImgForm(),
             'turfDetails': turfDetails,
@@ -83,6 +84,7 @@ class Turf_Dashboard(View):
             'editForm' : TurfEditForm(),
             'categories':categories,
             'passform':passform,
+            'category_editForm':category_editForm,
            
 
         }
@@ -124,7 +126,7 @@ class TurfSchedule(View):
         else:
             return redirect('403')
     def post(self, request, *args, **kwargs):
-        if request.user.is_tur:
+        if request.user.is_turf:
             txt_colors= ['rgba(206,32,20)','rgba(8,130,12)', 'rgba(58,87,232)','rgba(235,153,27)','rgba(108,117,125)']
             bg_colors= ['rgba(206,32,20,0.2)','rgba(8,130,12,0.2)', 'rgba(58,87,232,0.2)','rgba(235,153,27,0.2)','rgba(108,117,125,0.4)']
             if request.method == 'POST':
@@ -148,7 +150,7 @@ class TurfSchedule(View):
                     form2.save()
                         
                         
-                        # messages.success(self.request, "Account Created Successfully")
+                    messages.success(self.request, "Schedule Added Successfully")
                     return HttpResponseRedirect(reverse('turf_schedule'))
                         
                 else:
@@ -161,17 +163,20 @@ class TurfSchedule(View):
 @method_decorator(login_required,name='dispatch')
 class TurfScheduleEdit(View):
     def get(self, request, *args, **kwargs):
-        id = kwargs.pop('id')
-        schedule = TurfScheduleModel.objects.filter(id=id).first()
-        title = ""
-        editTurfForm = TurfScheduleForm()
-        if schedule:
-            title = schedule.title.split(' - ')
-            editTurfForm = TurfScheduleForm(initial={'category':schedule.category,'user':title[1] ,'start':schedule.start, 'end':schedule.end, 'turf':schedule.turf})
-        context={'addScheduleform':editTurfForm,
-                 'is_editform':True,
-                 'schedule_id':id}
-        return render(request,"turf/schedule.html",context)
+        if request.user.is_turf:
+            id = kwargs.pop('id')
+            schedule = TurfScheduleModel.objects.filter(id=id).first()
+            title = ""
+            editTurfForm = TurfScheduleForm()
+            if schedule:
+                title = schedule.title.split(' - ')
+                editTurfForm = TurfScheduleForm(initial={'category':schedule.category,'user':title[1] ,'start':schedule.start, 'end':schedule.end, 'turf':schedule.turf})
+            context={'addScheduleform':editTurfForm,
+                    'is_editform':True,
+                    'schedule_id':id}
+            return render(request,"turf/schedule.html",context)
+        else:
+            return redirect('403')
     def post(self, request, *args, **kwargs):
         id = kwargs.pop('id')
 
@@ -188,7 +193,9 @@ class TurfScheduleEdit(View):
                 schedule.start = request.POST['start']
                 schedule.end = request.POST['end']
                 schedule.turf = request.user
-                schedule.category = request.POST['category']
+                print(request.POST['category'],"aaaaaaaaaaaaaaaaaaaaaa")
+                category = CategoriesModel.objects.get(id = request.POST['category'] )
+                schedule.category = category
                 
                 for key,value in enumerate(bg_colors):
                     
@@ -197,7 +204,7 @@ class TurfScheduleEdit(View):
                         schedule.color_bg = bg_colors[key]
                 schedule.save()
                     
-                    # messages.success(self.request, "Account Created Successfully")
+                messages.success(self.request, "Schedule Updated Successfully")
                 return HttpResponseRedirect(reverse('turf_schedule'))
             else:
                 turf_schedule   = TurfScheduleModel.objects.filter(turf=request.user)
@@ -551,7 +558,7 @@ class DashboardImageUpdate(View):
                 # print("request.POST['image_id']",request.POST['image_id'])
                 if request.FILES :
 
-                    updatedRecord = TurfGallery.objects.get(isheader=True)
+                    updatedRecord = TurfGallery.objects.get(username = request.user.username, isheader=True)
                     print(updatedRecord)
 
                     updatedRecord.image = request.FILES['image']
@@ -667,29 +674,76 @@ class TurfPasswordChange(View):
 
 
 
-class TurfCategoryUpdate(View):
+class TurfCategoryAdd(View):
     def post(self, request, *args, **kwargs):
-            if request.method == 'POST':
-                form = TurfEditForm(request.POST,request.FILES)
-                if form.is_valid():
-                    print(request.POST.get('category'),"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-                    if request.POST.get('category') == "" or request.POST.get('category') == "[]":
+        editForm = categoryEditForm(request.POST)
+        if request.method == 'POST': 
+            if editForm.is_valid():
+                categoryToAdd = request.POST['category']
+                turf = UserModel.objects.filter(username=request.user).first()
+                categories =  turf.category
+                if not categoryToAdd in categories:
+                    categories.append(categoryToAdd)
+                print(categories,"sssssssssssssssss")
+                
+                turf.category =  categories
+                turf.save()
+                messages.success(request, 'Category Added Successfully')
+                return HttpResponseRedirect(reverse('turf_dash'))
+                            # print ("========editForm=====",editForm)
+            # print("RRRRRRRRRRRRRRRRRRR",request.POST['category'])
 
-                        user_obj=form.save(commit=False)
-                        user_obj.save()
+            # if editForm.is_valid(): 
+
+                # if request.FILES :
+
+                #     updatedRecord = UserModel.objects.get(id=request.POST['details_id'])
+
+                   
+                #     # updatedRecord.category = request.POST['category']
+
+                #     updatedRecord.save()
+
+                #     messages.success(request, 'Details Updated Successfully')
                     
-                    messages.success(self.request, "Updated Successfully")
-                    return HttpResponseRedirect(reverse('turf_dash'))
-                else:
-                    messages.error(request, 'Updation Failed!!')
-                    return HttpResponseRedirect(reverse('turf_dash'))
+                #     return HttpResponseRedirect(reverse('turf_dash'))  
+                
+                # else :
 
+                #     updatedRecord = UserModel.objects.get(id=request.POST['details_id'])
+
+                #     updatedRecord.avatar = request.POST['avatar']
+
+                #     updatedRecord.turf_name = request.POST['turf_name']
+                    
+                #     updatedRecord.username = request.POST['username']
+
+                #     updatedRecord.email = request.POST['email']
+                    
+                #     updatedRecord.phone = request.POST['phone']
+
+                #     updatedRecord.location = request.POST['location']
+
+                #     updatedRecord.landmark = request.POST['landmark']
+
+                    # updatedRecord.category = request.POST['category']
+
+                    # updatedRecord.save()
+
+                    # messages.success(request,"Saved successfully")
+                    # return HttpResponseRedirect(reverse('turf_dash'))  
+
+        else:  
+                print("-----------------------1111---------------------",editForm.errors)
+                messages.error(request,"Updation failed")
+                return HttpResponseRedirect(reverse('turf_dash'))
+    
 
 
 
 class DeleteTurfCategory(View):
     def get(self, request,id, *args,**kwargs):
-        item = CategoriesModel.objects.get(id=id)
+        item = CategoriesModel.objects.get(username = request.user.username, )
         item.delete()
         messages.success(request, 'Category Removed')
         return HttpResponseRedirect(reverse('turf_dash'))
