@@ -488,14 +488,16 @@ class CreateTournamentView(View):
      
         data={
             'category':CategoriesModel.objects.first(),
-            'team_name':CreateTeamModel.objects.first(),
+            'team_name':" ",
+            'image':" ",
             'start_date':datetime.now().date(),
             'end_date':datetime.now().date(),
             'start_time_f':datetime.now().strftime("%H:%M:%S"),
             'end_time_f':end_time.strftime("%H:%M:%S"),
             'start_time':datetime.now(),
             'end_time':end_time,
-            'locality':request.user.location,
+            'city':request.user.location,
+            'locality':" ",
             'creator' : request.user.username,
             'status' : "Upcoming",
             'team_space_available': 0,
@@ -541,7 +543,7 @@ class CreateTournamentView(View):
             form_cf.save()
 
 
-            TournamentRequestModel.objects.create(tournament_id=form_cf,category=form.cleaned_data['category'],team_name=form.cleaned_data['team_name'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",start_date=form.cleaned_data['start_date'],end_date=form.cleaned_data['end_date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
+            TournamentRequestModel.objects.create(tournament_id=form_cf,category=form.cleaned_data['category'],team_name=form.cleaned_data['team_name'],image=form.cleaned_data['image'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",start_date=form.cleaned_data['start_date'],end_date=form.cleaned_data['end_date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
             messages.success(request	,'Your tournament has been succesfully created. Visit My tournament to see .')
             return HttpResponseRedirect(reverse('my-tournaments'))
             
@@ -1178,7 +1180,7 @@ class SearchMatchView(View):
         print(categories)
         id_list=RequestModel.objects.filter(username=request.user.pk).values_list('match_id',flat=True)
         # print(id_list)
-        matches=MatchModel.objects.filter(Q(Q(creator__icontains=search_word)|Q(date=date_obj)|Q(category__in=categories))&Q(status="Upcoming")).exclude(id__in=list(id_list))
+        matches=MatchModel.objects.filter(Q(Q(date=date_obj)|Q(category__in=categories))&Q(status="Upcoming")).exclude(id__in=list(id_list))
         # matches=MatchModel.objects.filter(category__in=categories).exclude(creator=request.user.username,id__in=list(id_list))
         form=RequestForm(request=request)
         context ={'RequestForm': form ,'is_requestform':False , 'matches':matches,'is_searching':True,'search_KW':search_word}

@@ -41,6 +41,7 @@ class TournamentModel(models.Model):
     category = models.ForeignKey(CategoriesModel, on_delete=models.CASCADE)
     # team_name =  models.ForeignKey('User.CreateTeamModel', on_delete=models.CASCADE)
     team_name = models.CharField(max_length=30,null=True,blank=False)
+    image = models.ImageField(upload_to='images/team')
     start_date= models.DateField(blank=True)
     end_date= models.DateField(blank=True) 
     start_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
@@ -49,17 +50,17 @@ class TournamentModel(models.Model):
     creator = models.CharField(max_length=30,null=True,blank=False)
     status = models.CharField(default="Upcoming",max_length=30,null=False,blank=False)
     teams =models.IntegerField(default=1,null=False,blank=False)
+    city=models.CharField(max_length=100,null=True,blank=False)
     team_space_available =models.IntegerField(default = 1,null=False,blank=False)
     cron =models.IntegerField(default = 1,null=True,blank=False)
 
 
-    # start_time= models.DateTimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
-    # end_time= models.DateTimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
 class TournamentRequestModel(models.Model):
     tournament_id = models.ForeignKey(TournamentModel, on_delete=models.CASCADE)
     category=models.ForeignKey(CategoriesModel, on_delete=models.CASCADE)
     # team_name =  models.ForeignKey("CreateTeamModel", on_delete=models.CASCADE)
     team_name = models.CharField(max_length=30,null=True,blank=False)
+    image = models.ImageField(upload_to='images/team')
     username=models.CharField(max_length=30,null=False,blank=False)
     phoneno=models.CharField(max_length=16,default=7414414141)
     status=models.CharField(default="Pending",max_length=30,null=False,blank=False)

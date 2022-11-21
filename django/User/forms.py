@@ -238,7 +238,9 @@ class createtournamentForm(ModelForm):
 
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
     # team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
-    team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
+    team_name =forms.CharField(required=False,widget=forms.TextInput(attrs={'class': 'form-control',}))
+    image = forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
+
     # team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
@@ -248,13 +250,14 @@ class createtournamentForm(ModelForm):
     end_time = forms.DateTimeField(widget=forms.HiddenInput())
     teams = forms.IntegerField()#nos = number of slots           
     creator= forms.CharField(widget=forms.HiddenInput())
+    city=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     # status=forms.CharField(widget=forms.HiddenInput())
     team_space_available=forms.IntegerField(widget=forms.HiddenInput())
     # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model = TournamentModel
-        fields = 'category','team_name','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','team_space_available','creator','locality','creator'
+        fields = 'category','team_name','image','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','team_space_available','creator','locality','creator'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -265,12 +268,14 @@ class createtournamentForm(ModelForm):
         self.cleaned_data = super().clean()
         teams=self.cleaned_data.get('teams')
         creator=self.cleaned_data.get('creator')
-        # team_name=self.cleaned_data.get('team_name')
+        team_name=self.cleaned_data.get('team_name')
         status=self.cleaned_data.get('status')
         start_time_f=self.cleaned_data.get('start_time_f')
         end_time_f=self.cleaned_data.get('end_time_f')
         print(teams)
-        if teams != None and teams >= 2:
+        if team_name == None:
+            self.cleaned_data['team_space_available']=teams
+        elif team_name != None:
             self.cleaned_data['team_space_available']=teams-1
         else :
             self._errors['teams']=self.error_class(['No of teams can not be less than 2'])
@@ -308,6 +313,7 @@ class updatetournamentform(ModelForm):
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
     # team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
     team_name =forms.CharField(widget=forms.TextInput(attrs={"class":'form-control'}))
+    image = forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
