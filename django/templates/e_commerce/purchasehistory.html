@@ -48,7 +48,7 @@
                                                                     <a href="{% url 'orderdetails' data.orderno %}" class="text-dark orderno p-0 ">{{data.orderno}}</a>
                                                                 </td>
                                                                 <td>{{data.username}}</td>
-                                                                <td>{{data.price}}</td>
+                                                                <td>{% if request.user.is_superuser %}{{totalAmount}}{% else %}{{purchasedatauser}}{% endif %}</td>
                                                                 <td>{{data.date}}</td>
                                                                 <td>
                                                                     {% if data.status == "Shipped" %}
