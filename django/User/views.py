@@ -353,7 +353,7 @@ class RequestsView(View):
                     from .mail import send_email
                     mail_subject='Your Request Has Been Accepted'
                     to_email='epssanjana@gmail.com' #requested_match.creator.email
-                    content_as_html=render_to_string('emails/request.html', {'user':request.user,'':'requesti'})
+                    content_as_html=render_to_string('emails/request.html', {'user':request.user,'requested_match':'requesti','type':'accept'})
                     send_email(mail_subject,"",content_as_html,to_email)
                     ############################################################ Request  MAIL END ######################################################
                 messages.success(request,'The requests were accepted')
