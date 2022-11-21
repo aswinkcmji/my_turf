@@ -466,10 +466,10 @@ class AdminDashboardView(View):
                 price_list.append(totalAmount)
             print(date_list)
             print(price_list)
-            now = datetime.now()
+            # now = datetime.now()
 
-            timestamp = datetime.timestamp(now)
-            print("timestamp =", timestamp)
+            # timestamp = datetime.timestamp(now)
+            # print("timestamp =", timestamp)
             context={
                 'total_users':total_users,
                 'total_turfs':total_turfs,
