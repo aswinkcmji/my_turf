@@ -21972,9 +21972,9 @@ button.bg-soft-dark:focus {
 * Copyright (c) 2020 Animate.css
 */
 :root {
-  --animate-duration: 1s;
-  --animate-delay: 1s;
-  --animate-repeat: 1;
+  --animate-duration: 100s;
+  --animate-delay: 10s;
+  --animate-repeat: 10s;
 }
 
 .animate__animated {
