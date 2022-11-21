@@ -468,12 +468,12 @@ class CancelMatchView(View):
 @method_decorator(login_required,name='dispatch')
 class TeamView(View):
     def get(self, request,id, *args, **kwargs):
-        try:
-            reqdata=MatchModel.objects.get(id=id,creator=request.user.pk)
-        except:
+        reqdata=MatchModel.objects.get(id=id)
+
+        joined=RequestModel.objects.filter(status='Accepted',match_id=reqdata.id).order_by("id")
+        if not joined.objects.filter(username=request.user.pk).exists():
              messages.error(request,'You cannot view this team')
              return HttpResponseRedirect(reverse('my-matches'))
-        joined=RequestModel.objects.filter(status='Accepted',match_id=reqdata.id).order_by("id")
         context={}
         context['users']=joined
         print(context)
@@ -611,6 +611,7 @@ class EditTournamentView(View):
             'end_time_f':editobj1.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
             'start_time':editobj1.start_time,
             'end_time':editobj1.end_time,
+            'city':editobj1.city,
             'locality':editobj1.locality,
             'status':editobj1.status,
             "creator" : request.user.username,
@@ -667,7 +668,7 @@ class AllTournamentView(View):
                 print(request.user.username)
                 # context={}
                 id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('tournament_id',flat=True)
-                tournament=TournamentModel.objects.filter(locality__iexact=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
+                tournament=TournamentModel.objects.filter(city__iexact=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
                 form=TournamentRequestForm(request=request)
                 context ={'TournamentRequestForm': form ,'is_tournamentrequestform':False , 'tournaments':tournament}
                 print(context)
@@ -705,7 +706,7 @@ class  JoinTournamentView(View):
 
                 if len(tournaments) == 1:
                         tournament = tournaments[0]
-                        team=teams[0]
+                        # team=teams[0]
            
 
                 if len(tournaments) == 0:
@@ -752,28 +753,29 @@ class  JoinTournamentView(View):
 
             # teams = CreateTeamModel.objects.all()
             # print("==================+++++++++++++++++++++======================",teams)
-            print("===request.POST",(request.POST['team-select']))
+            print("===request.POST",(request.POST['team_name']))
             if len(tournaments) == 1:
                 requested_tournament = tournaments[0]
                 # team=teams[0]
-          
-            data1={
-                    'category':requested_tournament.category.id,
-                    'team_name':request.POST['team-select'],
-                    # "team_name":requested_tournament.team_name,
-                    'start_date':requested_tournament.start_date,
-                    'end_date':requested_tournament.end_date,
-                    'start_time':requested_tournament.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
-                    'end_time':requested_tournament.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
-                    'locality':requested_tournament.locality,
-                    'username':request.user.username,
-                    'status':"Pending",
-                    'phoneno': request.user.phone,
-                    'tournament_id':requested_tournament.pk,
-                }
-            form=TournamentRequestForm(data1,request=request)
+            if request.FILES['image']:
+                data1={
+                        'category':requested_tournament.category.pk,
+                        'team_name':request.POST['team_name'],
+                        # "team_name":requested_tournament.team_name,
+                        'image':request.FILES['image'],
+                        'start_date':requested_tournament.start_date,
+                        'end_date':requested_tournament.end_date,
+                        'start_time':requested_tournament.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                        'end_time':requested_tournament.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                        'locality':requested_tournament.locality,
+                        'username':request.user.username,
+                        'status':"Pending",
+                        'phoneno': request.user.phone,
+                        'tournament_id':requested_tournament.pk,
+                    }
             print("================++++++++++++=================",data1)
-            print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",form.errors)
+            form=TournamentRequestForm(data1,request.FILES,request=request)
+            print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",form)
             # print("",team_name)
 
             if form.is_valid():
@@ -787,7 +789,7 @@ class  JoinTournamentView(View):
             else:
                 messages.error(request	,'Please do not change the fields')
                 a=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=requested_tournament.pk).values()
-                context ={'is_tournamentrequestform':True ,'tournament':requested_tournament,'a':a,'data1':data1,}
+                context ={'is_tournamentrequestform':True ,'tournament':requested_tournament,'a':a,'data':data1,}
                 print(context)
                 # return render(request, 'Tournaments/tournaments.html',context)
                 return render(request, 'Tournaments/tournaments.html',context)
@@ -799,7 +801,7 @@ class TournamentRequestsView(View):
     def get(self, request,*args, **kwargs):
         id_list=TournamentModel.objects.filter(creator=request.user.username,status="Upcoming").values_list('id',flat=True).order_by("-id")
         print(list(id_list))
-        tournament_requests=TournamentRequestModel.objects.filter(status='Pending',tournament_id__in=list(id_list)).values().order_by("-id")
+        tournament_requests=TournamentRequestModel.objects.filter(status='Pending',tournament_id__in=list(id_list)).order_by("-id")
         # print(requests)
         context={}
         context['requests']=tournament_requests
@@ -880,11 +882,11 @@ class CancelTournamentView(View):
 class TournamentHistoryView(View):
     def get(self, request, *args, **kwargs):
         id_list1=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
-        jum=TournamentModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.username).values().order_by("-id")#joined upcoming matches
+        jum=TournamentModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.username).order_by("-id")#joined upcoming matches
         id_list2=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
-        jcom=TournamentModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).values().order_by("-id")#joined completed matches
+        jcom=TournamentModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).order_by("-id")#joined completed matches
         id_list3=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
-        jcam=TournamentModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).values().order_by("-id")#joined cancelled matches
+        jcam=TournamentModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).order_by("-id")#joined cancelled matches
         crum=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Upcoming").order_by("-id") #created upcoming matches
         crcom=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Completed").order_by("-id") #created completed matches
         crcam=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Cancelled").order_by("-id") #created cancelled matches
@@ -962,6 +964,17 @@ class Createteamview(View):
         #     'data' : 'Add team'
         # }
 
+############################################################## View for tournament teams #######################################################################
+@method_decorator(login_required,name='dispatch')
+class TournamentTeamView(View):
+    def get(self, request,id, *args, **kwargs):
+        reqdata=TournamentModel.objects.get(id=id,creator=request.user.username)
+            
+        joined=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=reqdata.id).order_by("id")
+        context={}
+        context['users']=joined
+        print(context)
+        return render(request,"Tournaments/team.html",context)
 
 
 
@@ -1200,3 +1213,26 @@ class SearchMatchView(View):
 # class UpdateCurrentLocView(View):
 #     def post(self, request, *args, **kwargs):
 #         pass
+
+
+
+
+@method_decorator(login_required,name='dispatch')
+class SearchTournamentView(View):
+    def post(self, request, *args, **kwargs):
+        search_word = request.POST.get('search')
+        try:
+            date_obj=datetime.strptime(search_word, '%Y-%m-%d')
+        except:
+            date_obj=datetime.strptime("2000-01-01", '%Y-%m-%d')
+        print(date_obj,type(date_obj))
+        categories=CategoriesModel.objects.filter(category__icontains=search_word)
+        print(categories)
+        id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('tournament_id',flat=True)
+    
+        tournaments=TournamentModel.objects.filter(Q(Q(creator__icontains=search_word)|Q(start_date=date_obj)|Q(category__in=categories))&Q(status="Upcoming")).exclude(id__in=list(id_list))
+        # matches=MatchModel.objects.filter(category__in=categories).exclude(creator=request.user.username,id__in=list(id_list))
+        form=RequestForm(request=request)
+        context ={'RequestForm': form ,'is_requestform':False , 'tournaments':tournaments,'is_searching':True,'search_KW':search_word}
+        print("###################### Inside SearchMatchView ###########################",context,"@@@@@@@@@@@@@@@@@@@",id_list,"!!!!!!!!!!!!!!!!!!!!!!!",tournaments)
+        return render(request, 'Tournaments/tournament.html',context)

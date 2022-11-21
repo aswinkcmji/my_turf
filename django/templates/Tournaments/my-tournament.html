@@ -1,59 +1,87 @@
 {% extends 'layouts/base.html' %}
+{% load static %}
 {% block content %}
 
 <div class="container-fluid">
-    {% if tournaments%}
-    <div class="row bg-light justify-content-around">
-        {% if tournaments %}
-<div class="row bg-light justify-content-around container-fluid">
+    <div class="row bg-soft-light d-flex justify-content-around container-fluid">
         {% for r in tournaments %}
-       
-    <div class="column col-md-4">
-        <div class="card p-2 m-4">
-            <img src="/media/{{r.category.image}}" class="card-img-top flex" alt="Product 1" style="height:14rem;">
-            <div class="card-body p-1 ">
-            <h2 class="card-text p-1 text-dark ">{{r.category}}</h2>
-            <p class="card-text text-dark">Tournament Day : <span class="text-secondary">{{r.start_date|date:"Y-m-d"}}</span></p>
-            <p class="card-text text-dark">Time : <span class="text-secondary">{{r.start_time|time:"H:i:s"}}</span> to  <span class="text-secondary">{{r.end_time|time:"H:i:s"}}</span></p>
-            <p class="card-text text-dark">Available Slots:{{r.team_space_available}}/{{r.team_space_available}}</p>
-            <p class="card-text text-dark">Locality:{{r.locality}}</p>
-            {% if r.creator == request.user.username %}
-            <a href="edit/{{r.id}} "  class="btn btn-primary">
-                EDIT
-            </a>
-            {%else%}
-            <p class="card-text ">Organized By:{{r.creator}}</p>
-            {%endif%}
+        <div class="column col-md-4">
+            <div class="card p-2 m-4">
+                <img src="/media/{{r.category.image}}" class="card-img-top" alt="Product 1"
+                    style="height:350px;object-fit: contain;">
+                <div class="card-body p-1 ">
+                    <h2 class="card-text p-1">{{r.category}}</h2>
+                    <p class="card-text ">Start Date of tournament:{{r.start_date|date:"Y-m-d"}}</p>
+                    <p class="card-text ">End Date of tournament:{{r.end_date|date:"Y-m-d"}}</p>
+                    <p class="card-text">Start-Time:{{r.start_time|time:"H:i:s"}}</p>
+                    <p class="card-text">End-Time:{{r.end_time|time:"H:i:s"}}</p>
+                    <p class="card-text">Available Slots:{{r.team_space_available}}/{{r.teams}}</p>
+                    <p class="card-text">Locality:{{r.locality}}</p>
+                    <p class="card-text">City:{{r.city}}</p>
+                    {% if r.creator == request.user.username and r.status == "Upcoming" %}
+                    <a href="edit/{{r.id}} " class="btn btn-primary">
+                        EDIT
+                    </a>
+                    <a onclick="return confirm('Are you sure you want to cancel this tournament?')"
+                        href="cancel/{{r.id}}" class="btn btn-primary">Cancel</a>
+                        <a href="{%url 'teams' id=r.id %} " class="btn btn-primary">
+                            View Team </a>
+                    {%elif r.creator == request.user.username %}
+                    <div class="col-4 "><img src="/static/assets/images/avatars/01.png" alt="User-Profile"
+                            class="theme-color-default-img img-fluid rounded-pill avatar-45">
+                            <a href="{%url 'teams' id=r.id %} " class="btn btn-primary">
+                                View Team </a>
+                            </div>
+                    {%else%}
+                    <p class="card-text">Organized By:{{r.creator}}</p>
+                    
+                    <!-- <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="popover" title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button> -->
+                    
+                    <a href="{%url 'myteam' id=r.id %} " class="btn btn-primary">
+                        View Team</a>
+                    {%endif%}
+                    
+                   
+                </div>
             </div>
         </div>
+        {% empty %}
+        <div class="card col-md-6 col-lg-6 my-5 mx-auto px-0 overflow-hidden">
+            <div class="d-flex justify-content-center">
+                <img src="{% static 'assets/images/errorImages/search404_defualt.png' %}" alt="search404"
+                    class="theme-color-default-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/errorImages/search404_1.png' %}" alt="search404"
+                    class="theme-color-purple-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/errorImages/search404_2.png' %}" alt="search404"
+                    class="theme-color-blue-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/errorImages/search404_3.png' %}" alt="search404"
+                    class="theme-color-green-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/errorImages/search404_4.png' %}" alt="search404"
+                    class="theme-color-yellow-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/errorImages/search404_5.png' %}" alt="search404"
+                    class="theme-color-pink-img  img-fluid  w-50 mx-auto">
+            </div>
+            <div class="card-body">
+                <p class="text-center">There are no upcoming matches that you created or joined!!</p>
+                <p class="text-center">Interested in creating your own matches<a class="nav-link "
+                        href="{% url 'create-matches' %}" id="create-matches-li">Click here</a></p>
+            </div>
+        </div>
+
     </div>
     {%endfor%}
-    
-    </div>
- {% else %}
-
- <div class="row bg-light justify-content-center">
-    <div class="column col-md-4 justify-content-md-around">
-        <div class="card text-white bg-soft-info m-5" > 
-          <div class="card-body">   
-            <h3 class="mt-3 text-center">There aren't any matches you have created or joined</h3>
-            <p class="mt-3 text-center">
-              Interested in creating your own tournament<a class="nav-link " href="{% url 'my-tournament' %}" id="create-tournament-li">Click here</a>
-            </p>
-          </div>
-          </div>
-    </div>
-    </div>
-    {%endif%}
 </div>
 
-{%endif%}
+
+
+
 <script>
     document.getElementById('my-tournaments-li').classList.add('active')
   
 </script>
 
-
-
-
 {% endblock content %}
+<h3 class="mt-3 text-center">There aren't any matches you have created or joined</h3>
+<p class="mt-3 text-center">
+  Interested in creating your own tournament<a class="nav-link " href="{% url 'my-tournament' %}" id="create-tournament-li">Click here</a>
+</p>

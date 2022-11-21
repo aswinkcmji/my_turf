@@ -1,0 +1,76 @@
+{% load static %}
+{% for t in tournaments %}
+<div class="column col-md-4">
+  <div class="card p-2 m-4">
+      <img src="/media/{{t.category.image}}" class="card-img-top flex" alt="Product 1" style="height:14rem;">
+      <div class="card-body p-1 ">
+      <h2 class="card-text p-1 text-dark ">{{t.category}}</h2>
+      <p class="card-text text-dark">Tournament Day : <span class="text-secondary">{{t.start_date|date:"Y-m-d"}}</span></p>
+      <p class="card-text text-dark">Time : <span class="text-secondary">{{t.start_time|time:"H:i:s"}}</span> to  <span class="text-secondary">{{t.end_time|time:"H:i:s"}}</span></p>
+      <p class="card-text text-dark">Available Slots:{{t.team_space_available}}/{{t.team_space_available}}</p>
+      <p class="card-text text-dark">Locality:{{t.locality}}</p>
+        {% if t.creator != request.user.username %}
+        <a class="btn btn-primary" href="a/{{t.id}}">JOIN NOW</a>
+      {%else%}
+       <p>You are the organizer.<br>Visit <a class="" href="{% url 'my-tournaments' %}" id="my-tournaments-li">My Tournaments</a> to edit</p>
+       {%endif%}
+      </div>
+    </div>
+</div>
+{%empty%}
+{% if is_searching %}
+
+        <div class="card col-md-6 col-lg-6 my-5 mx-auto px-0 overflow-hidden">
+            <div class="d-flex justify-content-center">
+                <img src="{% static 'assets/images/errorImages/search404_defualt.png' %}" alt="search404"
+                    class="theme-color-default-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/errorImages/search404_1.png' %}" alt="search404"
+                    class="theme-color-purple-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/errorImages/search404_2.png' %}" alt="search404"
+                    class="theme-color-blue-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/errorImages/search404_3.png' %}" alt="search404"
+                    class="theme-color-green-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/errorImages/search404_4.png' %}" alt="search404"
+                    class="theme-color-yellow-img  img-fluid  w-50 mx-auto">
+                <img src="{% static 'assets/images/errorImages/search404_5.png' %}" alt="search404"
+                    class="theme-color-pink-img  img-fluid  w-50 mx-auto">
+            </div>
+          <div class="card-body"> <p class="text-center">Couldn't Find Anything Related to "<span class="text-black">{{search_KW}}</span>" ! </p> 
+           <p class="text-center"> Try Searching  With Different Keyword</p>
+          </div>
+        </div>
+        
+ {% else %}        
+ <div class="card col-md-6 col-lg-6 my-5 mx-auto px-0 overflow-hidden">
+  <div class="d-flex justify-content-center">
+    <img src="{% static 'assets/images/errorImages/search404_defualt.png' %}" alt="search404"
+    class="theme-color-default-img  img-fluid  w-50 mx-auto">
+<img src="{% static 'assets/images/errorImages/search404_1.png' %}" alt="search404"
+    class="theme-color-purple-img  img-fluid  w-50 mx-auto">
+<img src="{% static 'assets/images/errorImages/search404_2.png' %}" alt="search404"
+    class="theme-color-blue-img  img-fluid  w-50 mx-auto">
+<img src="{% static 'assets/images/errorImages/search404_3.png' %}" alt="search404"
+    class="theme-color-green-img  img-fluid  w-50 mx-auto">
+<img src="{% static 'assets/images/errorImages/search404_4.png' %}" alt="search404"
+    class="theme-color-yellow-img  img-fluid  w-50 mx-auto">
+<img src="{% static 'assets/images/errorImages/search404_5.png' %}" alt="search404"
+    class="theme-color-pink-img  img-fluid  w-50 mx-auto">
+  </div>
+<div class="card-body"> <p class="text-center">There aren't any more tournaments happening in your locality!!!</p> 
+ <p class="text-center"> Visit <a class="" href="{% url 'my-tournaments' %}" id="my-tournaments-li">My tournaments</a> to see the tournament you created or joined</p>
+</div>
+</div>
+<!-- <div class="column col-md-4"{% if is_requestform %} style="display: none ;" {% else %}
+style="display: block ;" {% endif %}>
+    <div class="card text-white bg-soft-info m-5" > 
+      <div class="card-body">   
+        <h3 class="mt-3 text-center">There aren't any  more matches happening in your locality!!!</h3>
+        <h3 class="mt-3 text-center">There are ano more matches happening in your locality</h3>
+        <p class="mt-3 text-center">
+          Visit <a class="" href="{% url 'my-matches' %}" id="my-matches-li">My Match</a> to see the matches you created or joined
+        </p>
+      </div>
+      </div>
+</div> -->
+{%endif%}
+{%endfor%}

@@ -14,12 +14,13 @@
               <div class="card-body">
             <h2>{{match.category}}</h2>
                 <p class="card-text">Date of Match:{{match.date|date:"Y-m-d"}}</p>
-                <p class="card-text">Time:{{match.start_time|time:"H:i:s"}}</p>
-                <p class="card-text">Time:{{match.end_time|time:"H:i:s"}}</p>
-                <p class="card-text">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
+                <p class="card-text">Start Time:{{match.start_time|time:"H:i:s"}}</p>
+                <p class="card-text">End Time:{{match.end_time|time:"H:i:s"}}</p>
                 <p class="card-text">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
                 <p class="card-text">Locality:{{match.locality}}</p>
                 <p class="card-text">City:{{match.city}}</p>
+                <p class="card-text"> Creator:<a  class="text-primary" data-bs-html="true"  data-bs-toggle="popover" title="{{match.creator}}"  data-bs-content="<button class='btn btn-primary'>copy</button><p>Phone:{{match.creator.phone}}</p>    <p> Email:{{match.creator.email}}</p>" style="text-decoration: underline;">{{match.creator}}</a></p>
+          
                 <a  class="btn btn-primary" href="cancel/{{match.id}}">
                   Cancel
                 </a>
