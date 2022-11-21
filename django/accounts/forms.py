@@ -7,6 +7,7 @@ from .models import UserModel
 from django.forms import ModelForm
 from User.models import CitiesModel
 from django.contrib.auth.hashers import check_password
+from dashboard.models import CategoriesModel
 
 class SignUpForm(UserCreationForm):
     
@@ -179,3 +180,4 @@ class MyPasswordChangeForm(PasswordChangeForm):
         if matchcheck:
 
             raise forms.ValidationError({'new_password1': ("Cannot use previous password as new password")})
+

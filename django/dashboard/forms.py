@@ -167,3 +167,8 @@ class TurfPasswordChangeForm(PasswordChangeForm):
         if matchcheck:
 
             raise forms.ValidationError({'new_password1': ("Cannot use previous password as new password")})
+
+
+
+class categoryEditForm(forms.Form):
+    category = forms.ModelChoiceField(queryset=CategoriesModel.objects.all())

@@ -14,7 +14,7 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm, TurfPasswordChangeForm
+from .forms import *
 from django.utils.dateparse import parse_datetime
 from .models import TurfGallery, TurfScheduleModel , CategoriesModel
 from User.models import MatchModel,TournamentModel
@@ -72,7 +72,8 @@ class Turf_Dashboard(View):
         image = CategoriesModel.objects.filter(id__in = a )
 
      
-        
+        category_editForm =categoryEditForm()
+
         context = {
             'form': GalleryImgForm(),
             'turfDetails': turfDetails,
@@ -83,6 +84,7 @@ class Turf_Dashboard(View):
             'editForm' : TurfEditForm(),
             'categories':categories,
             'passform':passform,
+            'category_editForm':category_editForm,
            
 
         }
@@ -669,51 +671,64 @@ class TurfPasswordChange(View):
 
 class TurfCategoryAdd(View):
     def post(self, request, *args, **kwargs):
-        if request.method == 'POST':  
-            editForm = TurfEditForm(request.POST, request.FILES)
-            # print ("========editForm=====",editForm)
+        editForm = categoryEditForm(request.POST)
+        if request.method == 'POST': 
+            if editForm.is_valid():
+                categoryToAdd = request.POST['category']
+                turf = UserModel.objects.filter(username=request.user).first()
+                categories =  turf.category
+                if not categoryToAdd in categories:
+                    categories.append(categoryToAdd)
+                print(categories,"sssssssssssssssss")
+                
+                turf.category =  categories
+                turf.save()
+                messages.success(request, 'Category Added Successfully')
+                return HttpResponseRedirect(reverse('turf_dash'))
+                            # print ("========editForm=====",editForm)
             # print("RRRRRRRRRRRRRRRRRRR",request.POST['category'])
-            if editForm.is_valid(): 
 
-                if request.FILES :
+            # if editForm.is_valid(): 
 
-                    updatedRecord = UserModel.objects.get(id=request.POST['details_id'])
+                # if request.FILES :
+
+                #     updatedRecord = UserModel.objects.get(id=request.POST['details_id'])
 
                    
-                    # updatedRecord.category = request.POST['category']
+                #     # updatedRecord.category = request.POST['category']
 
-                    updatedRecord.save()
+                #     updatedRecord.save()
 
-                    messages.success(request, 'Details Updated Successfully')
+                #     messages.success(request, 'Details Updated Successfully')
                     
-                    return HttpResponseRedirect(reverse('turf_dash'))  
+                #     return HttpResponseRedirect(reverse('turf_dash'))  
                 
-                else :
+                # else :
 
-                    updatedRecord = UserModel.objects.get(id=request.POST['details_id'])
+                #     updatedRecord = UserModel.objects.get(id=request.POST['details_id'])
 
-                    updatedRecord.avatar = request.POST['avatar']
+                #     updatedRecord.avatar = request.POST['avatar']
 
-                    updatedRecord.turf_name = request.POST['turf_name']
+                #     updatedRecord.turf_name = request.POST['turf_name']
                     
-                    updatedRecord.username = request.POST['username']
+                #     updatedRecord.username = request.POST['username']
 
-                    updatedRecord.email = request.POST['email']
+                #     updatedRecord.email = request.POST['email']
                     
-                    updatedRecord.phone = request.POST['phone']
+                #     updatedRecord.phone = request.POST['phone']
 
-                    updatedRecord.location = request.POST['location']
+                #     updatedRecord.location = request.POST['location']
 
-                    updatedRecord.landmark = request.POST['landmark']
+                #     updatedRecord.landmark = request.POST['landmark']
 
                     # updatedRecord.category = request.POST['category']
 
-                    updatedRecord.save()
+                    # updatedRecord.save()
 
-                    messages.success(request,"Saved successfully")
-                    return HttpResponseRedirect(reverse('turf_dash'))  
+                    # messages.success(request,"Saved successfully")
+                    # return HttpResponseRedirect(reverse('turf_dash'))  
 
-            else:  
+        else:  
                 print("-----------------------1111---------------------",editForm.errors)
                 messages.error(request,"Updation failed")
                 return HttpResponseRedirect(reverse('turf_dash'))

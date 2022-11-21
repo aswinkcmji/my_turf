@@ -37,7 +37,7 @@
                         <h1>Let's Play...!  </h1>
                     </div>
                     <div>
-                        {% if count == 0 %}
+                        {% if count %}
                         <a type="button" href="" class="btn btn-link btn-soft-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >                                
                                 <path opacity="0.4" d="M19.9927 18.9534H14.2984C13.7429 18.9534 13.291 19.4124 13.291 19.9767C13.291 20.5422 13.7429 
@@ -181,37 +181,40 @@
     
     <div class="iq-header-img">
         
-        {% if count == 0%}
-        <img src="/static/assets/images/dashboard/top-header.png" alt="header"
-        class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header1.png" alt="header"
-        class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header2.png" alt="header"
-        class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header3.png" alt="header"
-        class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header4.png" alt="header"
-        class="theme-color-yellow-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="/static/assets/images/dashboard/top-header5.png" alt="header"
-        class="theme-color-pink-img img-fluid w-100 h-100 animated-scaleX">
+        {% if count and is_turf %}
         
-        {% else %}
-        {% for data in header %}
 
-        <img src="{{media_url}}{{data.image}}"  alt="header"
-            class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="{{media_url}}{{data.image}}" alt="header"
-            class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="{{media_url}}{{data.image}}" alt="header"
-            class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="{{media_url}}{{data.image}}" alt="header"
-            class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
-         <img src="{{media_url}}{{data.image}}" alt="header"
-            class="theme-color-yellow-img img-fluid w-100 h-100 animated-scaleX">
-        <img src="{{media_url}}{{data.image}}" alt="header"
-            class="theme-color-pink-img img-fluid w-100 h-100 animated-scaleX">
+        
+        {% for data in header %}
+       
+            <img src="{{media_url}}{{data.image}}"  alt="header"
+                class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
+            <img src="{{media_url}}{{data.image}}" alt="header"
+                class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
+            <img src="{{media_url}}{{data.image}}" alt="header"
+                class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
+            <img src="{{media_url}}{{data.image}}" alt="header"
+                class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
+            <img src="{{media_url}}{{data.image}}" alt="header"
+                class="theme-color-yellow-img img-fluid w-100 h-100 animated-scaleX">
+            <img src="{{media_url}}{{data.image}}" alt="header"
+                class="theme-color-pink-img img-fluid w-100 h-100 animated-scaleX">
             
         {% endfor %}
+        
+        {% else %}
+            <img src="/static/assets/images/dashboard/top-header.png" alt="header"
+            class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
+            <img src="/static/assets/images/dashboard/top-header1.png" alt="header"
+            class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
+            <img src="/static/assets/images/dashboard/top-header2.png" alt="header"
+            class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
+            <img src="/static/assets/images/dashboard/top-header3.png" alt="header"
+            class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
+            <img src="/static/assets/images/dashboard/top-header4.png" alt="header"
+            class="theme-color-yellow-img img-fluid w-100 h-100 animated-scaleX">
+            <img src="/static/assets/images/dashboard/top-header5.png" alt="header"
+            class="theme-color-pink-img img-fluid w-100 h-100 animated-scaleX">
         {% endif %}
         
        
@@ -434,19 +437,12 @@
                                                         <div class="form-label">Game Categories</div>
                                                         <div class="content-taginput">
                                                             <p>Select Type of Games can be played at your turf</p>
-                                                            <ul id="ul-taginput">
-                                                                <select type="text" spellcheck="false" id="taginput" class="form-control">                       
-                                                                    <option>Categories</option>
-                                                                    {% for category in categories %}
-                                                                    <option value="{{category.id}}">{{category.category}}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                            </ul>                       
+                                                            {% render_field category_editForm.category class="form-control" %}                      
                                                         </div>                                                                                
                                                         <div class="d-flex justify-content-end">
                                                             <span id="bt-remove-taginput" style="cursor: pointer;"
                                                                 class=" text-danger text-end w-auto">
-                                                                Remove All
+                                                               
                                                             </span>
                                                         </div>                                                           
                                                     </div>
@@ -472,7 +468,7 @@
 
            
                         
-                    <div class="row justify-content-center">                
+                    <div class="row justify-content-center" style="margin-bottom: 5rem;">                
                         {% for data in image %}
                             <div class="col-lg-3 col-md-4 mb-3 card ">
                                 <div class="card-body  rounded-3" style="background-image: url('{{media_url}}{{ data.image}}');  background-repeat: no-repeat;
@@ -516,12 +512,14 @@
                                             </div>
                                         
                                             
-                                            <form action="{% url 'galleryupdate' %}"  method="POST" enctype="multipart/form-data">
+                                            <form action="{% url 'DeleteTurfCategory' %}"  method="POST" enctype="multipart/form-data">
+                                                
+                                                {% csrf_token %}
                                                 <div class="modal-body">
                                                     <h6>Are you Sure</h6>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary">Yes</button>
+                                                    <button type="submit" class="btn btn-primary">Yes</button>
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                                                 </div>
                                             </form>
