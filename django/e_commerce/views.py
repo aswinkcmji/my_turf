@@ -4,7 +4,7 @@ from select import select
 from django.shortcuts import render,redirect
 from django.urls import reverse
 from django.views.generic import View
-from .forms import addStockForm, addToCartForm ,billingAddressForm
+from .forms import addStockForm, addToCartForm ,billingAddressForm,updateQty
 from .models import CartModel, CheckoutModel, ProductsModel,BillingAddressModel
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -282,15 +282,12 @@ class CartDetailsView(View):
             'media_url':settings.MEDIA_URL,
             'totalItemCount':totalItemCount,
             'totalAmount':totalAmount,
+            'form':updateQty()
 
 
         }
         return render(request,'e_commerce/cartPage.html',context)
 
-def increaseBtn(request,id):
-    item = CartModel.objects.get(id=id)
-    item.update()
-    return HttpResponseRedirect(reverse('stocktable'))
 
 
 
@@ -460,4 +457,33 @@ class OrderDetailsView(View):
 
 
 
+class UpdateQtyView(View):
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST': 
 
+            pid = request.POST.get('p_id')
+
+            print(pid)
+
+
+            updatedRecord = CartModel.objects.get(id=pid)
+
+            pname = updatedRecord.product_name
+
+            form = updateQty(request.POST)
+            
+            if form.is_valid():
+
+                if int(ProductsModel.objects.filter(product_name=pname).first().quantity) >= int(request.POST.get('product_qty')) :
+                    updatedRecord.quantity = request.POST.get('product_qty')
+
+                    updatedRecord.save()
+
+                    messages.success(request, 'Updated Successfully')
+                    
+                    return HttpResponseRedirect(reverse('cartdetails'))  
+                else :
+
+                    messages.warning(request, 'no stcok available..')
+    
+                    return HttpResponseRedirect(reverse('cartdetails'))
