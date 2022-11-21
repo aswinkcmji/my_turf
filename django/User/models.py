@@ -50,6 +50,8 @@ class TournamentModel(models.Model):
     status = models.CharField(default="Upcoming",max_length=30,null=False,blank=False)
     teams =models.IntegerField(default=1,null=False,blank=False)
     team_space_available =models.IntegerField(default = 1,null=False,blank=False)
+    cron =models.IntegerField(default = 1,null=True,blank=False)
+
 
     # start_time= models.DateTimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)
     # end_time= models.DateTimeField(default=datetime.now().strftime('%H:%M:%S'),blank=True)

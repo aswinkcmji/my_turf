@@ -238,10 +238,7 @@ class MatchHistoryView(View):
         print(context)
         return render(request, 'Matches/match-history.html',context)
 
-############################################################# View for listing all turfs in user locality ####################################################################
-# class TurfsView(View):
-#     def get(self, request, *args, **kwargs):
-#         return render(request, 'turf/main.html',{ })
+
 
 ############################################################## View for editing matches created by user #####################################################################
 
@@ -530,28 +527,32 @@ class MyTournamentView(View):
     def get(self, request, *args, **kwargs):
         print(request.user.username)
         print(datetime.now())
-        # tournament=TournamentModel.objects.filter(id__in=list(id))
-        tournament=TournamentModel.objects.all()
-        # img1 = CategoriesModel.objects.values_list('image')[0][0]
-        # img2 = CategoriesModel.objects.values_list('image')[1][0]
-        # img3 = CategoriesModel.objects.values_list('image')[2][0]
-        # img4 = CategoriesModel.objects.values_list('image')[3][0]
-        # img5 = CategoriesModel.objects.values_list('image')[4][0]
 
+       
+        # tournament=TournamentModel.objects.all()
         
+
+
+
+     
+        # context={
+        #     'tournaments':tournament,
         
+            
+        # }
+        # return render(request, 'Tournaments/my-tournament.html',context)
+        id_list=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True)
+        print("=================",list(id_list))
+        exclude_status=["Completed","Cancelled"]
+        tournament=TournamentModel.objects.filter(id__in=list(id_list)).exclude(status__in=exclude_status).order_by("-id")
+        print("7777777777777777",tournament)
         context={
             'tournaments':tournament,
-            # 'img1' : img1,
-            # "img2" : img2,
-            # "img3" : img3,
-            # "img4" : img4,
-            # "img5" : img5,
-
-            # 'media_url':settings.MEDIA_URL,
             
         }
         return render(request, 'Tournaments/my-tournament.html',context)
+        
+
 
 ############################### view for editing created tournaments  ####################################################################
 @method_decorator(login_required,name='dispatch')
@@ -562,6 +563,7 @@ class EditTournamentView(View):
         data={
             'category':editobj1.category.id,
             'team_name':editobj1.team_name,
+            # 'team_name':CreateTeamModel.objects.filter(),
             'start_date':editobj1.start_date,
             'end_date':editobj1.end_date,
             'start_time_f':editobj1.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
@@ -690,6 +692,7 @@ class  JoinTournamentView(View):
                     'locality':tournament.locality,
                     'username':request.user.username,
                     'status':"Pending",
+                    'team_space_available':tournament.team_space_available,
                     'phoneno': request.user.phone,
                     'tournament_id':tournament.pk,
                 }

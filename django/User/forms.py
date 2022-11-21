@@ -236,8 +236,8 @@ class createtournamentForm(ModelForm):
 
 
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
-    team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
-    # team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
+    # team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
+    team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     # team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
@@ -305,8 +305,8 @@ class updatetournamentform(ModelForm):
 
     tournament_id = forms.ModelChoiceField(queryset=TournamentModel.objects.all(),widget=forms.HiddenInput())
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
-    team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
-    # team_name =forms.CharField(widget=forms.TextInput(attrs={"class":'form-control'}))
+    # team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
+    team_name =forms.CharField(widget=forms.TextInput(attrs={"class":'form-control'}))
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))

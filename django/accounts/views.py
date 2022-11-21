@@ -30,14 +30,9 @@ class Signup(View):
             if request.method == 'POST':
                 form = SignUpForm(request.POST)
                 if form.is_valid():
-<<<<<<< HEAD
-                    form.save()
-                    
-=======
                     user_obj=form.save(commit=False)
                     user_obj.current_location=user_obj.location
                     user_obj.save()
->>>>>>> 41a5bf75f0f8d24be05fbe5a07153fec16a4b298
                     messages.success(self.request, "Account Created Successfully")
                     return HttpResponseRedirect(reverse('login'))
                       
