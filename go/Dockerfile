@@ -5,4 +5,4 @@ COPY . /code/
 RUN apk add --no-cache git --repository https://alpine.global.ssl.fastly.net/alpine/v3.13/community --repository https://alpine.global.ssl.fastly.net/alpine/v3.13/main
 RUN  go get "github.com/jasonlvhit/gocron"
 RUN  go get "github.com/lib/pq"
-CMD go run updateMatchStatus.go  
+CMD go run updateMatchStatus.go  && go run updatetournament.go

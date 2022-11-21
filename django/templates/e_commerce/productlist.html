@@ -25,20 +25,6 @@
                             {% csrf_token %}
                             <div class="buy-buttons d-flex gap-3 justify-content-between">
                                 {% if request.user.is_superuser %}
-                                
-                                {% else %}
-                                    <div class="product-quantity d-flex align-items-center ">
-                                        <a class="sub-item-btn btn border text-center p-1 " style="width: 1.5rem;">-</a>
-                                            {% render_field cartForm.quantity type="number" class="product-quantity-field text-center p-1 border" style="width: 2rem;"  min=1 max=i.quantity value="1" %}
-                                            {% render_field cartForm.product_name type="text" value=i.product_name hidden=true %}
-                                            {% render_field cartForm.product_id value=i.id hidden=true %}
-                                            {% render_field cartForm.username type="text" value=request.user.username hidden=true %}
-                                            {% render_field cartForm.price value=i.price hidden=true %}
-                                            {% render_field cartForm.image type="text" value=i.image hidden=true %}
-                                        <a class="add-item-btn btn border text-center p-1 " style="width: 1.5rem;">+</a>
-                                    </div>
-                                {% endif %}
-                                {% if request.user.is_superuser %}
 
                                 {% else %}
                                     {% if i.id in cartorbuylist %}
@@ -81,6 +67,18 @@
                                         </button>
                                     {% endif %} 
                                 {% endif %} 
+                                {% if request.user.is_superuser %}
+                                
+                                {% else %}
+                                    <div class="product-quantity d-flex align-items-center ">
+                                            {% render_field cartForm.quantity type="number" hidden=true class="product-quantity-field text-center p-1 border" style="width: 2rem;"  min=1 max=i.quantity value=1 %}
+                                            {% render_field cartForm.product_name type="text" value=i.product_name hidden=true %}
+                                            {% render_field cartForm.product_id value=i.id hidden=true %}
+                                            {% render_field cartForm.username type="text" value=request.user.username hidden=true %}
+                                            {% render_field cartForm.price value=i.price hidden=true %}
+                                            {% render_field cartForm.image type="text" value=i.image hidden=true %}
+                                    </div>
+                                {% endif %}
 
                             
                             </div>

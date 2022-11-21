@@ -19,6 +19,13 @@ class addToCartForm(forms.ModelForm):
     model = CartModel
     fields = '__all__'
 
+class updateQty(forms.ModelForm):
+
+  product_qty = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+  class Meta:
+    model = CartModel
+    fields = ('product_qty',)
+
 
 class billingAddressForm(forms.ModelForm):
 
