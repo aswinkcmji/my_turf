@@ -271,7 +271,7 @@ class DeleteStock(View):
 
 class CartDetailsView(View):
     def get(self, request,*args, **kwargs):
-        cartData = CartModel.objects.filter(username = request.user.username)
+        cartData = CartModel.objects.filter(username = request.user.username).order_by('id')
         totalPrice = CartModel.objects.filter(username = request.user.username).values_list('quantity','price')
         totalAmount = 0
         totalItemCount = CartModel.objects.filter(username = request.user.username).count()
@@ -492,7 +492,7 @@ class UpdateQtyView(View):
             updatedRecord = CartModel.objects.get(id=pid)
 
             pname = updatedRecord.product_name
-
+ 
             form = updateQty(request.POST)
             
             if form.is_valid():

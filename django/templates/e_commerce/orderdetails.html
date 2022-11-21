@@ -1,5 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load widget_tweaks %}
+{% load mathfilters %}
 
 {% block content %}
 
@@ -314,7 +315,7 @@
                                                     <p class="card-text text-primary">{{data.product_name}}</p>
                                                     <p class="text-dark">
                                                         <span>Total Price:</span>
-                                                        <span>${{data.price}}</span>
+                                                        <span>${{ data.quantity|mul:data.price }}</span>
                                                     </p>
                                                 </div>
                                             </div>

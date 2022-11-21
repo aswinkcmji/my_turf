@@ -172,8 +172,8 @@ class CreateMatchesView(View):
 
             user=UserModel.objects.get(username=request.user.username)
             RequestModel.objects.create(match_id=form_cf,category=form.cleaned_data['category'],username=user,phoneno=request.user.phone,status="Accepted",date=form.cleaned_data['date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
-            messages.success(request	,'Your match has been succesfully created. Visit My Match to see .')
-            return HttpResponseRedirect(reverse('create-matches'))
+            messages.success(request	,'Your match has been succesfully created!')
+            return HttpResponseRedirect(reverse('my-matches'))
 
         else:
             print("########### HAS CITY ERROR #############", form.has_error('end_time_f', code=None))
