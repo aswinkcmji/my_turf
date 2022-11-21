@@ -150,7 +150,7 @@ class TurfSchedule(View):
                     form2.save()
                         
                         
-                        # messages.success(self.request, "Account Created Successfully")
+                    messages.success(self.request, "Schedule Added Successfully")
                     return HttpResponseRedirect(reverse('turf_schedule'))
                         
                 else:
@@ -163,17 +163,20 @@ class TurfSchedule(View):
 @method_decorator(login_required,name='dispatch')
 class TurfScheduleEdit(View):
     def get(self, request, *args, **kwargs):
-        id = kwargs.pop('id')
-        schedule = TurfScheduleModel.objects.filter(id=id).first()
-        title = ""
-        editTurfForm = TurfScheduleForm()
-        if schedule:
-            title = schedule.title.split(' - ')
-            editTurfForm = TurfScheduleForm(initial={'category':schedule.category,'user':title[1] ,'start':schedule.start, 'end':schedule.end, 'turf':schedule.turf})
-        context={'addScheduleform':editTurfForm,
-                 'is_editform':True,
-                 'schedule_id':id}
-        return render(request,"turf/schedule.html",context)
+        if request.user.is_turf:
+            id = kwargs.pop('id')
+            schedule = TurfScheduleModel.objects.filter(id=id).first()
+            title = ""
+            editTurfForm = TurfScheduleForm()
+            if schedule:
+                title = schedule.title.split(' - ')
+                editTurfForm = TurfScheduleForm(initial={'category':schedule.category,'user':title[1] ,'start':schedule.start, 'end':schedule.end, 'turf':schedule.turf})
+            context={'addScheduleform':editTurfForm,
+                    'is_editform':True,
+                    'schedule_id':id}
+            return render(request,"turf/schedule.html",context)
+        else:
+            return redirect('403')
     def post(self, request, *args, **kwargs):
         id = kwargs.pop('id')
 
@@ -190,7 +193,9 @@ class TurfScheduleEdit(View):
                 schedule.start = request.POST['start']
                 schedule.end = request.POST['end']
                 schedule.turf = request.user
-                schedule.category = request.POST['category']
+                print(request.POST['category'],"aaaaaaaaaaaaaaaaaaaaaa")
+                category = CategoriesModel.objects.get(id = request.POST['category'] )
+                schedule.category = category
                 
                 for key,value in enumerate(bg_colors):
                     
@@ -199,7 +204,7 @@ class TurfScheduleEdit(View):
                         schedule.color_bg = bg_colors[key]
                 schedule.save()
                     
-                    # messages.success(self.request, "Account Created Successfully")
+                messages.success(self.request, "Schedule Updated Successfully")
                 return HttpResponseRedirect(reverse('turf_schedule'))
             else:
                 turf_schedule   = TurfScheduleModel.objects.filter(turf=request.user)

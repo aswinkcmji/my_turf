@@ -1,0 +1,49 @@
+{% extends 'layouts/base_boxed_fancy.html' %}
+{% block content %}
+{% load static widget_tweaks %}
+<div class="container">
+    <div class="card mt-lg-4 mt-2">
+        <div class="card-header h4 text-center mt-lg-4">
+            Contact Us
+        </div>
+        <div class="card-body p-lg-5 p-md-4 p-3">
+            <div class="content-inner">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    {% if forloop.first or forloop.counter|divisibleby:2 == False %} <div class="row"> {% endif %}
+
+                        {% if field.name != 'message' and field.name != 'subject'%}
+                        <div class="form-group col-md-6">
+                            <label>{{field.label}} {% if field.name != 'phone' %} * {% endif %}</label>
+                            {% render_field field class="form-control" %}
+                            <span class="text-danger">{{field.errors}}</span>
+                        </div>
+                        {% endif %}
+                        {% if forloop.counter|divisibleby:2 or forloop.last %}
+                    </div> {% endif %}
+                    {% endfor %}
+                    {% if form.subject %}
+                    <div class="form-group">
+                        <label>{{form.subject.label}} *</label>
+                        {% render_field form.subject class="form-control" %}
+                        <span class="text-danger">{{form.subject.errors}}</span>
+                    </div>
+                    {% endif %}
+                    {% if form.message %}
+                    <div class="form-group">
+                        <label>{{form.message.label}} *</label>
+                        {% render_field form.message class="form-control" %}
+                        <span class="text-danger">{{form.message.errors}}</span>
+                    </div>
+                    {% endif %}
+                    <div class="d-flex justify-content-center">
+
+                        <button type="submit" class="btn btn-primary text-center">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
