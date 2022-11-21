@@ -1,11 +1,10 @@
-
 {% extends 'layouts/base.html' %}
 {% load widget_tweaks %}
 {% block content %}
 
 
 
-<section class="ecommerce-addstock-section container-fluid m-3"  >
+<section class="ecommerce-addstock-section container-fluid m-3">
     <!-- ecommerce topbar -->
     <!-- {% if messages %}
     {% for message in messages %}
@@ -15,48 +14,56 @@
       {% endif %} -->
     <div class="ecomerce-top-bar ">
         <div class="row">
-                <h1 class=" mt-5"style="text-align:center">CREATE YOUR OWN TOURNAMENT</h1>
+            <h1 class=" mt-5" style="text-align:center">CREATE YOUR OWN TOURNAMENT</h1>
         </div>
     </div>
     <!-- ecommerce main section -->
     <div class="ecom-addstock my-3">
-        <div class="bg-white col-md-6 mx-auto mt-5 p-5">
+        <div class="card col-md-6 mx-auto mt-5 p-5">
             <div class="">
-                <form method="POST" id="create-tournament-li">
+                <form method="POST" id="creatematch">
                     {% csrf_token %}
                     <!-- {{form.errors}} -->
-                    
-        
+
+
                     {% for addForm in form.visible_fields %}
-                                
-                    
-                        {% if addForm.label != "Category" %}
-                        <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
-                            {% render_field addForm class="form-control" placeholder="Place Holder" min="1"%}
-                            {% if addForm.type != "hidden"%}
-                            {% if addForm.label == "Start time f" %}
-                            <label >Start Time</label>
-                            {% elif addForm.label == "End time f" %}
-                            <label >End Time</label>
-                            {% else %}
-                            <label >{{addForm.label}}</label>
-                            {% endif %}
-                            {%endif%}
-                            <!-- <p>{{addform.type}} helllll</p> -->
-                            <span class="text-danger">{{addForm.errors}}</span>
-                        </div>
+
+
+                    {% if addForm.label != "Category" and addForm.label != "City" %}
+                    <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
+                        {% render_field addForm class="form-control" placeholder="Place Holder" min="1"%}
+                        {% if addForm.type != "hidden"%}
+                        {% if addForm.label == "Start time f" %}
+                        <label>Start Time</label>
+                        {% elif addForm.label == "End time f" %}
+                        <label>End Time</label>
                         {% else %}
-                            {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
-                           
-                            {% endif %}
-                      
-                          
-        
+                        <label>{{addForm.label}}</label>
+                        {% endif %}
+                        {%endif%}
+                        <!-- <p>{{addform.type}} helllll</p> -->
+                        <span class="text-danger">{{addForm.errors}}</span>
+                    </div>
+                    {% endif %}
+                    <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
+                    {%if  addForm.label == "City" %}
+                    {% render_field addForm hx-post='/search-city/city' hx-target='#results' hx-trigger="keyup changed delay:100ms"  class="form-control"  placeholder="Select Your City ..." %}
+                    <label>Search your {{addForm.label}}</label>
+                    <span class="text-danger">{{addForm.errors}}</span>
+                    <div id="results" class="suggestion"></div>
+                    </div>
+                    {%endif%}
+                    {%if addForm.label == "Category" %}
+                    {% render_field form.category  class="form-control  mb-4"%}
+
+                    {% endif %}
+                   
                     {% endfor %}
                     {%for dontForm in form.hidden_fields%}
                     {% render_field dontForm.as_hidden %}
                     {%endfor%}
-                        <button class="btn btn-primary" type="submit">Submit</button>
+                    
+                    <button class="btn btn-primary" type="submit">Submit</button>
                 </form>
             </div>
         </div>
@@ -65,188 +72,35 @@
 
 <script>document.getElementById('create-tournament-li').classList.add('active')</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
-      
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
-  <script type="text/javascript">
-    //  $(document).ready(function(){
-    //     let tag=$('#messagetag').html()
-    //     let message = $('#messagecontent').html()
-    //       if( tag == 'error'){
-    //         toastr.error(message);
-    //         $('#creatematch').trigger('reset');
-    //       }
-    //       if( tag == 'success' ){
-    //         toastr.success(message);
-    //         $('#creatematch').trigger('reset');
-    //       }
-    //   });
-      $(document).ready(function() {
-      var today = new Date().toISOString().split('T')[0];
-      $("#id_start_date").attr('min', today);
-      $("#id_end_date").attr('min', today);
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 
-      $('#createtournament').trigger('reset');
-      });
-  </script>
-<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyAPaN2ndJcLY_fajOnaFwpkBVfIwSEfvgw"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var today = new Date().toISOString().split('T')[0];
+        $("#id_date").attr('min', today);
+        $('#creatematch').trigger('reset');
+    });
+</script>
 <script>
-google.maps.event.addDomListener(window, 'load', function () 
-{   
-    
-    var options = {
-        // types: ['(cities)'],
-        componentRestrictions: {country: 'in'}
-    };
-	var places = new google.maps.places.Autocomplete(document.getElementById('id_locality'),options);
-    google.maps.event.addListener(places, 'place_changed', function () 
-	{
-		console.log(places.getPlace());
-		var getaddress 	  = places.getPlace();				//alert(getaddress.address_components[0].long_name);
-		var whole_address = getaddress.address_components;  //alert(whole_address + 'whole_address');   
-		$('#id_locality').val('');
-});
-});
-</script> -->
-<style>
-.bd-example{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      width: 75rem;
-      height: 43rem;
+function useSuggestion(e) {
+    if(e.target.innerText!="No search results.Enter a valid name atleast 3 characters in length"){
+        
+        console.log(e.target.innerText)
+        id_city.value = e.target.innerText;
+        id_city.focus();
+        suggestions.innerHTML = '';
+        // suggestions.classList.remove('has-suggestions');
+    }
+	
 }
-</style>
+const suggestions = document.querySelector('.suggestion');
+suggestions.addEventListener('click', useSuggestion);
+document.addEventListener('click', () =>suggestions.innerHTML = '' );
+
+</script>
 
 
+{% include 'style/location_style.html' %}
 
 {% endblock content %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <section class="ecommerce-addstock-section container-fluid my-3"  >
- 
-    {% if messages %}
-    {% for message in messages %}
-        <p class="d-none" id="messagetag">{{message.tags}}</p>
-        <p class="d-none " id="messagecontent">{{message}}</p>
-    {% endfor %}
-      {% endif %}
-    <div class="ecomerce-top-bar ">
-        <div class="row">
-                <h1 class=" mt-5"style="text-align:center">CREATE YOUR OWN TOURNAMENT</h1>
-        </div>
-    </div>
-    
-    <div class="ecom-addstock my-3">
-        <div class="bg-white col-md-6 mx-auto mt-5 p-5">
-            <div class="">
-                <form method="POST" id="create-tournament-li">
-                    {% csrf_token %}
-                    
-        
-                    {% for addForm in form.visible_fields %}
-                                
-                       
-                        {% if addForm.label != "Category" %}
-                        <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
-                            {% render_field addForm class="form-control" placeholder="Place Holder" min="1"%}
-                            {% if addForm.type != "hidden"%}
-                            <label >{{addForm.label}}</label>
-                            {%endif%}
-                            <p>{{addForm.type}}</p>
-                        </div>
-                        {% else %}
-                            {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
-                        {% endif %}
-                        <span class="text-danger">{{addForm.errors}}</span>
-                        
-        
-                    {% endfor %}
-                    {%for dontForm in form.hidden_fields%}
-                    {% render_field dontForm %}
-                    {%endfor%}
-                        <button class="btn btn-primary" type="submit">Submit</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
-
-<script>document.getElementById('create-tournament-li').classList.add('active')</script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
-      
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
-  <script type="text/javascript">
-     $(document).ready(function(){
-        let tag=$('#messagetag').html()
-        let message = $('#messagecontent').html()
-          if( tag == 'error'){
-            toastr.error(message);
-            $('#createtournament').trigger('reset');
-          }
-          if( tag == 'success' ){
-            toastr.success(message);
-            $('#createtournament').trigger('reset');
-          }
-      });
-      $(document).ready(function() {
-      var today = new Date().toISOString().split('T')[0];
-      $("#id_start_date").attr('min', today);
-      $("#id_end_date").attr('min', today);
-
-      $('#createtournament').trigger('reset');
-      });
-  </script>
-
-
-<style>
-.bd-example{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      width: 75rem;
-      height: 43rem;
-      
-      
-
-}
-</style> -->
-
