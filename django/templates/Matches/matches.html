@@ -12,6 +12,8 @@
           <p class="card-text  ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
           <p class="card-text  ">City:{{match.city}}</p>
           <p class="card-text ">Locality:{{match.locality}}</p>
+          <p class="card-text"> Creator:<a  class="text-primary" data-bs-html="true"  data-bs-toggle="popover" title="{{match.creator}}"  data-bs-content="<button class='btn btn-primary'>copy</button><p>Phone:{{match.creator.phone}}</p>    <p> Email:{{match.creator.email}}</p>" style="text-decoration: underline;">{{match.creator}}</a></p>
+          
           {% if match.creator != request.user.username %}
          <a class="btn btn-primary" href="join/{{match.id}}">JOIN NOW</a>
         {%else%}

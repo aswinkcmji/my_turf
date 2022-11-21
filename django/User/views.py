@@ -33,6 +33,12 @@ from django.views.decorators.http import require_http_methods
 # import datetime as datetime
 # from .models import slotModel
 
+
+from django.core.mail import EmailMultiAlternatives
+
+
+
+
 # Create your views here.
 
 class HomeView(View):
@@ -103,6 +109,7 @@ class CreateMatchesView(View):
         # now = timezone.now()
         # print(now)
         # print(CategoriesModel.objects.get(id=1))
+        user=UserModel.objects.get(id=request.user.pk)
         data={
             'category':CategoriesModel.objects.first(),
             'date':datetime.now().date(),
@@ -112,7 +119,7 @@ class CreateMatchesView(View):
             'end_time':end_time,
             'locality':"",
             'city':request.user.location,
-            'creator' : request.user.username,
+            'creator' :  user  ,
             'status' : "Upcoming",
             'slot_available': 0,
             'slots': 2,
@@ -183,7 +190,7 @@ class RequestedMatchesView(View):
         context={}
         id_list=RequestModel.objects.filter(username=request.user.pk,status="Pending").values_list('match_id',flat=True).order_by("-id")
         print(list(id_list))
-        matches=MatchModel.objects.filter(id__in=list(id_list)).order_by("-id")
+        matches=MatchModel.objects.filter(id__in=list(id_list),status="Upcoming").order_by("-id")
         context['matches']=matches
         return render(request, 'Matches/requested-matches.html',context)
 
@@ -217,8 +224,8 @@ class MatchHistoryView(View):
         reqcan=RequestModel.objects.filter(username=request.user.pk,status="Cancelled").order_by("-id")#requests cancelled
         reqrej=RequestModel.objects.filter(username=request.user.pk,status="Rejected").order_by("-id")#requests rejected
         id_list4=MatchModel.objects.filter(creator=request.user.username).values_list('id',flat=True).order_by("-id")
-        reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted").exclude(username=request.user.username).order_by("-id")
-        reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected").exclude(username=request.user.username).order_by("-id")
+        reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted").exclude(username=request.user.pk).order_by("-id")
+        reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected").exclude(username=request.user.pk).order_by("-id")
         context={}
         context={
             'jum':jum,
@@ -312,7 +319,7 @@ class EditMatchesView(View):
 @method_decorator(login_required,name='dispatch')
 class RequestsView(View):
     def get(self, request,*args, **kwargs):
-        id_list=MatchModel.objects.filter(creator=request.user.username,status="Upcoming").values_list('id',flat=True).order_by("-id")
+        id_list=MatchModel.objects.filter(creator=request.user,status="Upcoming").values_list('id',flat=True).order_by("-id")
         print(list(id_list))
         requests=RequestModel.objects.filter(status='Pending',match_id__in=list(id_list)).order_by("-id")
         # print(requests)
@@ -366,7 +373,7 @@ class  JoinMatchView(View):
                 if len(matches) == 0:
                     return render(request,'errors/error404.html',{})
                 print("##################### INSIDE JOIN MATCHES #########################",match)
-                joined=RequestModel.objects.filter(status='Accepted',match_id=match.pk).values().order_by("id")
+                joined=RequestModel.objects.filter(status='Accepted',match_id=match.pk).order_by("id")
                 request.session['id']=match.id 
                 print("#### Match.Category #####",match.category,type(match.category)) 
                 user=UserModel.objects.get(id=request.user.pk)
@@ -414,6 +421,15 @@ class  JoinMatchView(View):
                 obj=form.save(commit=False)
                 obj.match_id=requested_match
                 obj.save()
+
+                ############################################################ Test MAIL #########################################################
+                subject, from_email, to = 'hello', 'myturfapp@gmail.com', 'avinesh777@outlook.com'
+                text_content = 'This is an important message.'
+                html_content = '<p>This is an <strong>important</strong> message.</p>'
+                msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+                ############################################################ TEST MAIL END ######################################################
                 return  HttpResponseRedirect(reverse('matches'))
             else:
                 messages.error(request	,'Please do not change the fields')
@@ -439,6 +455,22 @@ class CancelMatchView(View):
         reqdata.save()
         return HttpResponseRedirect(reverse('match-history'))
 
+
+
+############################################################## View for a match team #######################################################################
+@method_decorator(login_required,name='dispatch')
+class TeamView(View):
+    def get(self, request,id, *args, **kwargs):
+        try:
+            reqdata=MatchModel.objects.get(id=id,creator=request.user.username)
+        except:
+             messages.error(request,'You cannot view this team')
+             return HttpResponseRedirect(reverse('my-matches'))
+        joined=RequestModel.objects.filter(status='Accepted',match_id=reqdata.id).order_by("id")
+        context={}
+        context['users']=joined
+        print(context)
+        return render(request,"Matches/team.html",context)
 
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------

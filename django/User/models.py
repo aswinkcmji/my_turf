@@ -17,7 +17,7 @@ class MatchModel(models.Model):
     end_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
     locality = models.CharField(max_length=50,null=True,blank=False)
     city=models.CharField(max_length=100,null=True,blank=False)
-    creator = models.CharField(max_length=30,null=True,blank=False)
+    creator =models.ForeignKey(UserModel, on_delete=models.CASCADE,default=1)
     status = models.CharField(default="Upcoming",max_length=30,null=False,blank=False)
     slots =models.IntegerField(default=2,null=False,blank=False)
     slot_available =models.IntegerField(default = 1,null=False,blank=False)
