@@ -7,8 +7,8 @@
         {% if i.quantity %}
         
             <div class="col-12 col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                <div class="card  p-2 shadow-sm" >
-                    <div class="img-cover border d-flex justify-content-center align-items-center p-1" style="width: 100%; overflow: hidden;">
+                <div class="card  p-2 shadow-sm">
+                    <div class="img-cover border d-flex justify-content-center align-items-center" style="width:100%;">
                         <img src="{{media_url}}{{i.image}}" class="img-fluid" style="width:100%;">
                     </div>
                     <div class="card-body p-2">
@@ -24,7 +24,9 @@
                         <form method="POST">
                             {% csrf_token %}
                             <div class="buy-buttons d-flex gap-3 justify-content-between">
-                                
+                                {% if request.user.is_superuser %}
+
+                                {% else %}
                                     {% if i.id in cartorbuylist %}
                                         <a href="{% url 'cartdetails' %}" class="btn btn-danger p-2" style="font-size: .8rem;">
                                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,7 +65,20 @@
                                             </svg>
                                             <span>Add To Cart</span>
                                         </button>
-                                    {% endif %}  
+                                    {% endif %} 
+                                {% endif %} 
+                                {% if request.user.is_superuser %}
+                                
+                                {% else %}
+                                    <div class="product-quantity d-flex align-items-center ">
+                                            {% render_field cartForm.quantity type="number" hidden=true class="product-quantity-field text-center p-1 border" style="width: 2rem;"  min=1 max=i.quantity value=1 %}
+                                            {% render_field cartForm.product_name type="text" value=i.product_name hidden=true %}
+                                            {% render_field cartForm.product_id value=i.id hidden=true %}
+                                            {% render_field cartForm.username type="text" value=request.user.username hidden=true %}
+                                            {% render_field cartForm.price value=i.price hidden=true %}
+                                            {% render_field cartForm.image type="text" value=i.image hidden=true %}
+                                    </div>
+                                {% endif %}
 
                             
                             </div>
@@ -91,7 +106,8 @@
                         </p>
                         <div>
                             <div class="buy-buttons d-flex gap-3 justify-content-between">
-                                
+                                <div class="product-quantity d-flex align-items-center ">
+                                </div>
                                 <a href="{% url 'outOfStock' %}" class="btn btn-danger" style="font-size: .8rem;">Out Of Stock</a>
                             </div>
                         </div>
