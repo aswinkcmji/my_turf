@@ -33,9 +33,10 @@ from django.views.decorators.http import require_http_methods
 # import datetime as datetime
 # from .models import slotModel
 
-
-from django.core.mail import EmailMultiAlternatives
-
+####################################################### IMPORTS REQUIRED FOR EMAIL #############################################################
+from django.core.mail import EmailMultiAlternatives  ############# USED TO SEND MAIL
+from django.template.loader import render_to_string  ############# USED TO RENDER HTML FILE TO STRING
+from django.utils.html import strip_tags             ############# USED TO STRIP HTML  TAGS TO SEND  CONTENT AS PLAIN STRING IN CASE HTML CONTENT IIS NOT SUPPORTED
 
 
 
@@ -213,17 +214,17 @@ class CancelRequestView(View):
 class MatchHistoryView(View):
     def get(self, request, *args, **kwargs):
         id_list1=RequestModel.objects.filter(username=request.user.pk,status="Accepted").values_list('match_id',flat=True).order_by("-id")
-        jum=MatchModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.username).order_by("-id")#joined upcoming matches
+        jum=MatchModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.pk).order_by("-id")#joined upcoming matches
         id_list2=RequestModel.objects.filter(username=request.user.pk,status="Accepted").values_list('match_id',flat=True).order_by("-id")
-        jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).order_by("-id")#joined completed matches
+        jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.pk).order_by("-id")#joined completed matches
         id_list3=RequestModel.objects.filter(username=request.user.pk,status="Accepted").values_list('match_id',flat=True).order_by("-id")
-        jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).order_by("-id")#joined cancelled matches
-        crum=MatchModel.objects.filter(creator=request.user.username,status="Upcoming").order_by("-id") #created upcoming matches
-        crcom=MatchModel.objects.filter(creator=request.user.username,status="Completed").order_by("-id") #created completed matches
-        crcam=MatchModel.objects.filter(creator=request.user.username,status="Cancelled").order_by("-id") #created cancelled matches
+        jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.pk).order_by("-id")#joined cancelled matches
+        crum=MatchModel.objects.filter(creator=request.user.pk,status="Upcoming").order_by("-id") #created upcoming matches
+        crcom=MatchModel.objects.filter(creator=request.user.pk,status="Completed").order_by("-id") #created completed matches
+        crcam=MatchModel.objects.filter(creator=request.user.pk,status="Cancelled").order_by("-id") #created cancelled matches
         reqcan=RequestModel.objects.filter(username=request.user.pk,status="Cancelled").order_by("-id")#requests cancelled
         reqrej=RequestModel.objects.filter(username=request.user.pk,status="Rejected").order_by("-id")#requests rejected
-        id_list4=MatchModel.objects.filter(creator=request.user.username).values_list('id',flat=True).order_by("-id")
+        id_list4=MatchModel.objects.filter(creator=request.user.pk).values_list('id',flat=True).order_by("-id")
         reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted").exclude(username=request.user.pk).order_by("-id")
         reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected").exclude(username=request.user.pk).order_by("-id")
         context={}
@@ -348,6 +349,13 @@ class RequestsView(View):
                              return HttpResponseRedirect(reverse('requests'))
                     requesti.save()
                     obj.save()
+                    ############################################################ Request  MAIL #########################################################
+                    from .mail import send_email
+                    mail_subject='Your Request Has Been Accepted'
+                    to_email='epssanjana@gmail.com' #requested_match.creator.email
+                    content_as_html=render_to_string('emails/request.html', {'user':request.user,'':'requesti'})
+                    send_email(mail_subject,"",content_as_html,to_email)
+                    ############################################################ Request  MAIL END ######################################################
                 messages.success(request,'The requests were accepted')
                 return HttpResponseRedirect(reverse('requests'))
             elif 'Reject' in request.POST:
@@ -425,14 +433,13 @@ class  JoinMatchView(View):
                 obj.match_id=requested_match
                 obj.save()
 
-                ############################################################ Test MAIL #########################################################
-                subject, from_email, to = 'hello', 'myturfapp@gmail.com', 'avinesh777@outlook.com'
-                text_content = 'This is an important message.'
-                html_content = '<p>This is an <strong>important</strong> message.</p>'
-                msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                msg.attach_alternative(html_content, "text/html")
-                msg.send()
-                ############################################################ TEST MAIL END ######################################################
+                ############################################################ Request  MAIL #########################################################
+                from .mail import send_email
+                mail_subject=' A request has been made to join a match you have created'
+                to_email='epssanjana@gmail.com' #requested_match.creator.email
+                content_as_html=render_to_string('emails/request.html', {'user':request.user,'requested_match': requested_match})
+                send_email(mail_subject,"",content_as_html,to_email)
+                ############################################################ Request  MAIL END ######################################################
                 return  HttpResponseRedirect(reverse('matches'))
             else:
                 messages.error(request	,'Please do not change the fields')
@@ -448,7 +455,7 @@ class  JoinMatchView(View):
 class CancelMatchView(View):
     def get(self, request,id, *args, **kwargs):
         try:
-            reqdata=MatchModel.objects.get(id=id,creator=request.user.username,status="Upcoming")
+            reqdata=MatchModel.objects.get(id=id,creator=request.user.pk,status="Upcoming")
         except:
              messages.error(request,'You cannot cancel this match')
              return HttpResponseRedirect(reverse('my-matches'))
@@ -465,7 +472,7 @@ class CancelMatchView(View):
 class TeamView(View):
     def get(self, request,id, *args, **kwargs):
         try:
-            reqdata=MatchModel.objects.get(id=id,creator=request.user.username)
+            reqdata=MatchModel.objects.get(id=id,creator=request.user.pk)
         except:
              messages.error(request,'You cannot view this team')
              return HttpResponseRedirect(reverse('my-matches'))
@@ -1094,8 +1101,9 @@ class SearchMatchView(View):
         categories=CategoriesModel.objects.filter(category__icontains=search_word)
         print(categories)
         id_list=RequestModel.objects.filter(username=request.user.pk).values_list('match_id',flat=True)
+        uids=UserModel.objects.filter(username__icontains=search_word)
         # print(id_list)
-        matches=MatchModel.objects.filter(Q(Q(creator__icontains=search_word)|Q(date=date_obj)|Q(category__in=categories))&Q(status="Upcoming")).exclude(id__in=list(id_list))
+        matches=MatchModel.objects.filter(Q(Q(creator__in=uids)|Q(date=date_obj)|Q(category__in=categories))&Q(status="Upcoming")).exclude(id__in=list(id_list))
         # matches=MatchModel.objects.filter(category__in=categories).exclude(creator=request.user.username,id__in=list(id_list))
         form=RequestForm(request=request)
         context ={'RequestForm': form ,'is_requestform':False , 'matches':matches,'is_searching':True,'search_KW':search_word}
