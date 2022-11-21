@@ -2,7 +2,7 @@ from datetime import datetime
 from email import message
 from multiprocessing import context
 from tkinter import FLAT
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from .models import *
 from django.views.generic import View
 from .forms import *
@@ -1107,3 +1107,38 @@ class SearchMatchView(View):
 # class UpdateCurrentLocView(View):
 #     def post(self, request, *args, **kwargs):
 #         pass
+
+
+class Contact_usView(View):
+    def get(self, request, *args, **kwargs):
+        form = contact_usForm()
+        context = {'form': form}
+
+        return render(request, 'home/contact_us.html',context)
+    def post(self, request, *args, **kwargs):
+        form = contact_usForm(request.POST)
+        if request.method == 'POST':
+
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Message sent successfully...")
+                return HttpResponseRedirect(reverse('contact_us')) 
+
+            else:  
+                
+                # form = contact_usForm()  
+        
+                return render(request, 'home/contact_us.html',{'form':form})
+        else:
+            messages.error(request,"Something went wrong....")
+            form = contact_usForm()  
+            return render(request, 'home/contact_us.html',{'form':form})
+
+@method_decorator(login_required,name='dispatch')
+class messagesView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            messages = contact_usModel.objects.filter(hidden=False).order_by('-id')
+            return render(request, 'admin/messages_contactUs.html',{'messages':messages})
+        else:
+            return redirect('403')

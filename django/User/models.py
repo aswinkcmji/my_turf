@@ -87,3 +87,15 @@ class CitiesModel(models.Model):
     country=models.CharField(max_length=100,null=True,blank=False)
     subcountry=models.CharField(max_length=100,null=True,blank=False)
     geonameid=models.IntegerField(default=1,null=True,blank=False)
+
+
+class contact_usModel(models.Model):
+    first_name=models.CharField(max_length=50)
+    last_name=models.CharField(max_length=50)
+    email=models.EmailField(max_length=100)
+    phone=models.CharField(max_length=16, null=True, blank=True)
+    subject=models.CharField(max_length=200)
+    message=models.TextField(max_length=1000)
+    hidden= models.BooleanField(default=False)
+    starred= models.BooleanField(default=False)
+    date = models.DateTimeField(default=datetime.now)
