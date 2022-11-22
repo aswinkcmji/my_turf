@@ -41,7 +41,7 @@ class TournamentModel(models.Model):
     category = models.ForeignKey(CategoriesModel, on_delete=models.CASCADE)
     # team_name =  models.ForeignKey('User.CreateTeamModel', on_delete=models.CASCADE)
     team_name = models.CharField(max_length=30,null=True,blank=False)
-    image = models.ImageField(upload_to='images/team')
+    image = models.ImageField(upload_to='images/team',null=True)
     start_date= models.DateField(blank=True)
     end_date= models.DateField(blank=True) 
     start_time= models.DateTimeField(max_length=30,default=datetime.now(),blank=True)
