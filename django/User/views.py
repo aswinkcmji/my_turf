@@ -46,7 +46,7 @@ from django.utils.html import strip_tags             ############# USED TO STRIP
 class HomeView(View):
     def get(self, request, *args, **kwargs):
 
-        featuredproduct = ProductsModel.objects.all()
+        featuredproduct = ProductsModel.objects.all().order_by('-id')[:4]
         
         context = {
             'featuredproduct':featuredproduct,
