@@ -1,0 +1,23 @@
+{% extends 'layouts/email.html' %}
+{% block content%}
+<h2 class="text-center"> Thank You For Signing Up</h2>
+<p>Dear {{first_name}} {{last_name }} ,<br>
+Welcome to the family of MyTurf. It’s our pleasure to have you in the family and we are here to make sure that your needs are being met.
+Welcome home! In MyTurf our priority is people and their physical and mental wellbeing<br>
+Remember that A Healthy Body Hosts A Healthy Mind.<br>
+The idea behind MyTurf is to give the new generation a new hope in rejuvenating the physical games where games are also played by fingertips.Where they  can definitely start a game by a touch but shall play it on ground.<br>
+Our vision is to make grounds and players made available all the time so that no one is staying away from the sports.
+And, we welcome you to be a part of it.
+<br>
+For anything you may need please reach out to our  Team .<br>
+You can contact us at <a href="{% url 'contact_us' %}"> Here</a> </p>
+<br>
+<p>Sincerely ,<br>
+
+    The Executive Team of MyTurf <br>
+    
+    MyTurf…..Let's Play!</p>
+<br>
+<hr>
+<p>Disclaimer: This is a system-generated mail, please do not reply to it. This e-mail is intended solely for the addressee(s) and is confidential. If you have received this message by mistake, please delete the e-mail.</p>
+{% endblock content %}

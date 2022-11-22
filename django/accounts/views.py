@@ -17,6 +17,14 @@ from dashboard.models import CategoriesModel
 
 
 
+####################################################### IMPORTS REQUIRED FOR EMAIL #############################################################
+from django.core.mail import EmailMultiAlternatives  ############# USED TO SEND MAIL
+from django.template.loader import render_to_string  ############# USED TO RENDER HTML FILE TO STRING
+from django.utils.html import strip_tags             ############# USED TO STRIP HTML  TAGS TO SEND  CONTENT AS PLAIN STRING IN CASE HTML CONTENT IIS NOT SUPPORTED
+
+
+
+
 class Signup(View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:  
@@ -32,8 +40,15 @@ class Signup(View):
                 if form.is_valid():
                     user_obj=form.save(commit=False)
                     user_obj.current_location=user_obj.location
-                    user_obj.save()
                     messages.success(self.request, "Account Created Successfully")
+                    ############################################################ Request  MAIL #########################################################
+                    from User.mail import send_email
+                    mail_subject='Welcome To MyTurf'
+                    to_email='epssanjana@gmail.com' #user_obj.email
+                    content_as_html=render_to_string('emails/welcome.html', {"first_name":user_obj.first_name,"last_name":user_obj.last_name})
+                    send_email(mail_subject,"",content_as_html,to_email)
+                    ############################################################ Request  MAIL END ######################################################
+                    user_obj.save()
                     return HttpResponseRedirect(reverse('login'))
                       
                 else:
@@ -61,9 +76,15 @@ class SignupTurf(View):
                         SignUpTurfForm.category= list
                     user_obj=form.save(commit=False)
                     user_obj.current_location=user_obj.location
-                    user_obj.save()
-                    
                     messages.success(self.request, "Account Created Successfully")
+                    ############################################################ Request  MAIL #########################################################
+                    from User.mail import send_email
+                    mail_subject='Welcome To MyTurf'
+                    to_email='epssanjana@gmail.com' #user_obj.email
+                    content_as_html=render_to_string('emails/welcome.html', {"first_name":user_obj.first_name,"last_name":user_obj.last_name})
+                    send_email(mail_subject,"",content_as_html,to_email)
+                    ############################################################ Request  MAIL END ######################################################
+                    user_obj.save()
                     return HttpResponseRedirect(reverse('login'))
                       
                 else:

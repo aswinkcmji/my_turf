@@ -373,7 +373,7 @@ class RequestsView(View):
                     ############################################################ Request  MAIL #########################################################
                     from .mail import send_email
                     mail_subject='Your Request Has Been Accepted'
-                    to_email='epssanjana@gmail.com' #requested_match.creator.email
+                    to_email='epssanjana@gmail.com' #requesti.match_id.creator.email
                     content_as_html=render_to_string('emails/requestaccep.html', {'user':request.user,'requested_match':requesti,'type':"accept"})
                     send_email(mail_subject,"",content_as_html,to_email)
                     ############################################################ Request  MAIL END ######################################################
@@ -388,7 +388,7 @@ class RequestsView(View):
                     ############################################################ Request  MAIL #########################################################
                     from .mail import send_email
                     mail_subject='Your Request Has Been Rejected'
-                    to_email='epssanjana@gmail.com' #requested_match.creator.email
+                    to_email='epssanjana@gmail.com' #requestj.match_id.creator.email
                     content_as_html=render_to_string('emails/requestrej.html', {'user':request.user,'requested_match':requestj,'type':"reject"})
                     send_email(mail_subject,"",content_as_html,to_email)
                     ############################################################ Request  MAIL END ######################################################
