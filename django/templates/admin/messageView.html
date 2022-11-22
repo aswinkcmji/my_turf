@@ -1,0 +1,163 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+{% load static%}
+<script>
+    document.getElementById('messages-li').classList.add('active')
+</script>
+
+
+<div class="container mt-5 mb-5">
+    <div class="email-app-details show">
+        <div class="card mb-0">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between">
+                        <div class="email-remove submit me-2 text-primary">
+                            <svg class="icon-24" xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24"
+                                fill="none">
+                                <path d="M4.25 12.2743L19.25 12.2743" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M10.2998 18.2987L4.2498 12.2747L10.2998 6.24969" stroke="currentColor"
+                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                        <div class="me-2">
+                            <a data-hx-get="{% url 'star_message_from_page'  id=message.id %} "
+                                hx-target="" hx-trigger="click"></a>
+                            {% if message.starred %}
+                            <svg width="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M17.9184 14.32C17.6594 14.571 17.5404 14.934 17.5994 15.29L18.4884 20.21C18.5634 20.627 18.3874 21.049 18.0384 21.29C17.6964 21.54 17.2414 21.57 16.8684 21.37L12.4394 19.06C12.2854 18.978 12.1144 18.934 11.9394 18.929H11.6684C11.5744 18.943 11.4824 18.973 11.3984 19.019L6.96839 21.34C6.74939 21.45 6.50139 21.489 6.25839 21.45C5.66639 21.338 5.27139 20.774 5.36839 20.179L6.25839 15.259C6.31739 14.9 6.19839 14.535 5.93939 14.28L2.32839 10.78C2.02639 10.487 1.92139 10.047 2.05939 9.65C2.19339 9.254 2.53539 8.965 2.94839 8.9L7.91839 8.179C8.29639 8.14 8.62839 7.91 8.79839 7.57L10.9884 3.08C11.0404 2.98 11.1074 2.888 11.1884 2.81L11.2784 2.74C11.3254 2.688 11.3794 2.645 11.4394 2.61L11.5484 2.57L11.7184 2.5H12.1394C12.5154 2.539 12.8464 2.764 13.0194 3.1L15.2384 7.57C15.3984 7.897 15.7094 8.124 16.0684 8.179L21.0384 8.9C21.4584 8.96 21.8094 9.25 21.9484 9.65C22.0794 10.051 21.9664 10.491 21.6584 10.78L17.9184 14.32Z"
+                                    fill="#FFD329"></path>
+                            </svg>
+                            {% else %}
+                            <svg width="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M13.1043 4.17701L14.9317 7.82776C15.1108 8.18616 15.4565 8.43467 15.8573 8.49218L19.9453 9.08062C20.9554 9.22644 21.3573 10.4505 20.6263 11.1519L17.6702 13.9924C17.3797 14.2718 17.2474 14.6733 17.3162 15.0676L18.0138 19.0778C18.1856 20.0698 17.1298 20.8267 16.227 20.3574L12.5732 18.4627C12.215 18.2768 11.786 18.2768 11.4268 18.4627L7.773 20.3574C6.87023 20.8267 5.81439 20.0698 5.98724 19.0778L6.68385 15.0676C6.75257 14.6733 6.62033 14.2718 6.32982 13.9924L3.37368 11.1519C2.64272 10.4505 3.04464 9.22644 4.05466 9.08062L8.14265 8.49218C8.54354 8.43467 8.89028 8.18616 9.06937 7.82776L10.8957 4.17701C11.3477 3.27433 12.6523 3.27433 13.1043 4.17701Z"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                </path>
+                            </svg>
+                            {% endif %}
+                            </a>
+                        </div>
+                        <div class="text-primary">
+                            <svg class="icon-24" xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24"
+                                fill="none">
+                                <path opacity="0.4"
+                                    d="M19.6433 9.48844C19.6433 9.55644 19.1103 16.2972 18.8059 19.1341C18.6153 20.875 17.493 21.931 15.8095 21.961C14.516 21.99 13.2497 22 12.0039 22C10.6812 22 9.38772 21.99 8.13215 21.961C6.50507 21.922 5.38177 20.845 5.20088 19.1341C4.88772 16.2872 4.36448 9.55644 4.35476 9.48844C4.34503 9.28345 4.41117 9.08846 4.54538 8.93046C4.67765 8.78447 4.86827 8.69647 5.06861 8.69647H18.9392C19.1385 8.69647 19.3194 8.78447 19.4624 8.93046C19.5956 9.08846 19.6627 9.28345 19.6433 9.48844Z"
+                                    fill="currentColor"></path>
+                                <path
+                                    d="M21 5.97686C21 5.56588 20.6761 5.24389 20.2871 5.24389H17.3714C16.7781 5.24389 16.2627 4.8219 16.1304 4.22692L15.967 3.49795C15.7385 2.61698 14.9498 2 14.0647 2H9.93624C9.0415 2 8.26054 2.61698 8.02323 3.54595L7.87054 4.22792C7.7373 4.8219 7.22185 5.24389 6.62957 5.24389H3.71385C3.32386 5.24389 3 5.56588 3 5.97686V6.35685C3 6.75783 3.32386 7.08982 3.71385 7.08982H20.2871C20.6761 7.08982 21 6.75783 21 6.35685V5.97686Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <!-- <div class="btn-group btn-group-toggle btn-group-sm ms-3 btn-group-edges"> 
+                        <a class="btn btn-icon btn-primary" href="javascript:void(0)">
+                            <svg class="icon-24" xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M15.5 19L8.5 12L15.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </a>
+                        <a class="btn btn-icon btn-primary" href="javascript:void(0)">
+                            <svg class="icon-24" xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M8.5 5L15.5 12L8.5 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </a>
+                    </div> -->
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-3 flex-wrap">
+                    <div>
+                        <h6>{{message.subject}}</h6>
+                    </div>
+                    <div class="text-end text-primary">{{message.date}}</div>
+                </div>
+                <div class="d-flex justify-content-start mt-4">
+                    <div>
+                        <div
+                            class="align-items-center avatar avatar-50 bg-soft-primary d-flex justify-content-center rounded-circle">
+                            <span>
+                                <svg class="icon-24" xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24"
+                                    fill="none">
+                                    <path
+                                        d="M11.949 14.5399C8.49903 14.5399 5.58807 15.1037 5.58807 17.2794C5.58807 19.4561 8.51783 20 11.949 20C15.399 20 18.31 19.4362 18.31 17.2605C18.31 15.0839 15.3802 14.5399 11.949 14.5399Z"
+                                        fill="currentColor"></path>
+                                    <path opacity="0.4"
+                                        d="M11.949 12.467C14.2851 12.467 16.1583 10.5831 16.1583 8.23351C16.1583 5.88306 14.2851 4 11.949 4C9.61293 4 7.73975 5.88306 7.73975 8.23351C7.73975 10.5831 9.61293 12.467 11.949 12.467Z"
+                                        fill="currentColor"></path>
+                                    <path opacity="0.4"
+                                        d="M21.0879 9.21926C21.6923 6.84179 19.9203 4.70657 17.6639 4.70657C17.4186 4.70657 17.184 4.73359 16.9548 4.77952C16.9243 4.78672 16.8903 4.80203 16.8724 4.82905C16.8518 4.86327 16.867 4.9092 16.8894 4.93892C17.5672 5.89531 17.9567 7.05973 17.9567 8.3097C17.9567 9.50744 17.5995 10.6241 16.9727 11.5508C16.9082 11.6463 16.9655 11.775 17.0792 11.7949C17.2368 11.8228 17.398 11.8372 17.5627 11.8417C19.2058 11.8849 20.6805 10.8213 21.0879 9.21926Z"
+                                        fill="currentColor"></path>
+                                    <path
+                                        d="M22.8093 14.8169C22.5084 14.1721 21.7823 13.73 20.6782 13.5129C20.1571 13.385 18.7468 13.2049 17.4351 13.2292C17.4154 13.2319 17.4046 13.2455 17.4028 13.2545C17.4002 13.2671 17.4055 13.2887 17.4315 13.3022C18.0377 13.6039 20.381 14.916 20.0864 17.6834C20.0738 17.8032 20.1696 17.9067 20.2887 17.8887C20.8654 17.8059 22.349 17.4853 22.8093 16.4866C23.0636 15.9588 23.0636 15.3456 22.8093 14.8169Z"
+                                        fill="currentColor"></path>
+                                    <path opacity="0.4"
+                                        d="M7.04483 4.77979C6.8165 4.73296 6.58101 4.70685 6.33567 4.70685C4.07926 4.70685 2.30726 6.84207 2.91255 9.21953C3.31906 10.8216 4.79379 11.8852 6.43685 11.842C6.60161 11.8375 6.76368 11.8221 6.92037 11.7951C7.03409 11.7753 7.09139 11.6465 7.02692 11.5511C6.40014 10.6235 6.04288 9.50771 6.04288 8.30997C6.04288 7.0591 6.43327 5.89468 7.11109 4.93919C7.13258 4.90947 7.1487 4.86354 7.12721 4.82932C7.1093 4.80141 7.07617 4.787 7.04483 4.77979Z"
+                                        fill="currentColor"></path>
+                                    <path
+                                        d="M3.32156 13.5127C2.21752 13.7297 1.49225 14.1719 1.19139 14.8167C0.936203 15.3453 0.936203 15.9586 1.19139 16.4872C1.65163 17.485 3.13531 17.8065 3.71195 17.8885C3.83104 17.9065 3.92595 17.8038 3.91342 17.6831C3.61883 14.9166 5.9621 13.6045 6.56918 13.3028C6.59425 13.2884 6.59962 13.2677 6.59694 13.2542C6.59515 13.2452 6.5853 13.2317 6.5656 13.2299C5.25294 13.2047 3.84358 13.3848 3.32156 13.5127Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="ms-2">
+                        <span class="text-dark">{{message.first_name}} {{message.last_name}}<code
+                                class="m-0 iq-word-wrap"></code></span><br>
+                        <div> <small class="text-xs"> To Admin</small></div>
+                        <!-- <div class="dropdown">
+                        <span role="button" id="dropdownMenuLink-1" data-bs-toggle="dropdown" aria-expanded="false" class="">
+                            to me
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 10 6" fill="none">
+                                <path d="M9 1L5 5L1 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </span>
+                        <table class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink-1" style="">
+                            <tbody><tr>
+                                <th>from:</th>
+                                <td class="iq-word-wrap">&lt;Library Books.123@gmail.com&gt;</td>
+                            </tr>
+                            <tr>
+                                <th>reply-to:</th>
+                                <td>Library Books</td>
+                            </tr>
+                            <tr>
+                                <th>to:</th>
+                                <td> &lt;michael.123@gmail.com&gt;</td>
+                            </tr>
+                            <tr>
+                                <th>subject:</th>
+                                <td>Confirmation Mail for Library Books</td>
+                            </tr>
+                            <tr>
+                                <th>mailed by:</th>
+                                <td>michael.mitc@example.com</td>
+                            </tr>
+                            <tr>
+                                <th>signed-by:</th>
+                                <td class="iq-word-wrap">Library Books.123@gmail.com</td>
+                            </tr>
+                            <tr>
+                                <th>security:</th>
+                                <td>Standard encryption (TLS)</td>
+                            </tr>
+                        </tbody></table>
+                    </div> -->
+                    </div>
+                </div>
+                <div>
+                    <p class="my-4">
+                        {{message.message}}
+                    </p>
+                </div>
+                <hr>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

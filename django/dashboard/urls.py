@@ -24,7 +24,7 @@ urlpatterns = [
     path('DeleteTurfHead',DeleteTurfHead.as_view(),name="DeleteTurfHead"),
     path('TurfPasswordChange',TurfPasswordChange.as_view(),name="TurfPasswordChange"),
     path('TurfCategoryAdd',TurfCategoryAdd.as_view(),name="TurfCategoryAdd"),
-    path('DeleteTurfCategory',DeleteTurfCategory.as_view(),name="DeleteTurfCategory")
+    path('DeleteTurfCategory/<str:id>/',DeleteTurfCategory.as_view(),name="DeleteTurfCategory")
 
 
 

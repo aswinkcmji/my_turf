@@ -2,30 +2,32 @@
 {% load static %}
 {% block content %}
 
-<div class="container-fluid">
-    <div class="row bg-soft-light d-flex justify-content-around container-fluid">
+<div class="container-fluid ">
+    <div class="row">
         {% for r in tournaments %}
-        <div class="column col-md-4">
+        <div class="col-12 col-sm-6 col-lg-4 pe-0">
             <div class="card p-2 m-4">
-                <img src="/media/{{r.category.image}}" class="card-img-top" alt="Product 1"
-                    style="height:350px;object-fit: contain;">
-                <div class="card-body p-1 ">
-                    <h2 class="card-text p-1">{{r.category}}</h2>
-                    <p class="card-text ">Start Date of tournament:{{r.start_date|date:"Y-m-d"}}</p>
-                    <p class="card-text ">End Date of tournament:{{r.end_date|date:"Y-m-d"}}</p>
-                    <p class="card-text">Start-Time:{{r.start_time|time:"H:i:s"}}</p>
-                    <p class="card-text">End-Time:{{r.end_time|time:"H:i:s"}}</p>
+                <div class="img-containerborder" style="height: 18rem; overflow: hidden;">
+                    <img src="/media/{{r.category.image}}" class="card-img-top img-fluid" alt="Product 1"
+                    >
+                </div>
+                <div class="card-body p-1 " style="position: relative;">
+                    <h4 class="card-text p-1" >{{r.category}}</h4>
+                    <p class="card-text " >Tournament Date : {{r.start_date|date:"Y-m-d"}}</p>
+                    <p class="card-text">Start-Time:{{r.start_time|time:"H:i:s"}} To {{r.end_time|time:"H:i:s"}}</p>
                     <p class="card-text">Available Slots:{{r.team_space_available}}/{{r.teams}}</p>
                     <p class="card-text">Locality:{{r.locality}}</p>
                     <p class="card-text">City:{{r.city}}</p>
                     {% if r.creator == request.user.username and r.status == "Upcoming" %}
-                    <a href="edit/{{r.id}} " class="btn btn-primary">
-                        EDIT
-                    </a>
-                    <a onclick="return confirm('Are you sure you want to cancel this tournament?')"
-                        href="cancel/{{r.id}}" class="btn btn-primary">Cancel</a>
-                        <a href="{%url 'teams' id=r.id %} " class="btn btn-primary">
-                            View Team </a>
+                    <div class="d-flex gap-2">
+                        <a href="edit/{{r.id}} " class="btn btn-primary px-2 py-1" >
+                            EDIT
+                        </a>
+                        <a onclick="return confirm('Are you sure you want to cancel this tournament?')"
+                            href="cancel/{{r.id}}" class="btn btn-primary px-2 py-1" >Cancel</a>
+                            <a href="{%url 'teams' id=r.id %} " class="btn btn-primary px-2 py-1" >
+                                View Team </a>
+                    </div>
                     {%elif r.creator == request.user.username %}
                     <div class="col-4 "><img src="/static/assets/images/avatars/01.png" alt="User-Profile"
                             class="theme-color-default-img img-fluid rounded-pill avatar-45">
@@ -67,9 +69,8 @@
                         href="{% url 'create-matches' %}" id="create-matches-li">Click here</a></p>
             </div>
         </div>
-
-    </div>
     {%endfor%}
+    </div>
 </div>
 
 
