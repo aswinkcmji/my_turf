@@ -1224,6 +1224,156 @@ class messagesView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_superuser:
             messages = contact_usModel.objects.filter(hidden=False).order_by('-id')
-            return render(request, 'admin/messages_contactUs.html',{'messages':messages})
+            return render(request, 'admin/messages_contactUs.html',{'messages':messages, 'type':'Primary'})
         else:
             return redirect('403')
+
+
+@method_decorator(login_required,name='dispatch')
+class StarredMessagesView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            messages = contact_usModel.objects.filter(hidden=False, starred=True).order_by('-id')
+            return render(request, 'admin/messages_list.html',{'messages':messages,'type':'Starred'})
+        else:
+            return redirect('403')
+@method_decorator(login_required,name='dispatch')
+class AllMessagesView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            messages = contact_usModel.objects.filter(hidden=False).order_by('-id')
+            return render(request, 'admin/messages_list.html',{'messages':messages, 'type':'Primary'})
+        else:
+            return redirect('403')
+@method_decorator(login_required,name='dispatch')
+class HiddenMessagesView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            messages = contact_usModel.objects.filter(hidden=True).order_by('-id')
+            return render(request, 'admin/messages_list.html',{'messages':messages,'type':'Hidden'})
+        else:
+            return redirect('403')
+@method_decorator(login_required,name='dispatch')
+class HideMessagesView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            id= kwargs.pop('id')
+            message = contact_usModel.objects.filter(id=id).first()
+            if message:
+                if message.hidden:
+                    message.hidden =False
+                    messages = contact_usModel.objects.filter(hidden=True).order_by('-id')
+                    context = {'messages':messages,'type':'Hidden'}
+                else:
+                    message.hidden =True
+                    messages = contact_usModel.objects.filter(hidden=False).order_by('-id')
+                    context = {'messages':messages,'type':'Primary'}
+                message.save()
+                return render(request, 'admin/messages_list.html',context)
+            else:
+                message.error(request, "something went wrong")
+                messages = contact_usModel.objects.filter(hidden=True).order_by('-id')
+                return render(request, 'admin/messages_list.html',{'messages':messages,'type':'Hidden'})
+
+        else:
+            return redirect('403')
+@method_decorator(login_required,name='dispatch')
+class StarMessagesView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            id= kwargs.pop('id')
+            type= kwargs.pop('type')
+            message = contact_usModel.objects.filter(id=id).first()
+            if message:
+                if message.starred:
+                    message.starred =False
+                    if type == 'Primary':
+                        messages = contact_usModel.objects.filter(hidden=False).order_by('-id')
+                        context = {'messages':messages,'type':'Primary'}
+                    elif type == 'Starred':
+                        messages = contact_usModel.objects.filter(starred = True,hidden=False).order_by('-id')
+                        context = {'messages':messages,'type':'Starred'}
+                    else:
+                        messages = contact_usModel.objects.filter(hidden=True).order_by('-id')
+                        context = {'messages':messages,'type':'Hidden'}
+
+
+                else:
+                    message.starred =True
+                    if type == 'Primary':
+                        messages = contact_usModel.objects.filter(hidden=False).order_by('-id')
+                        context = {'messages':messages,'type':'Primary'}
+                    elif type == 'Starred':
+                        messages = contact_usModel.objects.filter(starred = True,hidden=False).order_by('-id')
+                        context = {'messages':messages,'type':'Starred'}
+                    else:
+                        messages = contact_usModel.objects.filter(hidden=True).order_by('-id')
+                        context = {'messages':messages,'type':'Hidden'}
+
+                message.save()
+                return render(request, 'admin/messages_list.html',context)
+            else:
+                message.error(request, "something went wrong")
+                messages = contact_usModel.objects.filter(hidden=True).order_by('-id')
+                return render(request, 'admin/messages_list.html',{'messages':messages,'type':'starred'})
+
+        else:
+            return redirect('403')
+@method_decorator(login_required,name='dispatch')
+class DeleteMessagesView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            id= kwargs.pop('id')
+            type= kwargs.pop('type')
+            message = contact_usModel.objects.filter(id=id)
+            if message:
+                message.delete()
+                if type == 'Primary':
+                    messages = contact_usModel.objects.filter(hidden=False).order_by('-id')
+                    context = {'messages':messages,'type':'Primary'}
+                elif type == 'Starred':
+                    messages = contact_usModel.objects.filter(starred = True,hidden=False).order_by('-id')
+                    context = {'messages':messages,'type':'Starred'}
+                else:
+                    messages = contact_usModel.objects.filter(hidden=True).order_by('-id')
+                    context = {'messages':messages,'type':'Hidden'}
+
+
+
+                return render(request, 'admin/messages_list.html',context)
+            else:
+                message.error(request, "something went wrong")
+                messages = contact_usModel.objects.filter(hidden=True).order_by('-id')
+                return render(request, 'admin/messages_list.html',{'messages':messages,'type':'Hidden'})
+
+        else:
+            return redirect('403')
+
+
+@method_decorator(login_required,name='dispatch')
+class messageViewView(View):
+    def get(self, request, *args, **kwargs):
+        id = kwargs.pop('id')
+        if id:
+            message = contact_usModel.objects.filter(id=id).first()
+            message.seen= True
+            message.save()
+            context= {'message':message}
+            return render(request, 'admin/messageView.html', context)
+        
+
+    
+
+@method_decorator(login_required,name='dispatch')
+class DeleteMessageFromPageView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            id= kwargs.pop('id')
+            type= kwargs.pop('type')
+            message = contact_usModel.objects.filter(id=id).first()
+            if message:
+                if message.starred:
+                    message.starred =False
+                else:
+                    message.starred =True
+                message.save()

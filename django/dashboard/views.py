@@ -97,13 +97,15 @@ class Turf_Dashboard(View):
 
         if request.method == 'POST':
                 form = GalleryImgForm(request.POST,request.FILES)
-                # count = TurfGallery.objects.filter( username = request.user.username).values_list('isheader')
+                header = TurfGallery.objects.filter( username = request.user.username, isheader =True).first()
                 
                 # print("=============count===========",count)
 
                 print("====form11111111111===",form)
                 if form.is_valid():
-                    form.save(request)
+                    headerToUpload = request.FILES['image']
+                    header.image =headerToUpload
+                    header.save()
                     
                     messages.success(self.request, "Images added Successfully")
                     return HttpResponseRedirect(reverse('turf_dash')) 
@@ -471,10 +473,10 @@ class AdminDashboardView(View):
                 price_list.append(totalAmount)
             print(date_list)
             print(price_list)
-            now = datetime.now()
+            # now = datetime.now()
 
-            timestamp = datetime.timestamp(now)
-            print("timestamp =", timestamp)
+            # timestamp = datetime.timestamp(now)
+            # print("timestamp =", timestamp)
             context={
                 'total_users':total_users,
                 'total_turfs':total_turfs,

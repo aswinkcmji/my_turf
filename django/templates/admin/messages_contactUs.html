@@ -1,7 +1,9 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 {% load static%}
-
+<script>
+    document.getElementById('messages-li').classList.add('active')
+</script>
 
 <div class="container " style="height:75vh ;">
     <div class="card h-100">
@@ -14,28 +16,17 @@
                     style="min-width:5rem ;">
                     <div class="card-body p-0 pt-4 cb-msg">
                         <ul class="navbar-nav ul-msg" id="">
-                            <li class="card mb-2 col-9 nav-item ps-3 w-100 active " style="min-width:3rem ;">
-                                <a class="nav-link" aria-current="page" href="">
+                            <li class="card mb-2 col-9 nav-item ps-3 w-100  " style="min-width:3rem ;" id="navMsg1" onclick="toggleNavMsg1()">
+                                <a class="nav-link"  data-hx-get="{% url 'all_messages' %} " hx-target="#message_list " hx-trigger="click" style="cursor:pointer ;" > 
                                     <i class="icon">
-                                        <svg width="18" class="my-auto" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M9.14373 20.7821V17.7152C9.14372 16.9381 9.77567 16.3067 10.5584 16.3018H13.4326C14.2189 16.3018 
-                                                14.8563 16.9346 14.8563 17.7152V20.7732C14.8562 21.4473 15.404 21.9951 16.0829 22H18.0438C18.9596 22.0023 
-                                                19.8388 21.6428 20.4872 21.0007C21.1356 20.3586 21.5 19.4868 21.5 18.5775V9.86585C21.5 9.13139 21.1721 8.43471 
-                                                20.6046 7.9635L13.943 2.67427C12.7785 1.74912 11.1154 1.77901 9.98539 2.74538L3.46701 7.9635C2.87274 8.42082 
-                                                2.51755 9.11956 2.5 9.86585V18.5686C2.5 20.4637 4.04738 22 5.95617 22H7.87229C8.19917 22.0023 8.51349 21.8751 
-                                                8.74547 21.6464C8.97746 21.4178 9.10793 21.1067 9.10792 20.7821H9.14373Z"
-                                                fill="currentColor">
-                                            </path>
-                                        </svg>
+                                        <svg width="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                <path opacity="0.4" d="M22 15.94C22 18.73 19.76 20.99 16.97 21H16.96H7.05C4.27 21 2 18.75 2 15.96V15.95C2 15.95 2.006 11.524 2.014 9.298C2.015 8.88 2.495 8.646 2.822 8.906C5.198 10.791 9.447 14.228 9.5 14.273C10.21 14.842 11.11 15.163 12.03 15.163C12.95 15.163 13.85 14.842 14.56 14.262C14.613 14.227 18.767 10.893 21.179 8.977C21.507 8.716 21.989 8.95 21.99 9.367C22 11.576 22 15.94 22 15.94Z" fill="currentColor"></path>                                <path d="M21.4759 5.67351C20.6099 4.04151 18.9059 2.99951 17.0299 2.99951H7.04988C5.17388 2.99951 3.46988 4.04151 2.60388 5.67351C2.40988 6.03851 2.50188 6.49351 2.82488 6.75151L10.2499 12.6905C10.7699 13.1105 11.3999 13.3195 12.0299 13.3195C12.0339 13.3195 12.0369 13.3195 12.0399 13.3195C12.0429 13.3195 12.0469 13.3195 12.0499 13.3195C12.6799 13.3195 13.3099 13.1105 13.8299 12.6905L21.2549 6.75151C21.5779 6.49351 21.6699 6.03851 21.4759 5.67351Z" fill="currentColor"></path>                                </svg>                            
                                     </i>
                                     <span class="item-name ms-1 side-txt">Primary</span>
                                 </a>
                             </li>
-                            <li class="card bg-soft-primary mb-2 col-9 nav-item ps-3 w-100 active "
-                                style="min-width:3rem ;">
-                                <a class="nav-link" aria-current="page" href="">
+                            <li class="card bg-soft-primary mb-2 col-9 nav-item ps-3 w-100  " id="navMsg2"
+                                style="min-width:3rem ;" onclick="toggleNavMsg2()">
+                                <a class="nav-link"  data-hx-get="{% url 'starred_messages' %} " hx-target="#message_list " hx-trigger="click" style="cursor:pointer ;">
                                     <i class="icon">
                                         <svg width="18" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -50,9 +41,9 @@
                                     <span class="item-name ms-1 side-txt">Starred</span>
                                 </a>
                             </li>
-                            <li class="card bg-soft-primary mb-2 col-9 nav-item ps-3 w-100 active "
-                                style="min-width:3rem ;">
-                                <a class="nav-link" aria-current="page" href="">
+                            <li class="card bg-soft-primary mb-2 col-9 nav-item ps-3 w-100  " id="navMsg3"
+                                style="min-width:3rem ;" onclick="toggleNavMsg3()">
+                                <a class="nav-link"  data-hx-get="{% url 'hidden_messages' %} " hx-target="#message_list " hx-trigger="click" style="cursor:pointer ;">
                                     <i class="icon">
                                         <svg width="18" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -72,46 +63,8 @@
                     </div>
 
                 </div>
-                <div class="col-10 overflow-scroll " style="max-height: 100%;">
-                    {% for message in messages %}
-                    <div class="card shadow-sm rounded-2">
-                        <div class="card-body  d-flex gap-2 ">
-                            <div class="d-flex gap-2">
-                                <div> <a href=""> <svg width="
-                                    18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M17.9184 14.32C17.6594 14.571 17.5404 14.934 17.5994 15.29L18.4884 20.21C18.5634 20.627 18.3874 21.049 18.0384 21.29C17.6964 21.54 17.2414 21.57 16.8684 21.37L12.4394 19.06C12.2854 18.978 12.1144 18.934 11.9394 18.929H11.6684C11.5744 18.943 11.4824 18.973 11.3984 19.019L6.96839 21.34C6.74939 21.45 6.50139 21.489 6.25839 21.45C5.66639 21.338 5.27139 20.774 5.36839 20.179L6.25839 15.259C6.31739 14.9 6.19839 14.535 5.93939 14.28L2.32839 10.78C2.02639 10.487 1.92139 10.047 2.05939 9.65C2.19339 9.254 2.53539 8.965 2.94839 8.9L7.91839 8.179C8.29639 8.14 8.62839 7.91 8.79839 7.57L10.9884 3.08C11.0404 2.98 11.1074 2.888 11.1884 2.81L11.2784 2.74C11.3254 2.688 11.3794 2.645 11.4394 2.61L11.5484 2.57L11.7184 2.5H12.1394C12.5154 2.539 12.8464 2.764 13.0194 3.1L15.2384 7.57C15.3984 7.897 15.7094 8.124 16.0684 8.179L21.0384 8.9C21.4584 8.96 21.8094 9.25 21.9484 9.65C22.0794 10.051 21.9664 10.491 21.6584 10.78L17.9184 14.32Z"
-                                                fill="currentColor"></path>
-                                        </svg> </a>
-                                </div>
-                                <div>
-                                    {{message.first_name}} {{message.last_name}}
-
-                                </div>
-                                <div>
-                                    : {{message.subject|slice:":50" }}
-                                </div>
-                            </div>
-                            <div class="d-flex">
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <div class="card shadow-sm rounded-2">
-                        <div class="card-body  d-flex ">
-                            <div> <a href=""> <svg width="18" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M13.1043 4.17701L14.9317 7.82776C15.1108 8.18616 15.4565 8.43467 15.8573 8.49218L19.9453 9.08062C20.9554 9.22644 21.3573 10.4505 20.6263 11.1519L17.6702 13.9924C17.3797 14.2718 17.2474 14.6733 17.3162 15.0676L18.0138 19.0778C18.1856 20.0698 17.1298 20.8267 16.227 20.3574L12.5732 18.4627C12.215 18.2768 11.786 18.2768 11.4268 18.4627L7.773 20.3574C6.87023 20.8267 5.81439 20.0698 5.98724 19.0778L6.68385 15.0676C6.75257 14.6733 6.62033 14.2718 6.32982 13.9924L3.37368 11.1519C2.64272 10.4505 3.04464 9.22644 4.05466 9.08062L8.14265 8.49218C8.54354 8.43467 8.89028 8.18616 9.06937 7.82776L10.8957 4.17701C11.3477 3.27433 12.6523 3.27433 13.1043 4.17701Z"
-                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                    </svg> </a> </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-
+                <div class=" body-msg col-10  overflow-scroll " style="max-height: 100%;" id="message_list">
+                    {% include 'admin/messages_list.html' %}
                 </div>
             </div>
         </div>
@@ -127,6 +80,10 @@
     }
 
     @media screen and (max-width: 760px) {
+        .body-msg{
+            width: 100%;
+            margin-top: 1rem;
+        }
         .side-bar-msg {
             height: 4rem !important;
         }
@@ -170,6 +127,26 @@
 
     }
 </style>
+<script>
+    let navMsg1 = $("#navMsg1");
+    let navMsg2 = $("#navMsg2");
+    let navMsg3 = $("#navMsg3");
+    function toggleNavMsg1(){
+        navMsg1.removeClass("bg-soft-primary")
+        navMsg2.addClass("bg-soft-primary")
+        navMsg3.addClass("bg-soft-primary")
+    }
+    function toggleNavMsg2(){
+        navMsg1.addClass("bg-soft-primary")
+        navMsg2.removeClass("bg-soft-primary")
+        navMsg3.addClass("bg-soft-primary")
+    }
+    function toggleNavMsg3(){
+        navMsg1.addClass("bg-soft-primary")
+        navMsg2.addClass("bg-soft-primary")
+        navMsg3.removeClass("bg-soft-primary")
+    }
+</script>
 
 
 {% endblock content %}

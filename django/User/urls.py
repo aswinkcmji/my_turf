@@ -46,6 +46,7 @@ urlpatterns = [
     # path('updatecurrentloc/<str:location',UpdateCurrentLocView.as_view(),name="update_current_location"),
     path('conatct_us/',Contact_usView.as_view(),name="contact_us"), 
     path('messages-contactUs/',messagesView.as_view(),name="messages_conatct_us"), 
+    path('messageView/<str:id>',messageViewView.as_view(),name="messages_view"), 
 ] 
  
 
@@ -55,6 +56,14 @@ htmx_urlpatterns = [
     path("search-city/<str:feildname>",SearchCityView.as_view(),name="search-city"),
     path("search-matches/",SearchMatchView.as_view(),name="search-matches"),
     path('search_turf_list/',SearchTurfListView.as_view(), name="search_turf_list") , 
+
+    path('starred_messages/',StarredMessagesView.as_view(),name="starred_messages"), 
+    path('all_messages/',AllMessagesView.as_view(),name="all_messages"), 
+    path('hidden_messages/',HiddenMessagesView.as_view(),name="hidden_messages"), 
+    path('star_messages/<int:id>/<str:type>',StarMessagesView.as_view(),name="star_message"), 
+    path('hide_messages/<int:id>',HideMessagesView.as_view(),name="hide_messages"), 
+    path('delete_messages/<int:id>/<str:type>',DeleteMessagesView.as_view(),name="delete_messages"), 
+    path('star_message_from_page/<int:id>/',DeleteMessageFromPageView.as_view(),name="star_message_from_page"), 
 ]
 
 
