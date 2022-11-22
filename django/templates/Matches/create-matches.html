@@ -99,25 +99,6 @@ suggestions.addEventListener('click', useSuggestion);
 document.addEventListener('click', () =>suggestions.innerHTML = '' );
 
 </script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyAPaN2ndJcLY_fajOnaFwpkBVfIwSEfvgw"></script>
-<script>
-google.maps.event.addDomListener(window, 'load', function () 
-{   
-    
-    var options = {
-        // types: ['(cities)'],
-        componentRestrictions: {country: 'in'}
-    };
-	var places = new google.maps.places.Autocomplete(document.getElementById('id_locality'),options);
-    google.maps.event.addListener(places, 'place_changed', function () 
-	{
-		console.log(places.getPlace());
-		var getaddress 	  = places.getPlace();				//alert(getaddress.address_components[0].long_name);
-		var whole_address = getaddress.address_components;  //alert(whole_address + 'whole_address');   
-		$('#id_locality').val('');
-});
-});
-</script>
 
 {% include 'style/location_style.html' %}
 
