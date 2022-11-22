@@ -7,9 +7,9 @@
         {% for r in tournaments %}
         <div class="col-12 col-sm-6 col-lg-4 pe-0">
             <div class="card p-2 m-4">
-                <div class="img-container p-4 border" style="height: 18rem; overflow: hidden;">
+                <div class="img-containerborder" style="height: 18rem; overflow: hidden;">
                     <img src="/media/{{r.category.image}}" class="card-img-top img-fluid" alt="Product 1"
-                    style="width: 80%;">
+                    >
                 </div>
                 <div class="card-body p-1 " style="position: relative;">
                     <h4 class="card-text p-1" >{{r.category}}</h4>
@@ -20,12 +20,12 @@
                     <p class="card-text">City:{{r.city}}</p>
                     {% if r.creator == request.user.username and r.status == "Upcoming" %}
                     <div class="d-flex gap-2">
-                        <a href="edit/{{r.id}} " class="btn btn-primary px-2 py-1" style="font-size: .8rem;">
+                        <a href="edit/{{r.id}} " class="btn btn-primary px-2 py-1" >
                             EDIT
                         </a>
                         <a onclick="return confirm('Are you sure you want to cancel this tournament?')"
-                            href="cancel/{{r.id}}" class="btn btn-primary px-2 py-1" style="font-size: .8rem;">Cancel</a>
-                            <a href="{%url 'teams' id=r.id %} " class="btn btn-primary px-2 py-1" style="font-size: .8rem;">
+                            href="cancel/{{r.id}}" class="btn btn-primary px-2 py-1" >Cancel</a>
+                            <a href="{%url 'teams' id=r.id %} " class="btn btn-primary px-2 py-1" >
                                 View Team </a>
                     </div>
                     {%elif r.creator == request.user.username %}

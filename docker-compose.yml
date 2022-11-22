@@ -38,6 +38,14 @@ services:
     # command: ./go
     volumes:
       - ./go:/code/
+  go1:
+    build:
+      dockerfile: go/Dockerfile1
+      context: .
+    # command: ./go
+    volumes:
+      - ./go:/code/
+
 
 volumes :
   postgrees_data:
