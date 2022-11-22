@@ -115,16 +115,17 @@ class Turf_Dashboard(View):
 
                 print("====form11111111111===",form)
                 if form.is_valid():
-                    headerToUpload = request.FILES['image']
-                    header.image =headerToUpload
-                    header.save()
-                    
-                    messages.success(self.request, "Images added Successfully")
-                    return HttpResponseRedirect(reverse('turf_dash')) 
-                else:  
-                    messages.error(self.request, "Images failed")
-                    
-                    return HttpResponseRedirect(reverse('turf_dash')) 
+                    if header :
+                        headerToUpload = request.FILES['image']
+                        header.image =headerToUpload
+                        header.save()
+                        
+                        messages.success(self.request, "Images added Successfully")
+                        return HttpResponseRedirect(reverse('turf_dash')) 
+                    else:  
+                        messages.error(self.request, "Images failed")
+                        
+                        return HttpResponseRedirect(reverse('turf_dash')) 
 
 
 
@@ -572,19 +573,32 @@ class DashboardImageUpdate(View):
 
                 print("request.POST",request.POST)
                 # print("request.POST['image_id']",request.POST['image_id'])
+                updatedRecord = TurfGallery.objects.filter(isheader=True)
                 if request.FILES :
 
-                    updatedRecord = TurfGallery.objects.get(isheader=True)
-                    print(updatedRecord)
+                    if updatedRecord:
+                        print(updatedRecord)
 
-                    updatedRecord.image = request.FILES['image']
+                        updatedRecord.image = request.FILES['image']
 
-                    updatedRecord.save()
+                        updatedRecord.save()
 
-                    messages.success(request, 'Image Updated Successfully')
-                    
-                    return HttpResponseRedirect(reverse('turf_dash'))  
-                  
+                        messages.success(request, 'Image Updated Successfully')
+                        
+                        return HttpResponseRedirect(reverse('turf_dash'))  
+                    else:
+
+                        updatedRecord = form.save()
+                        
+                        updatedRecord.isheader = 1
+
+                        updatedRecord.username=request.user.username
+                        
+                        updatedRecord.save()
+
+                        messages.success(request, 'Image Updated Successfully')
+                        
+                        return HttpResponseRedirect(reverse('turf_dash'))  
 
             else:  
                 messages.error(request, 'failed')
