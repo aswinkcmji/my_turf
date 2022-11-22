@@ -145,7 +145,7 @@ class CreateMatchesView(View):
         if form.is_valid():
             print("kikikiki")
             print(form.errors.as_data())
-        
+            print(form.cleaned_data["slot_available"])
             start_date =form.cleaned_data["date"]
             start_time= parse_time(request.POST["start_time_f"])
             end_time= parse_time(request.POST["end_time_f"])
@@ -168,6 +168,7 @@ class CreateMatchesView(View):
             form_cf=form.save(commit=False)
             form_cf.start_time=start_datetime
             form_cf.end_time=end_datetime
+            form_cf.slot_available=form.cleaned_data["slot_available"]
             print(start_datetime,end_datetime,"ssssssssssssssssssssssssssssssssssss")
             form_cf.save()
 
@@ -350,7 +351,7 @@ class RequestsView(View):
                     from .mail import send_email
                     mail_subject='Your Request Has Been Accepted'
                     to_email='epssanjana@gmail.com' #requested_match.creator.email
-                    content_as_html=render_to_string('emails/request.html', {'user':request.user,'requested_match':'requesti','type':'accept'})
+                    content_as_html=render_to_string('emails/requestaccep.html', {'user':request.user,'requested_match':requesti,'type':"accept"})
                     send_email(mail_subject,"",content_as_html,to_email)
                     ############################################################ Request  MAIL END ######################################################
                 messages.success(request,'The requests were accepted')
@@ -361,6 +362,13 @@ class RequestsView(View):
                 for requestj in requests:
                     requestj.status="Rejected"
                     requestj.save()
+                    ############################################################ Request  MAIL #########################################################
+                    from .mail import send_email
+                    mail_subject='Your Request Has Been Rejected'
+                    to_email='epssanjana@gmail.com' #requested_match.creator.email
+                    content_as_html=render_to_string('emails/requestrej.html', {'user':request.user,'requested_match':requestj,'type':"reject"})
+                    send_email(mail_subject,"",content_as_html,to_email)
+                    ############################################################ Request  MAIL END ######################################################
                 messages.success(request,'The requests were rejected')
                 return HttpResponseRedirect(reverse('requests'))
         else:
@@ -673,7 +681,23 @@ class AllTournamentView(View):
                 context ={'TournamentRequestForm': form ,'is_tournamentrequestform':False , 'tournaments':tournament}
                 print(context)
                 return render(request, 'Tournaments/tournaments.html',context)
-
+        def post(self, request, *args, **kwargs):
+            location=request.POST.get('location')
+            if location :
+                list=location.split(", ")
+                if len(list) ==3:
+                    check_location=CitiesModel.objects.filter(name=list[0],subcountry=list[1],country=list[2])
+                    if len(check_location) == 0:
+                            messages.error(request,'Please Select a City from the provided list')
+                            return HttpResponseRedirect(reverse('matches'))
+                else:
+                    messages.error(request,'Please Select a City from the provided list')
+                    return HttpResponseRedirect(reverse('matches'))  
+            if location!=request.user.current_location:
+                user=UserModel.objects.get(username=request.user.username)
+                user.current_location=location
+                user.save()
+            return HttpResponseRedirect(reverse('all-tournaments'))
 
 # @method_decorator(login_required,name='dispatch')
 # class CreateTeamView(View):

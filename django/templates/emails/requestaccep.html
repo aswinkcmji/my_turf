@@ -1,7 +1,7 @@
 {% extends 'layouts/email.html' %}
 {% block content%}
-<h3 class="text-center">You have a request</h3>
-<p>A request has been sent to join the match you have created by <h3>{{user}}</h3></p>
+<h3 class="text-center">Request Accepted</h3>
+<p> Your request to join the match has been accepted by {{user}}</p>
 <p>The match is to be conducted on {{requested_match.date}} at {{requested_match.locality}}</p>
 <p>Login to view the details:<a href="http://localhost:8001/">MyTurf</a></p>
 <br>
