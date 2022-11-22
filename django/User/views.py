@@ -507,7 +507,7 @@ class TeamView(View):
             reqdata=MatchModel.objects.get(id=id)
 
             joined=RequestModel.objects.filter(status='Accepted',match_id=reqdata.id).order_by("id")
-            if not joined.objects.filter(username=request.user.pk).exists():
+            if not joined.filter(username=request.user.pk).exists():
                 messages.error(request,'You cannot view this team')
                 return HttpResponseRedirect(reverse('my-matches'))
             context={}
@@ -1051,8 +1051,7 @@ class Createteamview(View):
 @method_decorator(login_required,name='dispatch')
 class TournamentTeamView(View):
     def get(self, request,id, *args, **kwargs):
-        reqdata=TournamentModel.objects.get(id=id,creator=request.user.username)
-            
+        reqdata=TournamentModel.objects.get(id=id)
         joined=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=reqdata.id).order_by("id")
         context={}
         context['users']=joined
