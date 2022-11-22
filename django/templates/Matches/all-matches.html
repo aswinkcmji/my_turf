@@ -7,11 +7,12 @@
       <p class="d-none " id="messagecontent">{{message}}</p>
   {% endfor %}
     {% endif %} -->
+    <div class="container"></div>
     <div class="ecomerce-top-bar card p-3" {% if is_requestform %} style="display: none ;" {% else %}
     style="display: flex ;" {% endif %}>
         <div class="row justify-content-between">
-            <div class="col-4">
-                <span class="item-name"> 
+            <div class="col-lg-4 col-sm-5">
+                <div class="item-name"> 
                     <form method="POST"  class="d-flex">
                         {% csrf_token %}
                         <div class="pt-2">
@@ -20,13 +21,13 @@
                      <div>
                         <input type="text"  value="{{request.user.current_location}}" required="True" name="location" id="id_city" hx-post="{%url 'search-city' feildname="location" %}" hx-target='#results' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Select a City ..." >
                     </div>
-                    <button type="submit" name="location_change" class="btn-primary rounded-2 mb-2 mt-2 mx-2">Change</button>
+                    <button type="submit" name="location_change" class="btn-primary rounded-2 mx-auto my-auto">Change</button>
                 </form>
                 <div id="results" class="suggestion"></div>
-                </span>
+                </div>
             </div>
-            <div class="col-4"></div>
-            <div class="col-4  ecomerce-top-bar-btns justify-content-end mx-auto">
+            <div class="col-lg-4 "></div>
+            <div class="col-lg-4 col-sm-5 ecomerce-top-bar-btns justify-content-end mx-auto">
                 <form method="POST">
                     {% csrf_token %}
                     <input type="text" name="search" hx-post="{%url 'search-matches' %}" hx-target='#result-matches' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Search a  Username, Date or Game ..." >
@@ -34,7 +35,8 @@
             </div>
         </div>
     </div>
-<div class="row bg-soft-light  justify-content-around"  {% if is_requestform %} style="display: none ;" {% else %}
+    <div class="container">
+<div class="row bg-soft-light  justify-content-around my-auto"  {% if is_requestform %} style="display: none ;" {% else %}
 style="display: flex ;" {% endif %} id="result-matches">
 {% include 'Matches/matches.html' %}
 </div>
@@ -152,6 +154,7 @@ style="display: none ;" {% endif %}>
     </div>
 </div>
 
+</div>
 </div>
 <!-- <rssapp-wall id="tblR6sxbIzZJcii6"></rssapp-wall><script src="https://widget.rss.app/v1/wall.js" type="text/javascript" async></script> -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
