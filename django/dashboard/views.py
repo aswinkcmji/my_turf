@@ -109,13 +109,15 @@ class Turf_Dashboard(View):
 
         if request.method == 'POST':
                 form = GalleryImgForm(request.POST,request.FILES)
-                # count = TurfGallery.objects.filter( username = request.user.username).values_list('isheader')
+                header = TurfGallery.objects.filter( username = request.user.username, isheader =True).first()
                 
                 # print("=============count===========",count)
 
                 print("====form11111111111===",form)
                 if form.is_valid():
-                    form.save(request)
+                    headerToUpload = request.FILES['image']
+                    header.image =headerToUpload
+                    header.save()
                     
                     messages.success(self.request, "Images added Successfully")
                     return HttpResponseRedirect(reverse('turf_dash')) 
