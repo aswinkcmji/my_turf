@@ -65,7 +65,8 @@ htmx_urlpatterns = [
     path('star_messages/<int:id>/<str:type>',StarMessagesView.as_view(),name="star_message"), 
     path('hide_messages/<int:id>',HideMessagesView.as_view(),name="hide_messages"), 
     path('delete_messages/<int:id>/<str:type>',DeleteMessagesView.as_view(),name="delete_messages"), 
-    path('star_message_from_page/<int:id>/',DeleteMessageFromPageView.as_view(),name="star_message_from_page"), 
+    path('star_message_from_page/<int:id>/',StarMessageFromPageView.as_view(),name="star_message_from_page"), 
+    path('delete_message_from_page/<int:id>/',DeleteMessageFromPageView.as_view(),name="delete_message_from_page"), 
 ]
 
 
