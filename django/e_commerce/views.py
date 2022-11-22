@@ -115,18 +115,18 @@ class Checkout(View):
                     totalAmount = totalAmount + (i[0]*i[1])
 
 
-                    context = {
-                        'shipping_address': shipping_address if shipping_address else None,
-                        'totalAmount':totalAmount,
-                        'totalItemCount':totalItemCount,
-                        'cartData':cartData,
-                        'num':num,
-                        'form': form,
-                        
-                    }
+                context = {
+                    'shipping_address': shipping_address if shipping_address else None,
+                    'totalAmount':totalAmount,
+                    'totalItemCount':totalItemCount,
+                    'cartData':cartData,
+                    'num':num,
+                    'form': form,
+                    
+                }
 
 
-                    return render(request,'e_commerce/checkout.html',context)
+                return render(request,'e_commerce/checkout.html',context)
             else :
 
                 return HttpResponseRedirect(reverse('shop'))
@@ -508,8 +508,8 @@ class PurchaseHistoryView(View):
 
         if request.user.is_authenticated:
 
-            purchasedata = CheckoutModel.objects.all()
-            purchasedatauser = CheckoutModel.objects.filter(username = request.user.username)
+            purchasedata = CheckoutModel.objects.all().order_by('id')
+            purchasedatauser = CheckoutModel.objects.filter(username = request.user.username).order_by('id')
 
             totalPrice = CheckoutModel.objects.values_list('quantity','price')
 
