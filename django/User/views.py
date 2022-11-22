@@ -587,10 +587,6 @@ class CreateTournamentView(View):
             form_cf.end_time=end_datetime
             print(start_datetime,end_datetime,"ssssssssssssssssssssssssssssssssssss")
             form_cf.save()
-
-
-            TournamentRequestModel.objects.create(tournament_id=form_cf,category=form.cleaned_data['category'],team_name=form.cleaned_data['team_name'],image=form.cleaned_data['image'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",start_date=form.cleaned_data['start_date'],end_date=form.cleaned_data['end_date'],start_time=form.cleaned_data['start_time'],end_time=form.cleaned_data['end_time'],locality=form.cleaned_data['locality'])
-            messages.success(request	,'Your tournament has been succesfully created. Visit My tournament to see .')
             return HttpResponseRedirect(reverse('my-tournaments'))
             
 
@@ -622,10 +618,9 @@ class MyTournamentView(View):
                 
             # }
             # return render(request, 'Tournaments/my-tournament.html',context)
-            id_list=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True)
-            print("=================",list(id_list))
+
             exclude_status=["Completed","Cancelled"]
-            tournament=TournamentModel.objects.filter(id__in=list(id_list)).exclude(status__in=exclude_status).order_by("-id")
+            tournament=TournamentModel.objects.filter(creator=request.user.username).exclude(status__in=exclude_status).order_by("-id")
             print("7777777777777777",tournament)
             context={
                 'tournaments':tournament,
@@ -646,8 +641,6 @@ class EditTournamentView(View):
             # print(id,"44444444444444444444444444444444444444444444444444444444444")
             data={
                 'category':editobj1.category.id,
-                'team_name':editobj1.team_name,
-                # 'team_name':CreateTeamModel.objects.filter(),
                 'start_date':editobj1.start_date,
                 'end_date':editobj1.end_date,
                 'start_time_f':editobj1.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
@@ -687,7 +680,6 @@ class EditTournamentView(View):
             end_datetime= datetime.combine(end_date, end_time).astimezone(timezone('UTC'))
             updatedRecord = TournamentModel.objects.get(id=tournament_id)
             updatedRecord. category = form.cleaned_data['category']
-            updatedRecord. team_name = form.cleaned_data['team_name']
             updatedRecord. start_date = form.cleaned_data['start_date']
             updatedRecord. end_date = form.cleaned_data['end_date']
             updatedRecord. start_time = start_datetime
@@ -697,7 +689,6 @@ class EditTournamentView(View):
             updatedRecord. team_space_available = form.cleaned_data['team_space_available']
             updatedRecord.save()
             messages.success(request	,'Your tournament has been successfully edited.')
-            TournamentRequestModel.objects.filter(tournament_id=updatedRecord).update(category=form.cleaned_data['category'],team_name=form.cleaned_data['team_name'],username=form.cleaned_data['creator'],phoneno=request.user.phone,status="Accepted",start_date=form.cleaned_data['start_date'],end_date=form.cleaned_data['end_date'],start_time=form.cleaned_data['start_time_f'],end_time=form.cleaned_data['end_time_f'],locality=form.cleaned_data['locality'])
             return HttpResponseRedirect(reverse('my-tournaments'))
         else:
             print("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
@@ -715,7 +706,7 @@ class AllTournamentView(View):
                 print(request.user.username)
                 # context={}
                 id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('tournament_id',flat=True)
-                tournament=TournamentModel.objects.filter(city__iexact=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
+                tournament=TournamentModel.objects.filter(city=request.user.location,status="Upcoming").exclude(id__in=list(id_list))
                 form=TournamentRequestForm(request=request)
                 context ={'TournamentRequestForm': form ,'is_tournamentrequestform':False , 'tournaments':tournament}
                 print(context)
@@ -730,10 +721,10 @@ class AllTournamentView(View):
                     check_location=CitiesModel.objects.filter(name=list[0],subcountry=list[1],country=list[2])
                     if len(check_location) == 0:
                             messages.error(request,'Please Select a City from the provided list')
-                            return HttpResponseRedirect(reverse('matches'))
+                            return HttpResponseRedirect(reverse('all-tournaments'))
                 else:
                     messages.error(request,'Please Select a City from the provided list')
-                    return HttpResponseRedirect(reverse('matches'))  
+                    return HttpResponseRedirect(reverse('all-tournaments'))  
             if location!=request.user.current_location:
                 user=UserModel.objects.get(username=request.user.username)
                 user.current_location=location
@@ -967,9 +958,9 @@ class TournamentHistoryView(View):
             jcom=TournamentModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).order_by("-id")#joined completed matches
             id_list3=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
             jcam=TournamentModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).order_by("-id")#joined cancelled matches
-            crum=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Upcoming").order_by("-id") #created upcoming matches
-            crcom=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Completed").order_by("-id") #created completed matches
-            crcam=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Cancelled").order_by("-id") #created cancelled matches
+            crum=TournamentModel.objects.filter(creator=request.user.username,status="Upcoming").order_by("-id") #created upcoming matches
+            crcom=TournamentModel.objects.filter(creator=request.user.username,status="Completed").order_by("-id") #created completed matches
+            crcam=TournamentModel.objects.filter(creator=request.user.username,status="Cancelled").order_by("-id") #created cancelled matches
             reqcan=TournamentRequestModel.objects.filter(username=request.user.username,status="Cancelled").order_by("-id")#requests cancelled
             reqrej=TournamentRequestModel.objects.filter(username=request.user.username,status="Rejected").order_by("-id")#requests rejected
             id_list4=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location).values_list('id',flat=True).order_by("-id")

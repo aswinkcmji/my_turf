@@ -181,5 +181,21 @@ style="display: none ;" {% endif %}>
   //   });
 </script>
 
-
+<script>
+    function useSuggestion(e) {
+        if(e.target.innerText!="No search results.Enter a valid name atleast 3 characters in length"){
+            
+            console.log(e.target.innerText)
+            id_city.value = e.target.innerText;
+            id_city.focus();
+            suggestions.innerHTML = '';
+            // suggestions.classList.remove('has-suggestions');
+        }
+        
+    }
+    const suggestions = document.querySelector('.suggestion');
+    suggestions.addEventListener('click', useSuggestion);
+    document.addEventListener('click', () =>suggestions.innerHTML = '' );
+    </script>
+    {% include 'style/location_style.html' %}
 {% endblock content %}

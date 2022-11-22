@@ -24,29 +24,41 @@
                   {% for addForm in form.visible_fields %}
                               
                      
-                  {% if addForm.label != "Category" %}
+                 
+                  {% if addForm.label != "Category" and addForm.label != "City" %}
                   <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
-                      {% render_field addForm class="form-control" placeholder="Place Holder" min="2" %}
-                      {% if addform.type != "hidden"%}
-                        {% if addForm.label == "Start time f" %}
-                        <label >Start Time</label>
-                        {% elif addForm.label == "End time f" %}
-                        <label >End Time</label>
-                        {% else %}
-                        <label >{{addForm.label}}</label>
-                        {% endif %}
-                        {%endif%}
+                      {% render_field addForm class="form-control" placeholder="Place Holder" min="1"%}
+                      {% if addForm.type != "hidden"%}
+                      {% if addForm.label == "Start time f" %}
+                      <label>Start Time</label>
+                      {% elif addForm.label == "End time f" %}
+                      <label>End Time</label>
+                      {% else %}
+                      <label>{{addForm.label}}</label>
+                      {% endif %}
+                      {%endif%}
+                      <!-- <p>{{addform.type}} helllll</p> -->
+                      <span class="text-danger">{{addForm.errors}}</span>
                   </div>
-                  {% else %}
-                      {% render_field form.category class="form-select form-select-lg mb-4" aria-label=".form-select-lg example" name="category" id="category" %}
                   {% endif %}
+                  <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-4">
+                  {%if  addForm.label == "City" %}
+                  {% render_field addForm hx-post='/search-city/city' hx-target='#results' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Select Your City ..." %}
+                  <label>Search your {{addForm.label}}</label>
                   <span class="text-danger">{{addForm.errors}}</span>
+                  <div id="results" class="suggestion"></div>
+                  </div>
+                  {%endif%}
+                  {%if addForm.label == "Category" %}
+                  {% render_field form.category  class="form-control  mb-4"%}
+
+                  {% endif %}
+                 
+                  {% endfor %}
+                  {%for dontForm in form.hidden_fields%}
+                  {% render_field dontForm.as_hidden %}
+                  {%endfor%}
                   
-  
-              {% endfor %}
-              {%for dontForm in form.hidden_fields%}
-              {% render_field dontForm %}
-              {%endfor%}
                       <button class="btn btn-primary" type="submit">Submit</button>
               </form>
           </div>
@@ -76,4 +88,21 @@
       });
 
   </script>
+  <script>
+    function useSuggestion(e) {
+        if(e.target.innerText!="No search results.Enter a valid name atleast 3 characters in length"){
+            
+            console.log(e.target.innerText)
+            id_city.value = e.target.innerText;
+            id_city.focus();
+            suggestions.innerHTML = '';
+            // suggestions.classList.remove('has-suggestions');
+        }
+      
+    }
+    const suggestions = document.querySelector('.suggestion');
+    suggestions.addEventListener('click', useSuggestion);
+    document.addEventListener('click', () =>suggestions.innerHTML = '' );
+    </script>
+    {% include 'style/location_style.html' %}
 {%endblock content%}

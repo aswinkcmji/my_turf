@@ -142,6 +142,7 @@ class creatematchForm(ModelForm):
         else :
             self._errors['slots']=self.error_class(['No of slots can not be less than 2'])
         self.cleaned_data['creator']=user
+        print()
         # if creator !=  self.request.user.username:
         #     self._errors['creator']=self.error_class([''])
         # if status != "Upcoming":
@@ -237,10 +238,7 @@ class createtournamentForm(ModelForm):
 
 
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
-    # team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
-    team_name =forms.CharField(required=False,widget=forms.TextInput(attrs={'class': 'form-control',}))
-    image = forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
-
+    
     # team_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
@@ -257,7 +255,7 @@ class createtournamentForm(ModelForm):
     # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model = TournamentModel
-        fields = 'category','team_name','image','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','team_space_available','creator','locality','city'
+        fields = 'category','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','team_space_available','creator','locality','city'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -320,9 +318,6 @@ class updatetournamentform(ModelForm):
 
     tournament_id = forms.ModelChoiceField(queryset=TournamentModel.objects.all(),widget=forms.HiddenInput())
     category= forms.ModelChoiceField(queryset=CategoriesModel.objects.all())
-    # team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
-    team_name =forms.CharField(widget=forms.TextInput(attrs={"class":'form-control'}))
-    image = forms.ImageField(required=False,widget=forms.FileInput(attrs={'class':"form-control" }))
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     start_time_f = forms.TimeField(required=False,widget=forms.TimeInput(attrs={'type': 'time','step' : '1'}))
@@ -338,7 +333,7 @@ class updatetournamentform(ModelForm):
     # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model = TournamentModel
-        fields = 'category','team_name','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','creator','locality','city'
+        fields = 'category','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','creator','locality','city'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
