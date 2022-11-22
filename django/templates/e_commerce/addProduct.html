@@ -22,10 +22,15 @@
                         {% for addForm in form %}
                         
                         <div class="form-floating custom-form-floating custom-form-floating-sm form-group mb-5">
+                            {% if addForm.Image %}
                             {% render_field addForm class="form-control" placeholder="Place Holder"%}
+                            {% else %}
+                            {% render_field addForm class="form-control" required=true placeholder="Place Holder"%}
+                            {% endif%}
                             {% if addForm.label != "Image" %}
                                 <label >{{addForm.label}}</label>
                             {% else %}
+
                             {% endif %}
                         </div>
                         <span class="text-danger">{{addForm.errors}}</span>
@@ -38,6 +43,11 @@
             </div>
         </div>
     </section>
+    
+
+
+    <!-- Scripts -->
+
     
     <script>
         document.getElementById('addproduct-li').classList.add('active')

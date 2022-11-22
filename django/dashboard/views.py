@@ -14,7 +14,7 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import *
+from .forms import GalleryImgForm, TurfScheduleForm, CategoriesForm, CategoriesEditForm, TurfPasswordChangeForm,categoryEditForm
 from django.utils.dateparse import parse_datetime
 from .models import TurfGallery, TurfScheduleModel , CategoriesModel
 from User.models import MatchModel,TournamentModel
@@ -26,12 +26,18 @@ from django.contrib.auth import update_session_auth_hash
 
 
 
-# Create your views here.
 
+
+# Create your views here.
+@method_decorator(login_required,name='dispatch')
 class AddStockView(View):
     def get(self, request, *args, **kwargs):
-        form = addStockForm()
-        return render(request, 'e_commerce/addProduct.html',{'form':form})
+        if request.user.is_superuser:
+            form = addStockForm()
+            return render(request, 'e_commerce/addProduct.html',{'form':form})
+        else:
+            return redirect('404')
+
 
     def post(self,request,*args,**kwargs):
         print("helllllllllllllllllllllllllllllllllllllllllllllllll")  
@@ -50,6 +56,8 @@ class AddStockView(View):
                 form = addStockForm()  
         
             return render(request, 'e_commerce/addProduct.html',{'form':form})
+
+
 class Turf_Dashboard(View):
     def get(self,request):
 
@@ -65,15 +73,19 @@ class Turf_Dashboard(View):
         print('========count ==',editForm)
         print('@@@@@@catergory@@@@@@@',category)
         print('category',category.__dict__)
-        a=None
-        for i in category:
-            for j in i:
-                a=j
-        image = CategoriesModel.objects.filter(id__in = a )
 
-     
+        if category:
+            a=None
+            for i in category:
+                for j in i:
+                    a=j
+            image = CategoriesModel.objects.filter(id__in = a )
+
+        else:
+            image = []
+
         category_editForm =categoryEditForm()
-
+        
         context = {
             'form': GalleryImgForm(),
             'turfDetails': turfDetails,
@@ -412,8 +424,10 @@ class CategoriesEditView(View):
                             "image":category.image}
                 return render(request,"admin/manage_categories.html",context)
 
+
 @method_decorator(login_required,name='dispatch')
 class CategoriesDeleteView(View):
+
     def get (self, request, *args, **kwargs):
         id = kwargs.pop('id')
         category = CategoriesModel.objects.filter(id=id).first()
@@ -427,7 +441,7 @@ class CategoriesDeleteView(View):
 class AdminDashboardView(View):
     def get (self, request, *args, **kwargs):
         if request.user.is_superuser:
-            total_users=UserModel.objects.all().exclude(is_turf=1).count()
+            total_users=UserModel.objects.all().exclude(is_turf=1).exclude(is_superuser=1).count()
             total_turfs=UserModel.objects.filter(is_turf=1).count()
             total_matches=MatchModel.objects.all().count()
             total_tournaments=TournamentModel.objects.all().count()
@@ -471,10 +485,10 @@ class AdminDashboardView(View):
                 price_list.append(totalAmount)
             print(date_list)
             print(price_list)
-            now = datetime.now()
+            # now = datetime.now()
 
-            timestamp = datetime.timestamp(now)
-            print("timestamp =", timestamp)
+            # timestamp = datetime.timestamp(now)
+            # print("timestamp =", timestamp)
             context={
                 'total_users':total_users,
                 'total_turfs':total_turfs,
@@ -558,7 +572,7 @@ class DashboardImageUpdate(View):
                 # print("request.POST['image_id']",request.POST['image_id'])
                 if request.FILES :
 
-                    updatedRecord = TurfGallery.objects.get(username = request.user.username, isheader=True)
+                    updatedRecord = TurfGallery.objects.get(isheader=True)
                     print(updatedRecord)
 
                     updatedRecord.image = request.FILES['image']
@@ -675,7 +689,7 @@ class TurfPasswordChange(View):
 
 
 class TurfCategoryAdd(View):
-    def post(self, request, *args, **kwargs):
+     def post(self, request, *args, **kwargs):
         editForm = categoryEditForm(request.POST)
         if request.method == 'POST': 
             if editForm.is_valid():
@@ -737,13 +751,28 @@ class TurfCategoryAdd(View):
                 print("-----------------------1111---------------------",editForm.errors)
                 messages.error(request,"Updation failed")
                 return HttpResponseRedirect(reverse('turf_dash'))
+
+
     
-
-
-
 class DeleteTurfCategory(View):
-    def get(self, request,id, *args,**kwargs):
-        item = CategoriesModel.objects.get(username = request.user.username, )
-        item.delete()
-        messages.success(request, 'Category Removed')
-        return HttpResponseRedirect(reverse('turf_dash'))
+       def get(self, request,id, *args,**kwargs):
+
+        turf = UserModel.objects.filter(username=request.user).first()
+
+        cid = CategoriesModel.objects.filter(category=id).first().id
+    
+        tcat = turf.category
+
+        if str(cid) in tcat:
+
+            turf.category = list(filter(lambda x: x != str(cid), tcat))
+                        
+            turf.save()
+
+            messages.success(request, 'Category Removed')
+            return HttpResponseRedirect(reverse('turf_dash'))
+
+        else:
+            messages.success(request, 'Category not Removed')
+            return HttpResponseRedirect(reverse('turf_dash'))
+

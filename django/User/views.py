@@ -29,6 +29,7 @@ from django.http import HttpResponse
 from django.db.models import Count
 import json
 from django.views.decorators.http import require_http_methods
+from e_commerce.models import ProductsModel
 # from datetime import datetime
 # import datetime as datetime
 # from .models import slotModel
@@ -44,7 +45,15 @@ from django.utils.html import strip_tags             ############# USED TO STRIP
 
 class HomeView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'home.html',{})
+
+        featuredproduct = ProductsModel.objects.all()
+        
+        context = {
+            'featuredproduct':featuredproduct,
+            'media_url':settings.MEDIA_URL,
+        }
+
+        return render(request, 'home.html',context)
 
 
 
@@ -87,53 +96,58 @@ class AllMatchesView(View):
 @method_decorator(login_required,name='dispatch')
 class MyMatchesView(View):
     def get(self, request, *args, **kwargs):
-        print(request.user.username)
-        print(datetime.now())
-        context={}
-        id_list=RequestModel.objects.filter(username=request.user.pk,status="Accepted").values_list('match_id',flat=True)
-        print(list(id_list))
-        exclude_status=["Completed","Cancelled"]
-        matches=MatchModel.objects.filter(id__in=list(id_list)).exclude(status__in=exclude_status).order_by("-id")
-        context['matches']=matches
-        context[request]=request
-        return render(request, 'Matches/my-matches.html',context)
-
+        if request.user.is_authenticated:
+            print(request.user.username)
+            print(datetime.now())
+            context={}
+            id_list=RequestModel.objects.filter(username=request.user.pk,status="Accepted").values_list('match_id',flat=True)
+            print(list(id_list))
+            exclude_status=["Completed","Cancelled"]
+            matches=MatchModel.objects.filter(id__in=list(id_list)).exclude(status__in=exclude_status).order_by("-id")
+            context['matches']=matches
+            context[request]=request
+            return render(request, 'Matches/my-matches.html',context)
+        else:
+            return redirect('login')
 
 ##d###########################################################   View for creating matches ###############################################################################
 @method_decorator(login_required,name='dispatch')
 class CreateMatchesView(View):
     template = 'Matches/create-matches.html'
     def get(self, request, *args, **kwargs):
-        print(datetime.now()+timedelta(hours=1))
-        end_time=(datetime.now()+timedelta(hours=1))
-        print(end_time)
-        # now = timezone.now()
-        # print(now)
-        # print(CategoriesModel.objects.get(id=1))
-        user=UserModel.objects.get(id=request.user.pk)
-        data={
-            'category':CategoriesModel.objects.first(),
-            'date':datetime.now().date(),
-            'start_time_f':datetime.now().strftime("%H:%M:%S"),
-            'end_time_f':end_time.strftime("%H:%M:%S"),
-            'start_time':datetime.now(),
-            'end_time':end_time,
-            'locality':"",
-            'city':request.user.location,
-            'creator' :  user  ,
-            'status' : "Upcoming",
-            'slot_available': 0,
-            'slots': 2,
-        }
-        form = creatematchForm(initial=data,request=request)
-        # user = request.user
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
-        context = {'form': form,
-                    'data': 'Add match',
-                    # 'user': user,
-                    }
+        if request.user.is_authenticated:
+            print(datetime.now()+timedelta(hours=1))
+            end_time=(datetime.now()+timedelta(hours=1))
+            print(end_time)
+            # now = timezone.now()
+            # print(now)
+            # print(CategoriesModel.objects.get(id=1))
+            user=UserModel.objects.get(id=request.user.pk)
+            data={
+                'category':CategoriesModel.objects.first(),
+                'date':datetime.now().date(),
+                'start_time_f':datetime.now().strftime("%H:%M:%S"),
+                'end_time_f':end_time.strftime("%H:%M:%S"),
+                'start_time':datetime.now(),
+                'end_time':end_time,
+                'locality':"",
+                'city':request.user.location,
+                'creator' :  user  ,
+                'status' : "Upcoming",
+                'slot_available': 0,
+                'slots': 2,
+            }
+            form = creatematchForm(initial=data,request=request)
+            # user = request.user
+            context = {'form': form,
+                        'data': 'Add match',
+                        # 'user': user,
+                        }
+            
         
-        return render(request,self.template,context)
+            return render(request,self.template,context)
+        else:
+            return redirect('login')
 
     def post(self, request, *args, **kwargs):
         form=creatematchForm(request.POST,request=request)
@@ -187,14 +201,16 @@ class CreateMatchesView(View):
 @method_decorator(login_required,name='dispatch')
 class RequestedMatchesView(View):
     def get(self, request, *args, **kwargs):
-        print(request.user.username)
-        context={}
-        id_list=RequestModel.objects.filter(username=request.user.pk,status="Pending").values_list('match_id',flat=True).order_by("-id")
-        print(list(id_list))
-        matches=MatchModel.objects.filter(id__in=list(id_list),status="Upcoming").order_by("-id")
-        context['matches']=matches
-        return render(request, 'Matches/requested-matches.html',context)
-
+        if request.user.is_authenticated:
+            print(request.user.username)
+            context={}
+            id_list=RequestModel.objects.filter(username=request.user.pk,status="Pending").values_list('match_id',flat=True).order_by("-id")
+            print(list(id_list))
+            matches=MatchModel.objects.filter(id__in=list(id_list),status="Upcoming").order_by("-id")
+            context['matches']=matches
+            return render(request, 'Matches/requested-matches.html',context)
+        else:
+            return redirect('login')
 
 ################################################################  View for cancel match  requests ###################################################################################
 @method_decorator(login_required,name='dispatch')
@@ -213,39 +229,41 @@ class CancelRequestView(View):
 @method_decorator(login_required,name='dispatch')
 class MatchHistoryView(View):
     def get(self, request, *args, **kwargs):
-        id_list1=RequestModel.objects.filter(username=request.user.pk,status="Accepted").values_list('match_id',flat=True).order_by("-id")
-        jum=MatchModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.pk).order_by("-id")#joined upcoming matches
-        id_list2=RequestModel.objects.filter(username=request.user.pk,status="Accepted").values_list('match_id',flat=True).order_by("-id")
-        jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.pk).order_by("-id")#joined completed matches
-        id_list3=RequestModel.objects.filter(username=request.user.pk,status="Accepted").values_list('match_id',flat=True).order_by("-id")
-        jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.pk).order_by("-id")#joined cancelled matches
-        crum=MatchModel.objects.filter(creator=request.user.pk,status="Upcoming").order_by("-id") #created upcoming matches
-        crcom=MatchModel.objects.filter(creator=request.user.pk,status="Completed").order_by("-id") #created completed matches
-        crcam=MatchModel.objects.filter(creator=request.user.pk,status="Cancelled").order_by("-id") #created cancelled matches
-        reqcan=RequestModel.objects.filter(username=request.user.pk,status="Cancelled").order_by("-id")#requests cancelled
-        reqrej=RequestModel.objects.filter(username=request.user.pk,status="Rejected").order_by("-id")#requests rejected
-        id_list4=MatchModel.objects.filter(creator=request.user.pk).values_list('id',flat=True).order_by("-id")
-        reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted").exclude(username=request.user.pk).order_by("-id")
-        reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected").exclude(username=request.user.pk).order_by("-id")
-        context={}
-        context={
-            'jum':jum,
-            'jcom':jcom,
-            'jcam':jcam,
-            'crum':crum,
-            'crcom':crcom,
-            'crcam':crcam,
-            'reqcan':reqcan,
-            'reqrej':reqrej,
-            'reqaccep':reqaccep,
-            'reqrejec':reqrejec,
+        if request.user.is_authenticated:
+            id_list1=RequestModel.objects.filter(username=request.user.pk,status="Accepted").values_list('match_id',flat=True).order_by("-id")
+            jum=MatchModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.pk).order_by("-id")#joined upcoming matches
+            id_list2=RequestModel.objects.filter(username=request.user.pk,status="Accepted").values_list('match_id',flat=True).order_by("-id")
+            jcom=MatchModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.pk).order_by("-id")#joined completed matches
+            id_list3=RequestModel.objects.filter(username=request.user.pk,status="Accepted").values_list('match_id',flat=True).order_by("-id")
+            jcam=MatchModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.pk).order_by("-id")#joined cancelled matches
+            crum=MatchModel.objects.filter(creator=request.user.pk,status="Upcoming").order_by("-id") #created upcoming matches
+            crcom=MatchModel.objects.filter(creator=request.user.pk,status="Completed").order_by("-id") #created completed matches
+            crcam=MatchModel.objects.filter(creator=request.user.pk,status="Cancelled").order_by("-id") #created cancelled matches
+            reqcan=RequestModel.objects.filter(username=request.user.pk,status="Cancelled").order_by("-id")#requests cancelled
+            reqrej=RequestModel.objects.filter(username=request.user.pk,status="Rejected").order_by("-id")#requests rejected
+            id_list4=MatchModel.objects.filter(creator=request.user.pk).values_list('id',flat=True).order_by("-id")
+            reqaccep=RequestModel.objects.filter(match_id__in=list(id_list4),status="Accepted").exclude(username=request.user.pk).order_by("-id")
+            reqrejec=RequestModel.objects.filter(match_id__in=list(id_list4),status="Rejected").exclude(username=request.user.pk).order_by("-id")
+            context={}
+            context={
+                'jum':jum,
+                'jcom':jcom,
+                'jcam':jcam,
+                'crum':crum,
+                'crcom':crcom,
+                'crcam':crcam,
+                'reqcan':reqcan,
+                'reqrej':reqrej,
+                'reqaccep':reqaccep,
+                'reqrejec':reqrejec,
 
-        }
-        # context['data']=jum
-        print(jum)
-        print(context)
-        return render(request, 'Matches/match-history.html',context)
-
+            }
+            # context['data']=jum
+            print(jum)
+            print(context)
+            return render(request, 'Matches/match-history.html',context)
+        else:
+            return redirect('login')
 
 
 ############################################################## View for editing matches created by user #####################################################################
@@ -254,31 +272,36 @@ class MatchHistoryView(View):
 @method_decorator(login_required,name='dispatch')
 class EditMatchesView(View):
     def get(self, request,id, *args, **kwargs):
-        editobj=MatchModel.objects.get(id=id)
+        if request.user.is_authenticated:
+            editobj=MatchModel.objects.get(id=id)
 
-        print ( "type matvhodel : ", type( editobj.start_time ) )
+            print ( "type matvhodel : ", type( editobj.start_time ) )
 
-        data={
-            'category':editobj.category.id,
-            'date':editobj.date,
-            'start_time_f':editobj.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
-            'end_time_f':editobj.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
-            'start_time':editobj.start_time,
-            'end_time':editobj.end_time,
-            'city':editobj.city,
-            'locality':editobj.locality,
-            'status':editobj.status,
-            "creator" : request.user.username,
-            "slots": editobj.slots,
-            'slot_available':editobj.slot_available,
-            'match_id':editobj.id,
-        }
-        form=updatematchform(data,request=request)
-        context={
-            'form':form
-        }
-        return render(request,'Matches/edit-matches.html',context)
-        
+            data={
+                'category':editobj.category.id,
+                'date':editobj.date,
+                'start_time_f':editobj.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                'end_time_f':editobj.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                'start_time':editobj.start_time,
+                'end_time':editobj.end_time,
+                'city':editobj.city,
+                'locality':editobj.locality,
+                'status':editobj.status,
+                "creator" : request.user.username,
+                "slots": editobj.slots,
+                'slot_available':editobj.slot_available,
+                'match_id':editobj.id,
+            }
+            form=updatematchform(data,request=request)
+            context={
+                'form':form
+            }
+            return render(request,'Matches/edit-matches.html',context)
+        else:
+            return redirect('login')
+
+
+
     def post(self, request, *args, **kwargs):
         match_id = request.POST['match_id']
         form=updatematchform(request.POST,request=request)
@@ -371,37 +394,41 @@ class RequestsView(View):
 @method_decorator(login_required,name='dispatch')
 class  JoinMatchView(View):
     def get(self, request,id, *args, **kwargs):
-                # user_location=request.user.location
-                # location_list=user_location.split(",")
-                matches=MatchModel.objects.filter(id=id)
+        if request.user.is_authenticated:
+            # user_location=request.user.location
+            # location_list=user_location.split(",")
+            matches=MatchModel.objects.filter(id=id)
 
-                
-                if len(matches) == 1:
-                    match = matches[0]
-                if len(matches) == 0:
-                    return render(request,'errors/error404.html',{})
-                print("##################### INSIDE JOIN MATCHES #########################",match)
-                joined=RequestModel.objects.filter(status='Accepted',match_id=match.pk).order_by("id")
-                request.session['id']=match.id 
-                print("#### Match.Category #####",match.category,type(match.category)) 
-                user=UserModel.objects.get(id=request.user.pk)
-                data={
-                    'category':match.category.category,
-                    'date':match.date,
-                    'start_time':match.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
-                    'end_time':match.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
-                    'locality':match.locality,
-                    'username':user,
-                    'status':"Pending",
-                    'phoneno': request.user.phone,
-                    'match_id':match.pk,
-                }
-                print("##################data before initializing request form###########################",data)
-                # form=RequestForm(data,request=request)
-                # print(form)
-                context ={'is_requestform':True ,'match':match,'joined':joined,'data':data}
-                print(context)
-                return render(request, 'Matches/all-matches.html',context)
+            
+            if len(matches) == 1:
+                match = matches[0]
+            if len(matches) == 0:
+                return render(request,'errors/error404.html',{})
+            print("##################### INSIDE JOIN MATCHES #########################",match)
+            joined=RequestModel.objects.filter(status='Accepted',match_id=match.pk).order_by("id")
+            request.session['id']=match.id 
+            print("#### Match.Category #####",match.category,type(match.category)) 
+            user=UserModel.objects.get(id=request.user.pk)
+            data={
+                'category':match.category.category,
+                'date':match.date,
+                'start_time':match.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                'end_time':match.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                'locality':match.locality,
+                'username':user,
+                'status':"Pending",
+                'phoneno': request.user.phone,
+                'match_id':match.pk,
+            }
+            print("##################data before initializing request form###########################",data)
+            # form=RequestForm(data,request=request)
+            # print(form)
+            context ={'is_requestform':True ,'match':match,'joined':joined,'data':data}
+            print(context)
+            return render(request, 'Matches/all-matches.html',context)
+
+        else:
+            return redirect('login')
         # except:
         #     pass
     def post(self, request, *args, **kwargs):
@@ -468,17 +495,19 @@ class CancelMatchView(View):
 @method_decorator(login_required,name='dispatch')
 class TeamView(View):
     def get(self, request,id, *args, **kwargs):
-        reqdata=MatchModel.objects.get(id=id)
+        if request.user.is_authenticated:
+            reqdata=MatchModel.objects.get(id=id)
 
-        joined=RequestModel.objects.filter(status='Accepted',match_id=reqdata.id).order_by("id")
-        if not joined.objects.filter(username=request.user.pk).exists():
-             messages.error(request,'You cannot view this team')
-             return HttpResponseRedirect(reverse('my-matches'))
-        context={}
-        context['users']=joined
-        print(context)
-        return render(request,"Matches/team.html",context)
-
+            joined=RequestModel.objects.filter(status='Accepted',match_id=reqdata.id).order_by("id")
+            if not joined.objects.filter(username=request.user.pk).exists():
+                messages.error(request,'You cannot view this team')
+                return HttpResponseRedirect(reverse('my-matches'))
+            context={}
+            context['users']=joined
+            print(context)
+            return render(request,"Matches/team.html",context)
+        else:
+            return redirect('login')
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------
@@ -489,37 +518,39 @@ class TeamView(View):
 class CreateTournamentView(View):
     template = 'Tournaments/create-tournament.html'
     def get(self, request, *args, **kwargs):
-        print(datetime.now()+timedelta(hours=1))
-        end_time=(datetime.now()+timedelta(hours=1))
-        print(end_time)
-     
-        data={
-            'category':CategoriesModel.objects.first(),
-            'team_name':" ",
-            'image':" ",
-            'start_date':datetime.now().date(),
-            'end_date':datetime.now().date(),
-            'start_time_f':datetime.now().strftime("%H:%M:%S"),
-            'end_time_f':end_time.strftime("%H:%M:%S"),
-            'start_time':datetime.now(),
-            'end_time':end_time,
-            'city':request.user.location,
-            'locality':" ",
-            'creator' : request.user.username,
-            'status' : "Upcoming",
-            'team_space_available': 0,
-            'teams': 2,
-        }
-        form = createtournamentForm(initial=data,request=request)
-        # user = request.user
-        # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
-        context = {'form': form,
-                    'data': 'Add tournament',
-                    # 'user': 'user',
-                    }
+        if request.user.is_authenticated:
+            print(datetime.now()+timedelta(hours=1))
+            end_time=(datetime.now()+timedelta(hours=1))
+            print(end_time)
         
-        return render(request,'Tournaments/create-tournament.html',context)
-
+            data={
+                'category':CategoriesModel.objects.first(),
+                'team_name':" ",
+                'image':" ",
+                'start_date':datetime.now().date(),
+                'end_date':datetime.now().date(),
+                'start_time_f':datetime.now().strftime("%H:%M:%S"),
+                'end_time_f':end_time.strftime("%H:%M:%S"),
+                'start_time':datetime.now(),
+                'end_time':end_time,
+                'city':request.user.location,
+                'locality':" ",
+                'creator' : request.user.username,
+                'status' : "Upcoming",
+                'team_space_available': 0,
+                'teams': 2,
+            }
+            form = createtournamentForm(initial=data,request=request)
+            # user = request.user
+            # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",form.options)
+            context = {'form': form,
+                        'data': 'Add tournament',
+                        # 'user': 'user',
+                        }
+            
+            return render(request,'Tournaments/create-tournament.html',context)
+        else:
+            return redirect('login')
 
     def post(self, request, *args, **kwargs):
         form=createtournamentForm(request.POST,request=request)
@@ -566,66 +597,73 @@ class CreateTournamentView(View):
 @method_decorator(login_required,name='dispatch')
 class MyTournamentView(View):
     def get(self, request, *args, **kwargs):
-        print(request.user.username)
-        print(datetime.now())
+        if request.user.is_authenticated:
+            print(request.user.username)
+            print(datetime.now())
 
-       
-        # tournament=TournamentModel.objects.all()
         
-
-
-
-     
-        # context={
-        #     'tournaments':tournament,
-        
+            # tournament=TournamentModel.objects.all()
             
-        # }
-        # return render(request, 'Tournaments/my-tournament.html',context)
-        id_list=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True)
-        print("=================",list(id_list))
-        exclude_status=["Completed","Cancelled"]
-        tournament=TournamentModel.objects.filter(id__in=list(id_list)).exclude(status__in=exclude_status).order_by("-id")
-        print("7777777777777777",tournament)
-        context={
-            'tournaments':tournament,
-            
-        }
-        return render(request, 'Tournaments/my-tournament.html',context)
+
+
+
         
+            # context={
+            #     'tournaments':tournament,
+            
+                
+            # }
+            # return render(request, 'Tournaments/my-tournament.html',context)
+            id_list=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True)
+            print("=================",list(id_list))
+            exclude_status=["Completed","Cancelled"]
+            tournament=TournamentModel.objects.filter(id__in=list(id_list)).exclude(status__in=exclude_status).order_by("-id")
+            print("7777777777777777",tournament)
+            context={
+                'tournaments':tournament,
+                
+            }
+            return render(request, 'Tournaments/my-tournament.html',context)
+        else:
+            return redirect('login')  
 
 
 ############################### view for editing created tournaments  ####################################################################
 @method_decorator(login_required,name='dispatch')
 class EditTournamentView(View):
     def get(self, request,id, *args, **kwargs):
-        editobj1=TournamentModel.objects.get(id=id)
-        # print(id,"44444444444444444444444444444444444444444444444444444444444")
-        data={
-            'category':editobj1.category.id,
-            'team_name':editobj1.team_name,
-            # 'team_name':CreateTeamModel.objects.filter(),
-            'start_date':editobj1.start_date,
-            'end_date':editobj1.end_date,
-            'start_time_f':editobj1.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
-            'end_time_f':editobj1.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
-            'start_time':editobj1.start_time,
-            'end_time':editobj1.end_time,
-            'city':editobj1.city,
-            'locality':editobj1.locality,
-            'status':editobj1.status,
-            "creator" : request.user.username,
-            "teams": editobj1.teams,
-            'team_space_available':editobj1.team_space_available,
-            'tournament_id':editobj1.id,
-        }
-        form=updatetournamentform(data,request=request)
-        context={
-            'form':form
-            
-        }
-        return render(request,'Tournaments/edit-tournaments.html',context)
-        
+
+        if request.user.is_authenticated:
+            editobj1=TournamentModel.objects.get(id=id)
+            # print(id,"44444444444444444444444444444444444444444444444444444444444")
+            data={
+                'category':editobj1.category.id,
+                'team_name':editobj1.team_name,
+                # 'team_name':CreateTeamModel.objects.filter(),
+                'start_date':editobj1.start_date,
+                'end_date':editobj1.end_date,
+                'start_time_f':editobj1.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                'end_time_f':editobj1.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                'start_time':editobj1.start_time,
+                'end_time':editobj1.end_time,
+                'city':editobj1.city,
+                'locality':editobj1.locality,
+                'status':editobj1.status,
+                "creator" : request.user.username,
+                "teams": editobj1.teams,
+                'team_space_available':editobj1.team_space_available,
+                'tournament_id':editobj1.id,
+            }
+            form=updatetournamentform(data,request=request)
+            context={
+                'form':form
+                
+            }
+            return render(request,'Tournaments/edit-tournaments.html',context)
+        else:
+            return redirect('login')
+
+
     def post(self, request, *args, **kwargs):
         tournament_id = request.POST['tournament_id']
         form=updatetournamentform(request.POST,request=request)
@@ -665,6 +703,7 @@ class EditTournamentView(View):
 @method_decorator(login_required,name='dispatch')
 class AllTournamentView(View):
         def get(self, request, *args, **kwargs):
+            if request.user.is_authenticated:
                 print(request.user.username)
                 # context={}
                 id_list=TournamentRequestModel.objects.filter(username=request.user.username).values_list('tournament_id',flat=True)
@@ -673,7 +712,8 @@ class AllTournamentView(View):
                 context ={'TournamentRequestForm': form ,'is_tournamentrequestform':False , 'tournaments':tournament}
                 print(context)
                 return render(request, 'Tournaments/tournaments.html',context)
-
+            else:
+                return redirect('login')
 
 # @method_decorator(login_required,name='dispatch')
 # class CreateTeamView(View):
@@ -682,68 +722,75 @@ class AllTournamentView(View):
 @method_decorator(login_required,name='dispatch')
 class RequestedTournamentView(View):
     def get(self, request, *args, **kwargs):
-        print(request.user.username)
-        context={}
-        id_list=TournamentRequestModel.objects.filter(username=request.user.username,status="Pending").values_list('tournament_id',flat=True).order_by("-id")
-        print(list(id_list))
-        tournament=TournamentModel.objects.filter(id__in=list(id_list)).order_by("-id")
-        context['tournaments']=tournament
-        return render(request, 'Tournaments/requested-tournaments.html',context)
-
+        if request.user.is_authenticated:
+            print(request.user.username)
+            context={}
+            id_list=TournamentRequestModel.objects.filter(username=request.user.username,status="Pending").values_list('tournament_id',flat=True).order_by("-id")
+            print(list(id_list))
+            tournament=TournamentModel.objects.filter(id__in=list(id_list)).order_by("-id")
+            context['tournaments']=tournament
+            return render(request, 'Tournaments/requested-tournaments.html',context)
+        else:
+            return redirect('login')
 
 ###########################################################view for joining tournaments########################################################################
 
 @method_decorator(login_required,name='dispatch')
 class  JoinTournamentView(View):
     def get(self, request,id, *args, **kwargs):
-                user_location=request.user.location
-                tournaments=TournamentModel.objects.filter(id=id)
-                team_now=TournamentModel.objects.filter(id=id)
+        if request.user.is_authenticated:
 
-                teams = CreateTeamModel.objects.all()
-                
-                print("==================================",tournaments)
+            user_location=request.user.location
+            tournaments=TournamentModel.objects.filter(id=id)
+            team_now=TournamentModel.objects.filter(id=id)
 
-                if len(tournaments) == 1:
-                        tournament = tournaments[0]
-                        # team=teams[0]
-           
+            teams = CreateTeamModel.objects.all()
+            
+            print("==================================",tournaments)
 
-                if len(tournaments) == 0:
-                    return render(request,'errors/error404.html',{})
-                print("##################### INSIDE JOIN MATCHES #########################",tournament)
+            if len(tournaments) == 1:
+                    tournament = tournaments[0]
+                    # team=teams[0]
+        
 
-                a=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=tournament.pk).values().order_by("id")
-                b=TournamentRequestModel.objects.values_list()
-                request.session['id']=tournament.id 
-                print("#### Match.Category #####",tournament.category,type(tournament.category))
-                print("#### Match.Category #####",tournament.team_name,type(tournament.team_name))
-                # print("--",b.team_name)
-                
+            if len(tournaments) == 0:
+                return render(request,'errors/error404.html',{})
+            print("##################### INSIDE JOIN MATCHES #########################",tournament)
 
-                data={
-                    'category':tournament.category,
-                    # 'team_name_now':b.team_name,
-                    'joined_teams':TournamentRequestModel.objects.order_by('tournament_id'),
-                    # 'joined_teams':TournamentRequestModel.objects.annotate(count=Count('tournament_id')).order_by('id').distinct('tournament_id').filter(count__gt=1),
-                    'team_name':CreateTeamModel.objects.filter(),
-                    'start_date':tournament.start_date,
-                    'end_date':tournament.end_date,
-                    'start_time':tournament.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
-                    'end_time':tournament.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
-                    'locality':tournament.locality,
-                    'username':request.user.username,
-                    'status':"Pending",
-                    'team_space_available':tournament.team_space_available,
-                    'phoneno': request.user.phone,
-                    'tournament_id':tournament.pk,
-                }
-                print("##################data before initializing request form###########################",data)
-                # print("================++++++++++++=================",team)
+            a=TournamentRequestModel.objects.filter(status='Accepted',tournament_id=tournament.pk).values().order_by("id")
+            b=TournamentRequestModel.objects.values_list()
+            request.session['id']=tournament.id 
+            print("#### Match.Category #####",tournament.category,type(tournament.category))
+            print("#### Match.Category #####",tournament.team_name,type(tournament.team_name))
+            # print("--",b.team_name)
+            
 
-                context ={'is_tournamentrequestform':True ,'tournament':tournament,'a':a,'data':data,}
-                print(context)
-                return render(request, 'Tournaments/tournaments.html',context)
+            data={
+                'category':tournament.category,
+                # 'team_name_now':b.team_name,
+                'joined_teams':TournamentRequestModel.objects.order_by('tournament_id'),
+                # 'joined_teams':TournamentRequestModel.objects.annotate(count=Count('tournament_id')).order_by('id').distinct('tournament_id').filter(count__gt=1),
+                'team_name':CreateTeamModel.objects.filter(),
+                'start_date':tournament.start_date,
+                'end_date':tournament.end_date,
+                'start_time':tournament.start_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                'end_time':tournament.end_time.astimezone(timezone('Asia/Kolkata')).strftime("%H:%M:%S"),
+                'locality':tournament.locality,
+                'username':request.user.username,
+                'status':"Pending",
+                'team_space_available':tournament.team_space_available,
+                'phoneno': request.user.phone,
+                'tournament_id':tournament.pk,
+            }
+            print("##################data before initializing request form###########################",data)
+            # print("================++++++++++++=================",team)
+
+            context ={'is_tournamentrequestform':True ,'tournament':tournament,'a':a,'data':data,}
+            print(context)
+            return render(request, 'Tournaments/tournaments.html',context)
+        else:
+            return redirect('login')
+
 
     def post(self, request, *args, **kwargs):
             tournament_id=request.session.get('id')
@@ -799,13 +846,19 @@ class  JoinTournamentView(View):
 @method_decorator(login_required,name='dispatch')
 class TournamentRequestsView(View):
     def get(self, request,*args, **kwargs):
-        id_list=TournamentModel.objects.filter(creator=request.user.username,status="Upcoming").values_list('id',flat=True).order_by("-id")
-        print(list(id_list))
-        tournament_requests=TournamentRequestModel.objects.filter(status='Pending',tournament_id__in=list(id_list)).order_by("-id")
-        # print(requests)
-        context={}
-        context['requests']=tournament_requests
-        return render(request,'Tournaments/requests.html',context)
+
+        if request.user.is_authenticated:
+            id_list=TournamentModel.objects.filter(creator=request.user.username,status="Upcoming").values_list('id',flat=True).order_by("-id")
+            print(list(id_list))
+            tournament_requests=TournamentRequestModel.objects.filter(status='Pending',tournament_id__in=list(id_list)).order_by("-id")
+            # print(requests)
+            context={}
+            context['requests']=tournament_requests
+            return render(request,'Tournaments/requests.html',context)
+
+        else:
+            return redirect('login')
+
     def  post(self, request, *args, **kwargs):
         selected=request.POST.getlist('selected[]')
         print(selected)
@@ -881,38 +934,42 @@ class CancelTournamentView(View):
 @method_decorator(login_required,name='dispatch')
 class TournamentHistoryView(View):
     def get(self, request, *args, **kwargs):
-        id_list1=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
-        jum=TournamentModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.username).order_by("-id")#joined upcoming matches
-        id_list2=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
-        jcom=TournamentModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).order_by("-id")#joined completed matches
-        id_list3=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
-        jcam=TournamentModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).order_by("-id")#joined cancelled matches
-        crum=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Upcoming").order_by("-id") #created upcoming matches
-        crcom=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Completed").order_by("-id") #created completed matches
-        crcam=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Cancelled").order_by("-id") #created cancelled matches
-        reqcan=TournamentRequestModel.objects.filter(username=request.user.username,status="Cancelled").order_by("-id")#requests cancelled
-        reqrej=TournamentRequestModel.objects.filter(username=request.user.username,status="Rejected").order_by("-id")#requests rejected
-        id_list4=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location).values_list('id',flat=True).order_by("-id")
-        reqaccep=TournamentRequestModel.objects.filter(tournament_id__in=list(id_list4),status="Accepted").exclude(username=request.user.username).order_by("-id")
-        reqrejec=TournamentRequestModel.objects.filter(tournament_id__in=list(id_list4),status="Rejected").exclude(username=request.user.username).order_by("-id")
-        context={}
-        context={
-            'jum':jum,
-            'jcom':jcom,
-            'jcam':jcam,
-            'crum':crum,
-            'crcom':crcom,
-            'crcam':crcam,
-            'reqcan':reqcan,
-            'reqrej':reqrej,
-            'reqaccep':reqaccep,
-            'reqrejec':reqrejec,
+        if request.user.is_authenticated:
+            id_list1=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
+            jum=TournamentModel.objects.filter(status="Upcoming",id__in=list(id_list1)).exclude(creator=request.user.username).order_by("-id")#joined upcoming matches
+            id_list2=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
+            jcom=TournamentModel.objects.filter(status="Completed",id__in=list(id_list2)).exclude(creator=request.user.username).order_by("-id")#joined completed matches
+            id_list3=TournamentRequestModel.objects.filter(username=request.user.username,status="Accepted").values_list('tournament_id',flat=True).order_by("-id")
+            jcam=TournamentModel.objects.filter(status="Cancelled",id__in=list(id_list3)).exclude(creator=request.user.username).order_by("-id")#joined cancelled matches
+            crum=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Upcoming").order_by("-id") #created upcoming matches
+            crcom=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Completed").order_by("-id") #created completed matches
+            crcam=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location,status="Cancelled").order_by("-id") #created cancelled matches
+            reqcan=TournamentRequestModel.objects.filter(username=request.user.username,status="Cancelled").order_by("-id")#requests cancelled
+            reqrej=TournamentRequestModel.objects.filter(username=request.user.username,status="Rejected").order_by("-id")#requests rejected
+            id_list4=TournamentModel.objects.filter(creator=request.user.username,locality__iexact=request.user.location).values_list('id',flat=True).order_by("-id")
+            reqaccep=TournamentRequestModel.objects.filter(tournament_id__in=list(id_list4),status="Accepted").exclude(username=request.user.username).order_by("-id")
+            reqrejec=TournamentRequestModel.objects.filter(tournament_id__in=list(id_list4),status="Rejected").exclude(username=request.user.username).order_by("-id")
+            context={}
+            context={
+                'jum':jum,
+                'jcom':jcom,
+                'jcam':jcam,
+                'crum':crum,
+                'crcom':crcom,
+                'crcam':crcam,
+                'reqcan':reqcan,
+                'reqrej':reqrej,
+                'reqaccep':reqaccep,
+                'reqrejec':reqrejec,
 
-        }
-        # context['data']=jum
-        print(jum)
-        print(context)
-        return render(request, 'Tournaments/tournament-history.html',context)
+            }
+            # context['data']=jum
+            print(jum)
+            print(context)
+            return render(request, 'Tournaments/tournament-history.html',context)
+        else:
+            return redirect('login')
+
 
 @method_decorator(login_required,name='dispatch')
 class Createteamview(View):
@@ -1138,7 +1195,7 @@ class SearchCityView(View):
     def post(self, request, *args, **kwargs):
             feildname = kwargs.pop('feildname')
             search_text = request.POST.get(feildname)
-            print("#########################INSIDE SearchCityView" ,search_text ,"##################")
+            print("#########################    w" ,search_text ,"##################")
             if search_text:
                 if len(search_text)>=3:
                     results=CitiesModel.objects.filter(name__icontains=search_text)
