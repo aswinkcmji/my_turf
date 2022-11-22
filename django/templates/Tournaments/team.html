@@ -9,7 +9,7 @@
                         <div class="col-md-12">
                             <div class="flex-wrap d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h1>Manage Requests</h1>
+                                    <h1>The Teams</h1>
                                     <p></p>
                                 </div>
                                 <div>
@@ -54,42 +54,23 @@
     <div class="card">
       <div class="card-header d-flex justify-content-between">
                             <div class="header-title">
-                                <h4 class="card-title">Pending Request</h4>
+                                <h4 class="card-title">The Teams</h4>
                             </div>
                         </div>
                         <div class="card-body">
                           <form action="" method="POST">
                             {% csrf_token %}
-        <div class="d-flex justify-content-end">
-          <div class="btn-group   mb-5">
-            <button type="button" class="btn btn-primary">Action</button>
-            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-              <div class="d-flex flex-column gap-2">
-                <li class="mx-auto w-75"> <button class="btn-soft-success btn w-100" type="submit"
-                  name="Accept">Accept</button></li>
-                <li class="mx-auto w-75"> <button class="btn-soft-danger btn w-100" type="submit"
-                  name="Reject"> Reject </button>
-                </li>
-            </div>
-            </ul>
-          </div>
-        </div>  
+
 
         <div class="table-responsive">
             <table id="datatable" class="table table-striped" data-toggle="data-table">
               <thead class=" text-primary">
-                <th>
-                  <label><input type="checkbox" name="sample" class="selectall" /></label>
-                </th>
+                
                 <th>
                   #
                 </th>
                 <th>
-                  Category
+                    Team name
                 </th>
                 <th>
                   Username
@@ -98,36 +79,24 @@
                   Phone No
                 </th>
                 <th>
-                  Start_Date
+                  Email
                 </th>
                 <th>
-                  End_Date
-                </th>
-                <th>
-                  Start Time
-                </th>
-                <th>
-                  End Time
-                </th>
-                <th>
-                 Match Location
+                    Location
                 </th>
               </thead>
 
               <tbody>
-                {%for data in requests%}
+                {%for user in users%}
                 <tr>
-                  <td><input type="checkbox" name="selected[]" id="checks[]" value="{{data.id}}"></td>
+
                   <td>{{forloop.counter0|add:1}}</td>
-                  <td>{{data.category}}</td>
-                  <td>{{data.username }}</td>
-                  <td>{{data.phoneno}}</td>
-                  <td>{{data.start_date|date:"Y-m-d"}}</td>
-                  <td>{{data.end_date|date:"Y-m-d"}}</td>
-                  <td>{{data.start_time|time:"h:i:s"}}</td>
-                  <td>{{data.end_time|time:"h:i:s"}}</td>
+                  <td>{{user.team_name}}</td>
+                  <td>{{user.username}}</td>
+                  <td>{{user.phoneno}}</td>
+                  <td>{{user.username.email}}</td>
                   <td>
-                    {{data.locality}}
+                    {{user.username.location}}
                   </td>
 
                 </tr>
@@ -145,17 +114,4 @@
 </div>
 </div>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
-<script>
-  document.getElementById('tournament-request-li').classList.add('active')
-  $('.selectall').click(function () {
-    if ($(this).is(':checked')) {
-      $('input:checkbox').attr('checked', true);
-    } else {
-      $('input:checkbox').attr('checked', false);
-    }
-  });
-</script>
 {% endblock content %}

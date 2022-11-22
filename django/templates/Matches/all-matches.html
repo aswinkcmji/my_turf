@@ -29,7 +29,7 @@
             <div class="col-4  ecomerce-top-bar-btns justify-content-end mx-auto">
                 <form method="POST">
                     {% csrf_token %}
-                    <input type="text" name="search" hx-post="{%url 'search-matches' %}" hx-target='#result-matches' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Select a  Username, Date or Category ..." >
+                    <input type="text" name="search" hx-post="{%url 'search-matches' %}" hx-target='#result-matches' hx-trigger="keyup changed delay:500ms"  class="form-control"  placeholder="Search a  Username, Date or Game ..." >
                 </form>
             </div>
         </div>

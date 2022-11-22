@@ -1,27 +1,22 @@
 {% load static %}
-
-{% for match in matches%}
-  <div class="column col-md-4">
-    <div class="card p-2 m-4">
-        <div> <img src="/media/{{match.category.image}}" class="card-img-top" alt="Product 1" style="height:350px;"></div>
-        <div class="card-body p-1 ">
-          <h2>{{match.category}}</h2>
-          <p class="card-text ">Date of Match:{{match.date|date:"Y-m-d"}}</p>
-          <p class="card-text ">Start Time:{{match.start_time|time:"H:i:s"}}</p>
-          <p class="card-text ">End Time:{{match.end_time|time:"H:i:s"}}</p>
-          <p class="card-text  ">Available Slots:{{match.slot_available}}/{{match.slots}}</p>
-          <p class="card-text  ">City:{{match.city}}</p>
-          <p class="card-text ">Locality:{{match.locality}}</p>
-          <p class="card-text"> Creator:<a  class="text-primary" data-bs-html="true"  data-bs-toggle="popover" title="{{match.creator}}"  data-bs-content="<button class='btn btn-primary'>copy</button><p>Phone:{{match.creator.phone}}</p>    <p> Email:{{match.creator.email}}</p>" style="text-decoration: underline;">{{match.creator}}</a></p>
-          
-          {% if match.creator != request.user.username %}
-         <a class="btn btn-primary" href="join/{{match.id}}">JOIN NOW</a>
-        {%else%}
-         <p>You are the organizer.<br>Visit <a class="" href="{% url 'my-matches' %}" id="my-matches-li">My Match</a> to edit</p>
-         {%endif%}
-          </div>
-        </div>
-   </div>
+{% for t in tournaments %}
+<div class="column col-md-4">
+  <div class="card p-2 m-4">
+      <img src="/media/{{t.category.image}}" class="card-img-top flex" alt="Product 1" style="height:14rem;">
+      <div class="card-body p-1 ">
+      <h2 class="card-text p-1 text-dark ">{{t.category}}</h2>
+      <p class="card-text text-dark">Tournament Day : <span class="text-secondary">{{t.start_date|date:"Y-m-d"}}</span></p>
+      <p class="card-text text-dark">Time : <span class="text-secondary">{{t.start_time|time:"H:i:s"}}</span> to  <span class="text-secondary">{{t.end_time|time:"H:i:s"}}</span></p>
+      <p class="card-text text-dark">Available Slots:{{t.team_space_available}}/{{t.team_space_available}}</p>
+      <p class="card-text text-dark">Locality:{{t.locality}}</p>
+        {% if t.creator != request.user.username %}
+        <a class="btn btn-primary" href="a/{{t.id}}">JOIN NOW</a>
+      {%else%}
+       <p>You are the organizer.<br>Visit <a class="" href="{% url 'my-tournaments' %}" id="my-tournaments-li">My Tournaments</a> to edit</p>
+       {%endif%}
+      </div>
+    </div>
+</div>
 {%empty%}
 {% if is_searching %}
 
@@ -61,8 +56,8 @@
 <img src="{% static 'assets/images/errorImages/search404_5.png' %}" alt="search404"
     class="theme-color-pink-img  img-fluid  w-50 mx-auto">
   </div>
-<div class="card-body"> <p class="text-center">There aren't any  more matches happening in your locality!!!</p> 
- <p class="text-center">Visit <a class="" href="{% url 'my-matches' %}" id="my-matches-li">My Match</a> to see the matches you created or joined</p>
+<div class="card-body"> <p class="text-center">There aren't any more tournaments happening in your locality!!!</p> 
+ <p class="text-center"> Visit <a class="" href="{% url 'my-tournaments' %}" id="my-tournaments-li">My tournaments</a> to see the tournament you created or joined</p>
 </div>
 </div>
 <!-- <div class="column col-md-4"{% if is_requestform %} style="display: none ;" {% else %}

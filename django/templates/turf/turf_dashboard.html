@@ -468,12 +468,13 @@
 
            
                         
-                    <div class="row justify-content-center" style="margin-bottom: 5rem;">                
+                    <div class="row justify-content-evenly" >                
                         {% for data in image %}
                             <div class="col-lg-3 col-md-4 mb-3 card ">
                                 <div class="card-body  rounded-3" style="background-image: url('{{media_url}}{{ data.image}}');  background-repeat: no-repeat;
                                     background-position: center;
                                     background-size: cover;
+                                    
                                     -webkit-box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);
                                     -moz-box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);
                                     box-shadow: 15px 15px 39px 6px rgba(0,0,0,0.15);">
@@ -511,18 +512,15 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                         
-                                            
-                                            <form action="{% url 'DeleteTurfCategory' %}"  method="POST" enctype="multipart/form-data">
-                                                
-                                                {% csrf_token %}
-                                                <div class="modal-body">
-                                                    <h6>Are you Sure</h6>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary">Yes</button>
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                                                </div>
-                                            </form>
+                                        
+                                            <div class="modal-body">
+                                                <h6>Are you Sure</h6>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="{% url 'DeleteTurfCategory' data.category %}" class="btn btn-primary">Yes</a>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                            </div>
+                            
                                         </div>
                                     </div>
                                 </div>

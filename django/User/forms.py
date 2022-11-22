@@ -257,7 +257,7 @@ class createtournamentForm(ModelForm):
     # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model = TournamentModel
-        fields = 'category','team_name','image','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','team_space_available','creator','locality','creator'
+        fields = 'category','team_name','image','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','team_space_available','creator','locality','city'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -273,6 +273,15 @@ class createtournamentForm(ModelForm):
         start_time_f=self.cleaned_data.get('start_time_f')
         end_time_f=self.cleaned_data.get('end_time_f')
         print(teams)
+        city=self.cleaned_data.get('city')
+        if city :
+            list=city.split(", ")
+            if len(list) ==3:
+                check_city=CitiesModel.objects.filter(name=list[0],subcountry=list[1],country=list[2])
+                if len(check_city) == 0:
+                     self._errors['city']=self.error_class(['Please Select a City from the provided list'])
+            else:
+                self._errors['city']=self.error_class(['Please Select a City from the provided list'])
         if team_name == None:
             self.cleaned_data['team_space_available']=teams
         elif team_name != None:
@@ -325,10 +334,11 @@ class updatetournamentform(ModelForm):
     locality=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     # status=forms.CharField(widget=forms.HiddenInput())
     team_space_available=forms.IntegerField(widget=forms.HiddenInput())
+    city=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
     # cron=forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model = TournamentModel
-        fields = 'category','team_name','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','creator','locality','creator'
+        fields = 'category','team_name','start_date','end_date','start_time_f','end_time_f','start_time','end_time','teams','creator','locality','city'
     
     def __init__(self,*args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -344,6 +354,15 @@ class updatetournamentform(ModelForm):
         start_time_f=self.cleaned_data.get('start_time_f')
         end_time_f=self.cleaned_data.get('end_time_f')
         print("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",type(teams))
+        city=self.cleaned_data.get('city')
+        if city :
+            list=city.split(", ")
+            if len(list) ==3:
+                check_city=CitiesModel.objects.filter(name=list[0],subcountry=list[1],country=list[2])
+                if len(check_city) == 0:
+                     self._errors['city']=self.error_class(['Please Select a City from the provided list'])
+            else:
+                self._errors['city']=self.error_class(['Please Select a City from the provided list'])
         if teams != None and teams >= 2:
             self.cleaned_data['team_space_available']=teams-1
         else :
@@ -368,7 +387,8 @@ class updatetournamentform(ModelForm):
 class TournamentRequestForm(ModelForm):
     category = forms.ModelChoiceField(queryset=CategoriesModel.objects.all(),widget=forms.HiddenInput())
     # team_name =forms.ModelChoiceField(queryset=CreateTeamModel.objects.all())
-    team_name =forms.CharField(widget=forms.TextInput(attrs={"class":'form-control'}))
+    image=forms.ImageField(required=True,widget=forms.FileInput(attrs={'class':"form-control" }))
+    team_name =forms.CharField(required=True,widget=forms.TextInput(attrs={"class":'form-control'}))
     start_date =forms.DateField(widget=forms.HiddenInput())
     end_date = forms.DateField(widget=forms.HiddenInput())
     start_time = forms.TimeField(widget=forms.HiddenInput())
@@ -382,7 +402,7 @@ class TournamentRequestForm(ModelForm):
     class Meta():
         model = TournamentRequestModel    
         # exclude = '__all__'
-        fields =('category','team_name','start_date','end_date','start_time','end_time','username','locality','status','phoneno')
+        fields =('category','team_name','start_date','end_date','start_time','end_time','username','locality','status','phoneno','image')
     
 
     def __init__(self,*args, **kwargs):
@@ -416,7 +436,7 @@ class TournamentRequestForm(ModelForm):
             self._errors['end_time']=self.error_class(['Do not change the end_time'])
             print("end_time  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         if self.cleaned_data.get('locality')!=tournament.locality:
-            self._errors['date']=self.error_class(['Do not change the locality'])
+            self._errors['locality']=self.error_class(['Do not change the locality'])
             print("locality  erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")   
         if self.cleaned_data.get('username')!=self.request.user.username:
             self._errors['username']=self.error_class(['Do not change the username'])

@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-
+# PRODUCT TABLE
 class ProductsModel(models.Model):
     product_name = models.TextField(max_length=100, blank=False)
     price = models.FloatField(max_length=20, blank=False)
@@ -13,7 +13,7 @@ class ProductsModel(models.Model):
         return str(self.id)
 
 
-
+# CART TABLE
 class CartModel(models.Model):
     username = models.TextField(max_length=100, blank=False)
     product_id = models.IntegerField(blank=False )
@@ -25,7 +25,7 @@ class CartModel(models.Model):
     def __str__(self):
         return str(self.id)
 
-
+# CHECKOUT TABLE
 class CheckoutModel(models.Model):
 
     orderno = models.IntegerField(blank=False)
@@ -41,7 +41,7 @@ class CheckoutModel(models.Model):
     def __str__(self):
         return str(self.id)
 
-
+# BILLING ADDRESS
 class BillingAddressModel(models.Model):
 
     username = models.TextField(max_length=100, blank=False)

@@ -107,7 +107,7 @@
                             <tr >
                               {% if data.creator != request.user.username%}
                               <td>{{forloop.counter0|add:1}}</td>
-                              <td>{{data.category}}</td>
+                              <td>{{data.category.category}}</td>
                               <td>{{data.creator }}</td>
                               <td>{{data.start_date|date:"Y-m-d"}}</td>
                               <td>{{data.start_time|time:"H:i:s"}}</td>

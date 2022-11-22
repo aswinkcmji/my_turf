@@ -21,6 +21,7 @@ urlpatterns = [
     path("matches-history/cancel/<int:id>",CancelMatchView.as_view(),name="cancelmatch"),
     path("my-matches/cancel/<int:id>",CancelMatchView.as_view(),name="cancelmatch"),
     path("team/<int:id>",TeamView.as_view(),name="myteam"),
+    path("tournament_team/<int:id>",TournamentTeamView.as_view(),name="teams"),
     path('create-tournament/', CreateTournamentView.as_view(), name="create-tournament"),
     path('all-tournaments/', AllTournamentView.as_view(), name="all-tournaments"),
     path('my-tournaments/', MyTournamentView.as_view(), name="my-tournaments"),
@@ -55,6 +56,7 @@ htmx_urlpatterns = [
     path("add-TurfComment/<str:username>", AddTurfCommentView.as_view() ,name="add-TurfComment"),
     path("search-city/<str:feildname>",SearchCityView.as_view(),name="search-city"),
     path("search-matches/",SearchMatchView.as_view(),name="search-matches"),
+    path("search-tournaments/",SearchTournamentView.as_view(),name="search-tournaments"),
     path('search_turf_list/',SearchTurfListView.as_view(), name="search_turf_list") , 
 
     path('starred_messages/',StarredMessagesView.as_view(),name="starred_messages"), 
